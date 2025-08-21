@@ -1,78 +1,65 @@
+```yaml
 name: Generate Sitemap
 
 on:
   push:
-    branches: [ main, master ]
-  workflow_dispatch:
+    branches:
+      - main
+      - master
 
 jobs:
-  generate:
+  generate-sitemap:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Create sitemap generator script
+      - name: Install dependencies
+        run: npm install glob
+
+      - name: Generate sitemap.xml
         run: |
-          cat > generate-sitemap.js << 'EOF'
+          node <<'EOF'
           const fs = require('fs');
           const glob = require('glob');
-
-          const htmlFiles = glob.sync('**/*.html', {
-            ignore: 'node_modules/**',
-            nodir: true
-          });
 
           const baseUrl = 'https://www.dash-smal.ir';
           const today = new Date().toISOString().split('T')[0];
 
-          let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-
-`;
-
-          htmlFiles.forEach(file => {
-            const url = file === 'index.html' ? '/' : '/' + file;
-            const fullUrl = baseUrl + url;
-            const priority = url === '/' ? '1.0' : '0.8';
-            const changefreq = url === '/' ? 'weekly' : 'monthly';
-
-            sitemap += `  <url>
-    <loc>${fullUrl}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>${changefreq}</changefreq>
-    <priority>${priority}</priority>
-  </url>
-
-`;
+          const files = glob.sync('**/*.html', { ignore: ['node_modules/**'] });
+          let urls = files.map(file => {
+            let loc = baseUrl;
+            if (file === 'index.html') {
+              loc += '/';
+              return `<url><loc>${loc}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>`;
+            } else {
+              loc += '/' + file.replace(/\\/g, '/');
+              return `<url><loc>${loc}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`;
+            }
           });
 
-          sitemap += '</urlset>';
+          const sitemap =
+            `<?xml version="1.0" encoding="UTF-8"?>\n` +
+            `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+            urls.join('\n') +
+            `\n</urlset>`;
 
           fs.writeFileSync('sitemap.xml', sitemap, 'utf8');
-          console.log('✅ sitemap.xml با موفقیت ساخته شد.');
           EOF
 
-      - name: Install glob
-        run: npm install glob
-
-      - name: Run generator
-        run: node generate-sitemap.js
-
-      - name: Commit and push if changed
+      - name: Commit and push sitemap.xml
         run: |
-          git config user.name "Sitemap Bot"
-          git config user.email "bot@dash-smal.ir"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add sitemap.xml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Auto-update sitemap.xml" && git push)
+          git commit -m "🤖 Auto-update sitemap.xml" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
