@@ -15,8 +15,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.head_ref }}  # برای pull request
-          fetch-depth: 0  # تاریخچه کامل برای commit
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -71,9 +70,20 @@ jobs:
       - name: Generate sitemap.xml
         run: node generate-sitemap.js
 
-      - name: Commit and push if changed
+      - name: Check if sitemap changed
+        id: check-changes
+        run: |
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "NO_CHANGES=true" >> $GITHUB_ENV
+          else
+            echo "NO_CHANGES=false" >> $GITHUB_ENV
+          fi
+
+      - name: Commit and Push if Changed
+        if: env.NO_CHANGES == 'false'
         run: |
           git config user.name "Sitemap Bot"
           git config user.email "bot@dash-smal.ir"
           git add sitemap.xml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Auto-update sitemap.xml" && git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git)
+          git commit -m "🤖 Auto-update sitemap.xml"
+          git push
