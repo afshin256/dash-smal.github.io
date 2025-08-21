@@ -1,76 +1,60 @@
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
-    with:
-      token: ${{ secrets.GITHUB_TOKEN }}
-      persist-credentials: true
+name: Generate Sitemap
 
-  - name: Setup Node.js
-    uses: actions/setup-node@v4
-    with:
-      node-version: '18'
+on:
+  push:
+    branches:
+      - main
+      - master
 
-  - name: Generate sitemap.xml
-    shell: bash
-    run: |
-      node <<'EOF'
-      const fs = require('fs');
-      const path = require('path');
+jobs:
+  generate-sitemap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      const baseUrl = 'https://www.dash-smal.ir';
-      const today = new Date().toISOString().split('T')[0];
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      function walk(dir, results = []) {
-        const entries = fs.readdirSync(dir, { withFileTypes: true });
-        for (const entry of entries) {
-          if (entry.name === 'node_modules' || entry.name === '.git') continue;
-          const full = path.join(dir, entry.name);
-          if (entry.isDirectory()) {
-            walk(full, results);
-          } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.html')) {
-            results.push(path.relative(process.cwd(), full));
-          }
-        }
-        return results;
-      }
+      - name: Install dependencies
+        run: npm install glob
 
-      const files = walk(process.cwd()).sort();
+      - name: Generate sitemap
+        run: |
+          node -e '
+          const fs = require("fs");
+          const glob = require("glob");
+          const today = new Date().toISOString().split("T")[0];
+          const domain = "https://www.dash-smal.ir";
+          
+          const files = glob.sync("**/*.html", { nodir: true });
+          const urls = files.map(file => {
+            const url = file === "index.html" ? "/" : `/${file}`;
+            const priority = url === "/" ? "1.0" : "0.8";
+            const changefreq = url === "/" ? "weekly" : "monthly";
+            return `
+              <url>
+                <loc>${domain}${url}</loc>
+                <lastmod>${today}</lastmod>
+                <changefreq>${changefreq}</changefreq>
+                <priority>${priority}</priority>
+              </url>`;
+          });
+          
+          const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.join("")}</urlset>`;
+          
+          fs.writeFileSync("sitemap.xml", sitemap);
+          '
 
-      const entries = files.map((file) => {
-        const normalized = file.replace(/\\/g, '/');
-        let urlPath;
-        if (normalized === 'index.html') {
-          urlPath = '/';
-        } else if (normalized.endsWith('/index.html')) {
-          urlPath = '/' + normalized.slice(0, -'index.html'.length);
-        } else {
-          urlPath = '/' + normalized;
-        }
-
-        const loc = encodeURI(baseUrl + urlPath);
-        const isHome = urlPath === '/';
-        const changefreq = isHome ? 'weekly' : 'monthly';
-        const priority = isHome ? '1.0' : '0.8';
-
-        return `  <url><loc>${loc}</loc><lastmod>${today}</lastmod><changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`;
-      });
-
-      const xmlHeader = '<?xml version="1.0" encoding="UTF-8"?>';
-      const openTag = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-      const closeTag = '</urlset>';
-
-      const body = entries.length ? '\n' + entries.join('\n') + '\n' : '\n';
-      const sitemap = `${xmlHeader}\n${openTag}${body}${closeTag}\n`;
-
-      fs.writeFileSync('sitemap.xml', sitemap, 'utf8');
-      EOF
-
-  - name: Commit and push sitemap.xml
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    run: |
-      git config user.name "github-actions[bot]"
-      git config user.email "github-actions[bot]@users.noreply.github.com"
-      git add sitemap.xml
-      git commit -m "🤖 Auto-update sitemap.xml" || echo "No changes to commit"
-      git push origin HEAD:${{ github.ref }}
+      - name: Commit and push sitemap
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add sitemap.xml
+          git commit -m "🤖 Auto-update sitemap.xml" || echo "No changes to commit"
+          git push
