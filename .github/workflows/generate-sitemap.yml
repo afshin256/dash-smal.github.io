@@ -9,6 +9,8 @@ on:
 jobs:
   generate-sitemap:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,5 +58,9 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           git add sitemap.xml
-          git commit -m "🤖 Auto-update sitemap.xml" || echo "No changes to commit"
-          git push
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "🤖 Auto-update sitemap.xml"
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
