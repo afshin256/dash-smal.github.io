@@ -2,7 +2,7 @@ name: Generate Sitemap
 
 on:
   push:
-    branches: [ main, master ]  # شاخه اصلی رو وارد کن
+    branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
 
@@ -15,6 +15,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}  # برای pull request
+          fetch-depth: 0  # تاریخچه کامل برای commit
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -28,7 +30,7 @@ jobs:
           const path = require('path');
           const glob = require('glob');
 
-          // پیدا کردن تمام فایل‌های HTML در ریشه و زیرپوشه‌ها
+          // پیدا کردن تمام فایل‌های HTML
           const htmlFiles = glob.sync('**/*.html', {
             ignore: 'node_modules/**',
             nodir: true
@@ -59,7 +61,6 @@ jobs:
 
           sitemap += '</urlset>';
 
-          // ذخیره فایل
           fs.writeFileSync('sitemap.xml', sitemap, 'utf8');
           console.log('✅ sitemap.xml با موفقیت ساخته شد.');
           EOF
@@ -75,4 +76,4 @@ jobs:
           git config user.name "Sitemap Bot"
           git config user.email "bot@dash-smal.ir"
           git add sitemap.xml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Auto-update sitemap.xml" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Auto-update sitemap.xml" && git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git)
