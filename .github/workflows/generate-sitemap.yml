@@ -2,9 +2,7 @@ name: Generate Sitemap
 
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [ main, master ]
 
 jobs:
   generate-sitemap:
@@ -62,5 +60,5 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "🤖 Auto-update sitemap.xml"
-            git push origin HEAD:${GITHUB_REF_NAME}
+            git push origin HEAD
           fi
