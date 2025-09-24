@@ -8,7 +8,7 @@
 </head>
 <body>
   <!-- صدا - موزیک پس‌زمینه -->
-  <audio id="toucan-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop></audio>
+  <audio id="background-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop></audio>
 
   <div class="header">
     <div class="brand">
@@ -25,18 +25,7 @@
       <strong>میز:</strong> <span id="table-number-display">—</span>
     </div>
 
-    <!-- food-grid با مدیریت واکنش‌گرا -->
-    <div 
-      id="food-grid" 
-      style="
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 14px;
-        justify-items: center;
-        padding: 10px;
-        margin-bottom: 200px;
-      "
-    ></div>
+    <div id="food-grid" class="food-grid"></div>
   </div>
 
   <!-- floating cart -->
@@ -46,9 +35,11 @@
       <div class="cart-list" id="cart-list"></div>
       <div style="margin-top:6px;font-weight:800">کل: <span id="cart-total">0</span> تومان</div>
     </div>
-    <div class="cart-actions" style="display:flex;align-items:center;gap:12px;">
+    <div class="cart-actions">
       <button id="send-whatsapp" class="send-btn">ارسال سفارش به واتس‌اپ</button>
       <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
+      <!-- دکمه موسیقی -->
+      <button id="music-toggle" title="پخش/توقف موسیقی"></button>
     </div>
   </div>
 
@@ -63,47 +54,6 @@
         <button id="close-modal" class="send-btn" style="background:#ddd;color:#000">بستن</button>
       </div>
     </div>
-  </div>
-
-  <!-- دکمه صوتی ثابت - چسبیده به لبه چپ پایین -->
-  <button 
-    id="music-toggle-btn" 
-    title="پخش/توقف موسیقی"
-    style="
-      position: fixed;
-      bottom: 20px;
-      left: 0;
-      background: url('https://www.dash-smal.ir/assets/images/player/play.png') no-repeat center;
-      background-size: contain;
-      width: 100px;
-      height: 100px;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      margin: 0;
-      opacity: 0.95;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      border-radius: 12px;
-      z-index: 1000;
-      outline: none;
-    "
-  ></button>
-
-  <!-- متن Powered by -->
-  <div style="
-    position: fixed;
-    bottom: 5px;
-    left: 110px;
-    font-size: 12px;
-    color: white;
-    opacity: 0.8;
-    white-space: nowrap;
-    font-family: Arial, sans-serif;
-    font-weight: bold;
-    z-index: 999;
-  ">
-    Powered by DASH-SMAL.IR — All rights reserved by Dash Smal Content Production Agency.
   </div>
 
 <script>
@@ -124,7 +74,7 @@
     return params.get(name);
   }
 
-  // CSV parser that handles quoted fields and commas inside quotes
+  // CSV parser
   function parseCSV(text) {
     const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
     if(lines.length === 0) return [];
@@ -385,29 +335,51 @@
     }catch(e){ console.warn(e); }
   }
 
-  // --- مدیریت دکمه صوتی ---
-  const music = document.getElementById('toucan-music');
-  const toggleBtn = document.getElementById('music-toggle-btn');
+  // --- مدیریت هوشمند موزیک ---
+  const music = document.getElementById('background-music');
+  const toggleBtn = document.getElementById('music-toggle');
 
-  function updateButtonImage() {
-    const playImg = 'https://www.dash-smal.ir/assets/images/player/play.png';
-    const pauseImg = 'https://www.dash-smal.ir/assets/images/player/puse.png';
-    toggleBtn.style.backgroundImage = `url('${music.paused ? playImg : pauseImg}')`;
+  let isMusicInitialized = false;
+
+  function initMusic() {
+    if (isMusicInitialized) return;
+    music.muted = true;
+    music.play().then(() => {
+      music.muted = false;
+      isMusicInitialized = true;
+      music.play();
+      toggleBtn.classList.add('pause');
+    }).catch(e => {
+      console.log("هنوز اجازه پخش داده نشده");
+    });
+    removeListeners();
   }
+
+  function removeListeners() {
+    document.removeEventListener('click', initMusic);
+    document.removeEventListener('touchstart', initMusic);
+    document.removeEventListener('scroll', initMusicOnce);
+  }
+
+  function initMusicOnce() {
+    initMusic();
+    removeListeners();
+  }
+
+  document.addEventListener('click', initMusic);
+  document.addEventListener('touchstart', initMusic);
+  document.addEventListener('scroll', initMusicOnce);
 
   toggleBtn.addEventListener('click', () => {
     if (music.paused) {
-      music.play().then(updateButtonImage).catch(e => {
-        console.log("اجرای صدا نیاز به تعامل کاربر دارد");
-      });
+      music.play().catch(() => alert("لطفاً اول روی صفحه کلیک کنید."));
     } else {
       music.pause();
-      updateButtonImage();
     }
   });
 
-  music.addEventListener('play', updateButtonImage);
-  music.addEventListener('pause', updateButtonImage);
+  music.addEventListener('play', () => toggleBtn.classList.add('pause'));
+  music.addEventListener('pause', () => toggleBtn.classList.remove('pause'));
 
   // --- بقیه عملیات ---
   loadCart();
@@ -427,37 +399,53 @@
 })();
 </script>
 
-<!-- مدیریت شبکه در موبایل: فقط 2 ستون -->
-<script>
-function updateGrid() {
-  const grid = document.getElementById('food-grid');
-  if (window.innerWidth <= 768) {
-    grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
-  } else {
-    grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+<!-- CSS دکمه موسیقی + اصلاح واکنش‌گرایی شبکه -->
+<style>
+  /* --- دکمه موسیقی --- */
+  #music-toggle {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(1);
+    transition: transform 0.2s ease;
   }
-}
-window.addEventListener('load', updateGrid);
-window.addEventListener('resize', updateGrid);
-</script>
-  <script>
-function forceTwoColumns() {
-  const grid = document.getElementById('food-grid');
-  if (window.innerWidth <= 768) {
-    grid.style.display = 'grid';
-    grid.style.gridTemplateColumns = '1fr 1fr';
-    grid.style.gap = '14px';
-    grid.style.justifyItems = 'center';
-  } else {
-    grid.style.display = 'grid';
-    grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
-    grid.style.gap = '14px';
-    grid.style.justifyItems = 'center';
+  #music-toggle:hover {
+    transform: scale(1.15);
   }
-}
-window.addEventListener('load', forceTwoColumns);
-window.addEventListener('resize', forceTwoColumns);
-setTimeout(forceTwoColumns, 1000);
-</script>
+  #music-toggle::after {
+    content: "▶️";
+  }
+  #music-toggle.pause::after {
+    content: "⏸️";
+  }
+
+  /* --- اصلاح حالت موبایل: فقط 2 ستون --- */
+  @media (max-width: 768px) {
+    .food-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 14px !important;
+      justify-items: center !important;
+      padding: 10px !important;
+    }
+    .food-card {
+      width: 100% !important;
+      height: auto !important;
+      margin: 8px 0 !important;
+    }
+    .food-img {
+      height: 160px !important;
+    }
+    .cart-actions {
+      flex-wrap: wrap;
+    }
+  }
+</style>
 </body>
 </html>
