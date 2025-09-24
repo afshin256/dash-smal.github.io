@@ -22,7 +22,7 @@
     @media (max-width:600px) {
       .food-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 6px;
       }
       body { padding-bottom: 120px; }
     }
@@ -89,6 +89,8 @@
       margin: 0 0 6px 0;
       font-size: 13px;
       color: #bbb;
+      white-space: normal;
+      word-wrap: break-word;
     }
 
     .controls {
@@ -240,6 +242,7 @@
       justify-content: center;
       cursor: pointer;
       z-index: 1200;
+      transition: box-shadow 0.1s ease;
     }
 
     .music-button img {
@@ -342,6 +345,7 @@
 
   let foods = []; // array of food objects
   let cart = {}; // id -> {id, en, fa, price, whatsapp, qty}
+  let audioCtx, source, analyser, bufferLength, dataArray;
 
   function getQueryParam(name) {
     const params = new URLSearchParams(location.search);
@@ -641,6 +645,8 @@
       if (music.paused) {
         await music.play();
         icon.src = PAUSE_SRC;
+        setupAudioAnalyzer();
+        animateFlame();
       } else {
         music.pause();
         icon.src = PLAY_SRC;
@@ -651,7 +657,39 @@
     }
   });
 
-  music.addEventListener('play', () => icon.src = PAUSE_SRC);
+  function setupAudioAnalyzer() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      source = audioCtx.createMediaElementSource(music);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+      bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
+  }
+
+  function animateFlame() {
+    if (music.paused) return;
+    analyser.getByteFrequencyData(dataArray);
+    let avg = 0;
+    for (let i = 0; i < bufferLength; i++) {
+      avg += dataArray[i];
+    }
+    avg /= bufferLength;
+    let shadowIntensity = avg / 255 * 30;
+    toggleBtn.style.boxShadow = `0 0 ${shadowIntensity}px 5px rgba(255, 69, 0, 0.7),
+      0 0 ${shadowIntensity * 2}px 10px rgba(255, 140, 0, 0.5),
+      0 0 ${shadowIntensity * 3}px 15px rgba(255, 215, 0, 0.3)`;
+    requestAnimationFrame(animateFlame);
+  }
+
+  music.addEventListener('play', () => {
+    icon.src = PAUSE_SRC;
+    setupAudioAnalyzer();
+    animateFlame();
+  });
   music.addEventListener('pause', () => icon.src = PLAY_SRC);
   music.addEventListener('ended', () => icon.src = PLAY_SRC);
 
