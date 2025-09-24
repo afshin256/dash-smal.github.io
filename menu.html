@@ -8,7 +8,7 @@
 </head>
 <body>
   <!-- صدا - موسیقی پس‌زمینه -->
-  <audio id="background-music" src="assets/music/toucan/toucan.mp3" loop></audio>
+  <audio id="background-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop></audio>
 
   <div class="header">
     <div class="brand">
@@ -74,7 +74,7 @@
     return params.get(name);
   }
 
-  // CSV parser that handles quoted fields and commas inside quotes
+  // CSV parser
   function parseCSV(text) {
     const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
     if(lines.length === 0) return [];
@@ -335,27 +335,55 @@
     }catch(e){ console.warn(e); }
   }
 
-  // --- اضافه شده: مدیریت موسیقی ---
+  // --- مدیریت هوشمند موزیک با اسکرول و کلیک ---
   const music = document.getElementById('background-music');
   const toggleBtn = document.getElementById('music-toggle');
 
-  // تلاش برای پخش خودکار (در مرورگرها فقط بعد از تعامل)
-  window.addEventListener('load', () => {
-    music.play().catch(e => {
-      console.log("پخش خودکار نیاز به تعامل کاربر دارد");
-    });
-  });
+  let isMusicInitialized = false;
 
+  function initMusic() {
+    if (isMusicInitialized) return;
+
+    // فعال‌سازی صدا با mute اولیه
+    music.muted = true;
+    music.play().then(() => {
+      music.muted = false;
+      isMusicInitialized = true;
+      music.play(); // شروع پخش واقعی
+      toggleBtn.classList.add('pause');
+      console.log("موسیقی فعال و در حال پخش");
+    }).catch(e => {
+      console.log("هنوز اجازه پخش داده نشده — کاربر باید دوباره تعامل داشته باشه");
+    });
+
+    // حذف event بعد از یک بار اجرا
+    removeListeners();
+  }
+
+  function removeListeners() {
+    document.removeEventListener('click', initMusic);
+    document.removeEventListener('touchstart', initMusic);
+    document.removeEventListener('scroll', initMusicOnce);
+  }
+
+  // اضافه کردن listener برای scroll (فقط یک بار)
+  function initMusicOnce() {
+    initMusic();
+    removeListeners();
+  }
+
+  document.addEventListener('click', initMusic);
+  document.addEventListener('touchstart', initMusic);
+  document.addEventListener('scroll', initMusicOnce);
+
+  // کنترل دکمه Play/Pause
   toggleBtn.addEventListener('click', () => {
     if (music.paused) {
-      music.play().then(() => {
-        toggleBtn.classList.add('pause');
-      }).catch(e => {
-        alert("لطفاً اول روی صفحه کلیک کنید تا صدا فعال شود.");
+      music.play().catch(e => {
+        alert("برای پخش صدا، لطفاً یک بار روی صفحه کلیک کنید.");
       });
     } else {
       music.pause();
-      toggleBtn.classList.remove('pause');
     }
   });
 
@@ -385,7 +413,7 @@
 })();
 </script>
 
-<!-- اضافه کردن CSS مربوط به دکمه موسیقی درون style.css (یا درون این فایل) -->
+<!-- CSS دکمه موسیقی -->
 <style>
   #music-toggle {
     background: none;
