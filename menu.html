@@ -40,18 +40,10 @@
       position: relative;
     }
 
-    /* موبایل: 2 برابر بزرگتر */
-    @media (max-width: 600px) {
-      .food-card {
-        cursor: default;
-      }
-    }
-
     /* تصویر غذا */
     .food-img {
-      width: 84px;
-      height: 84px;
       flex: 0 0 84px;
+      aspect-ratio: 3 / 4;
       border-radius: 8px;
       overflow: hidden;
       background: #222;
@@ -62,16 +54,12 @@
 
     @media (max-width: 600px) {
       .food-img {
-        width: 168px;
-        height: 168px;
         flex: 0 0 168px;
       }
     }
 
     @media (min-width: 601px) {
       .food-img {
-        width: 150px;
-        height: 150px;
         flex: 0 0 150px;
       }
     }
@@ -134,13 +122,11 @@
       justify-content: center;
     }
 
-    /* --- افکت کارت در دسکتاپ --- */
-    @media (min-width: 601px) {
-      .food-card:hover {
-        transform: translateY(-10px) scale(1.05);
-        animation: flame 1.5s infinite alternate ease-in-out;
-        z-index: 10;
-      }
+    /* --- افکت کارت --- */
+    .food-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      animation: flame 1.5s infinite alternate ease-in-out;
+      z-index: 10;
     }
 
     @keyframes flame {
