@@ -36,15 +36,19 @@
       gap: 12px;
       padding: 12px;
       align-items: center;
+      transition: transform 0.3s ease, z-index 0.3s;
+      position: relative;
+      cursor: pointer;
     }
 
-    @media (min-width: 601px) {
+    /* موبایل: 2 برابر بزرگتر */
+    @media (max-width: 600px) {
       .food-card {
-        cursor: pointer;
+        cursor: default;
       }
     }
 
-    /* تصویر غذا — اندازه واکنش‌گرا */
+    /* تصویر غذا */
     .food-img {
       width: 84px;
       height: 84px;
@@ -57,7 +61,6 @@
       justify-content: center;
     }
 
-    /* موبایل: 2 برابر بزرگتر */
     @media (max-width: 600px) {
       .food-img {
         width: 168px;
@@ -66,15 +69,11 @@
       }
     }
 
-    /* دسکتاپ: 4 برابر بزرگتر، با حداکثر مناسب */
     @media (min-width: 601px) {
       .food-img {
         width: 150px;
         height: 150px;
         flex: 0 0 150px;
-      }
-      .food-grid {
-        gap: 12px; /* فاصله بین ستون‌ها */
       }
     }
 
@@ -95,7 +94,7 @@
       margin: 0 0 6px 0;
       font-size: 16px;
       line-height: 1.2;
-      color: #fff; /* رنگ اسم غذا: سفید */
+      color: #fff;
       font-weight: 600;
     }
 
@@ -129,6 +128,36 @@
       cursor: pointer;
       font-weight: 700;
       font-size: 14px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* --- افکت کارت در دسکتاپ --- */
+    @media (min-width: 601px) {
+      .food-grid {
+        position: relative;
+        transition: filter 0.3s ease;
+      }
+
+      .food-card:hover {
+        transform: scale(1.08) translateY(-8px);
+        z-index: 10;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      }
+
+      .food-card.active {
+        transform: scale(1.1) translateY(-10px);
+        z-index: 20;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+      }
+
+      .food-grid.dimmed {
+        filter: blur(4px);
+        pointer-events: none;
+      }
     }
 
     /* سبد خرید شناور */
@@ -140,7 +169,7 @@
       max-width: calc(100% - 24px);
       background: linear-gradient(180deg, rgba(10,10,10,0.95), rgba(12,12,12,0.95));
       color: #fff;
-      padding: 14px 14px 44px 142px;
+      padding: 14px 14px 44px 86px;
       border-radius: 12px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.6);
       display: flex;
@@ -151,7 +180,6 @@
       font-size: 13px;
     }
 
-    /* فضای داخلی سبد */
     .cart-list {
       max-height: 160px;
       overflow: auto;
@@ -202,13 +230,13 @@
       /* allow inline override */
     }
 
-    /* دکمه موزیک - قرار گرفته در سمت چپ نوار */
+    /* دکمه موزیک */
     .music-button {
       position: absolute;
       left: 12px;
       top: 12px;
-      width: 112px;
-      height: 112px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       overflow: hidden;
       border: 2px solid rgba(255,255,255,0.06);
@@ -227,7 +255,7 @@
       display: block;
     }
 
-    /* متن حقوقی پایین و وسط سبد */
+    /* متن حقوقی */
     .rights-text {
       position: absolute;
       bottom: 8px;
@@ -240,13 +268,12 @@
       pointer-events: none;
     }
 
-    /* وقتی سبد در صفحه کوچک است */
     @media (max-width: 420px) {
       .cart-floating {
         right: 8px;
         left: 8px;
         width: auto;
-        padding-left: 138px;
+        padding-left: 82px;
       }
       .music-button {
         left: 8px;
@@ -275,7 +302,6 @@
 
   <!-- floating cart -->
   <div id="cart" class="cart-floating" aria-live="polite">
-    <!-- دکمه موسیقی ( نمایشی، سمت چپ) -->
     <button id="music-toggle" class="music-button" title="پخش/توقف موسیقی">
       <img id="music-icon" src="https://www.dash-smal.ir/assets/images/player/play.png" alt="play">
     </button>
@@ -291,7 +317,6 @@
       <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
     </div>
 
-    <!-- متن حقوقی در پایین و وسط (غیر تداخلی) -->
     <div class="rights-text">All rights reserved by Dash Smal Content Production Agency.</div>
   </div>
 
@@ -312,7 +337,7 @@
   </div>
 
 <script>
-/* کامل‌شده: menu.js - client side logic */
+/* menu.js - client side logic */
 (() => {
   const CSV_PATH = 'data/foods.csv';
   const PLACEHOLDER = 'assets/images/placeholder.png';
@@ -398,9 +423,12 @@
   function renderFoods(){
     const grid = document.getElementById('food-grid');
     grid.innerHTML = '';
+
     foods.forEach(f => {
       const card = document.createElement('div');
       card.className = 'food-card';
+      card.dataset.id = f.id;
+
       const imgWrap = document.createElement('div'); imgWrap.className='food-img';
       const img = document.createElement('img');
       const imgPath = makeImagePath(f);
@@ -414,58 +442,34 @@
       const p = document.createElement('p'); p.textContent = f.ingredients || '';
       const controls = document.createElement('div'); controls.className='controls';
       const priceSpan = document.createElement('div'); priceSpan.className='price'; priceSpan.textContent = formatMoney(f.price) + ' تومان';
-      const addBtn = document.createElement('button'); addBtn.className='add-btn'; addBtn.textContent='+';
-      addBtn.addEventListener('click', ()=> addToCart(f));
+      
+      // دکمه + به جای "افزودن"
+      const addBtn = document.createElement('button');
+      addBtn.className = 'add-btn';
+      addBtn.textContent = '+';
+      addBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // جلوگیری از trigger کارت
+        addToCart(f);
+      });
+
       controls.appendChild(priceSpan);
       controls.appendChild(addBtn);
 
       info.appendChild(h); info.appendChild(p); info.appendChild(controls);
       card.appendChild(imgWrap); card.appendChild(info);
+
+      // افزودن event برای افکت کارت (فقط در دسکتاپ)
+      if (window.innerWidth > 600) {
+        card.addEventListener('click', function() {
+          if (!this.classList.contains('active')) {
+            this.classList.add('active');
+            grid.classList.add('dimmed');
+          }
+        });
+      }
+
       grid.appendChild(card);
-
-      card.addEventListener('click', (e) => {
-        if (window.innerWidth <= 600) return;
-        if (e.target.closest('.add-btn')) return;
-        zoomCard(card);
-      });
     });
-  }
-
-  function zoomCard(card) {
-    const overlay = document.createElement('div');
-    overlay.style.position = 'fixed';
-    overlay.style.inset = '0';
-    overlay.style.background = 'rgba(0,0,0,0.6)';
-    overlay.style.backdropFilter = 'blur(5px)';
-    overlay.style.zIndex = '1999';
-
-    const cloned = card.cloneNode(true);
-    cloned.style.position = 'fixed';
-    cloned.style.zIndex = '2000';
-    cloned.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-    cloned.style.transform = 'translate(-50%, -50%) scale(0.5)';
-    cloned.style.opacity = '0';
-    cloned.style.left = '50%';
-    cloned.style.top = '50%';
-
-    document.body.appendChild(overlay);
-    document.body.appendChild(cloned);
-
-    setTimeout(() => {
-      cloned.style.transform = 'translate(-50%, -50%) scale(1.5)';
-      cloned.style.opacity = '1';
-    }, 10);
-
-    const close = () => {
-      cloned.style.transform = 'translate(-50%, -50%) scale(0.5)';
-      cloned.style.opacity = '0';
-      setTimeout(() => {
-        overlay.remove();
-        cloned.remove();
-      }, 300);
-    };
-
-    overlay.addEventListener('click', close);
   }
 
   function makeImagePath(f){
@@ -638,17 +642,15 @@
     }catch(e){ console.warn(e); }
   }
 
-  // ========== مدیریت دکمه موزیک (بدون autoplay) ==========
+  // ========== مدیریت دکمه موزیک ==========
   const music = document.getElementById('background-music');
   const toggleBtn = document.getElementById('music-toggle');
   const icon = document.getElementById('music-icon');
   const PLAY_SRC = "https://www.dash-smal.ir/assets/images/player/play.png";
   const PAUSE_SRC = "https://www.dash-smal.ir/assets/images/player/puse.png";
 
-  // شروع وضعیت آیکون
   icon.src = PLAY_SRC;
 
-  // کلیک روی دکمه موزیک => پخش/توقف
   toggleBtn.addEventListener('click', async (ev) => {
     ev.preventDefault();
     try {
@@ -665,10 +667,22 @@
     }
   });
 
-  // sync with player events
   music.addEventListener('play', () => icon.src = PAUSE_SRC);
   music.addEventListener('pause', () => icon.src = PLAY_SRC);
   music.addEventListener('ended', () => icon.src = PLAY_SRC);
+
+  // ================= بستن کارت با کلیک بیرونی =================
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 600) return;
+
+    const grid = document.getElementById('food-grid');
+    const activeCard = document.querySelector('.food-card.active');
+
+    if (activeCard && !grid.contains(e.target)) {
+      activeCard.classList.remove('active');
+      grid.classList.remove('dimmed');
+    }
+  });
 
   // ================= load & init =================
   loadCart();
@@ -684,14 +698,6 @@
   document.getElementById('modal').addEventListener('click', (ev)=>{
     if(ev.target === document.getElementById('modal')) document.getElementById('modal').style.display='none';
   });
-
-  // helpers for fallback / debugging
-  window.__toucan_debug = {
-    foods,
-    cart,
-    reloadFoods: fetchFoods,
-    saveCart
-  };
 
 })();
 </script>
