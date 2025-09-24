@@ -37,32 +37,32 @@
     </div>
     <div class="cart-actions" style="display:flex;align-items:center;gap:12px;position:relative">
       
-      <!-- دکمه صوتی بزرگ چسبیده به گوشه سمت چپ -->
+      <!-- دکمه صوتی 120px - چسبیده به لبه چپ -->
       <button 
         id="music-toggle-btn" 
         title="پخش/توقف موسیقی"
         style="
           position: absolute;
           top: 50%;
-          left: 16px;
+          left: 0;
           transform: translateY(-50%);
           background: url('https://www.dash-smal.ir/assets/images/player/play.png') no-repeat center;
           background-size: contain;
-          width: 160px;
-          height: 160px;
+          width: 120px;
+          height: 120px;
           border: none;
           cursor: pointer;
           padding: 0;
           opacity: 0.95;
           transition: transform 0.2s ease;
           box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-          border-radius: 12px;
+          border-radius: 10px;
           z-index: 10;
         "
       ></button>
 
-      <!-- دکمه‌های اصلی (بعد از دکمه صوتی) -->
-      <div style="margin-left: 190px; display: flex; gap: 12px;">
+      <!-- دکمه‌های اصلی با فاصله از دکمه صوتی -->
+      <div style="margin-left: 140px; display: flex; gap: 12px;">
         <button id="send-whatsapp" class="send-btn">ارسال سفارش به واتس‌اپ</button>
         <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
       </div>
