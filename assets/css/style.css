@@ -1,0 +1,168 @@
+:root{
+  --bg:#070606;
+  --neon-yellow:#ffd24d;
+  --neon-outline:#ffb84d;
+  --card-bg:#ffffff;
+  --gold:#d4af37;
+  --black:#000000;
+  --neon-shadow: 0 0 18px 6px rgba(255,140,0,0.95);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;
+  background:var(--bg);
+  color:var(--card-bg);
+  direction:rtl;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  padding:20px;
+}
+
+/* Header / brand */
+.header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:18px;
+}
+.brand{
+  background:linear-gradient(90deg, #111 0%, #0b0b0b 100%);
+  border-radius:14px;
+  padding:12px 18px;
+  box-shadow: var(--neon-shadow);
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.brand .logo{
+  width:54px;height:54px;border-radius:10px;
+  background:linear-gradient(90deg,#ffd24d,#ffb84d);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--black);font-weight:800;font-size:20px;
+  box-shadow:0 0 10px 2px rgba(255,210,77,0.8);
+}
+
+/* menu grid */
+.food-grid{
+  display:grid;
+  gap:18px;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+}
+
+/* card style neon */
+.food-card{
+  background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.98));
+  color:var(--black);
+  border-radius:16px;
+  padding:12px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  box-shadow: 0 0 18px 6px rgba(255,140,0,0.25), 0 6px 18px rgba(0,0,0,0.5);
+  border: 2px solid rgba(255,210,77,0.06);
+  position:relative;
+  overflow:hidden;
+}
+
+/* neon frame along left */
+.food-card:before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:10px;
+  background:linear-gradient(180deg,var(--neon-yellow),var(--neon-outline));
+  box-shadow: var(--neon-shadow);
+  border-top-right-radius:8px;
+  border-bottom-right-radius:8px;
+}
+
+/* image circle with neon outline */
+.food-img{
+  width:86px;height:86px;
+  flex:0 0 86px;
+  border-radius:50%;
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  padding:6px;
+  box-shadow: 0 0 18px 6px rgba(255,140,0,0.85);
+}
+.food-img img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+
+/* info */
+.food-info{flex:1;min-width:0}
+.food-info h3{margin:0;font-size:16px}
+.food-info p{margin:6px 0 10px 0;font-size:13px;color:#333}
+
+/* price and add */
+.controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  justify-content:space-between;
+}
+.price{font-weight:700}
+.add-btn{
+  background:var(--gold);
+  color:var(--black);
+  border:none;
+  padding:8px 10px;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* floating cart */
+.cart-floating{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:12px;
+  width:calc(100% - 28px);
+  max-width:980px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.96));
+  color:var(--black);
+  box-shadow: 0 0 28px 8px rgba(255,140,0,0.95);
+  border-radius:12px;
+  padding:10px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  z-index:9999;
+}
+.cart-list{flex:1; max-height:180px; overflow:auto}
+.cart-item{display:flex;align-items:center;gap:8px;padding:6px;border-bottom:1px dashed #eee}
+.cart-item .qty{min-width:28px;text-align:center}
+
+/* cart actions */
+.cart-actions{display:flex;gap:8px;align-items:center}
+.send-btn{
+  background:var(--gold);
+  color:var(--black);
+  padding:10px 14px;border-radius:8px;border:none;font-weight:700;cursor:pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* modal for multiple recipients */
+.modal{
+  position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.6);
+  display:flex;align-items:center;justify-content:center;z-index:10010;
+}
+.modal .box{
+  background:white;color:var(--black);padding:18px;border-radius:12px;max-width:540px;width:100%;
+}
+
+/* responsive tweaks */
+@media (max-width:720px){
+  .food-card{padding:10px}
+  .food-img{width:64px;height:64px}
+  .cart-floating{bottom:6px;padding:8px}
+  .cart-list{max-height:120px}
+}
