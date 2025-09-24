@@ -215,17 +215,46 @@ body {
   cursor: pointer;
 }
 
-/* برای موبایل */
+/* --- برای موبایل: فقط 2 ستون، فضای بهتر، عدم ریز شدن --- */
 @media (max-width: 768px) {
+  .food-grid {
+    grid-template-columns: repeat(2, 1fr); /* فقط 2 ستون در موبایل */
+    gap: 14px;
+    padding: 10px;
+  }
+
   .food-card {
     width: 100%;
-    height: 320px; /* ارتفاع بیشتر برای موبایل */
-    margin: 10px 0;
+    height: auto;        /* ارتفاع انعطاف‌پذیر */
+    margin: 8px 0;
+    padding: 12px;
   }
+
   .food-img {
-    height: 45%;
+    height: 160px;       /* ارتفاع ثابت مناسب برای موبایل */
+    border-radius: 8px;
   }
-  .food-grid {
-    grid-template-columns: 1fr 1fr;
+
+  .food-info {
+    padding: 6px 10px;
+    gap: 6px;
+  }
+
+  .food-info h3 {
+    font-size: 17px;     /* کمی بزرگ‌تر برای خوانایی */
+  }
+
+  .food-info p {
+    font-size: 13px;
+  }
+
+  .price,
+  .add-btn {
+    font-size: 15px;     /* بزرگ‌تر برای لمس آسان */
+  }
+
+  .add-btn {
+    padding: 8px 16px;
+    min-height: 32px;
   }
 }
