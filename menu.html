@@ -4,107 +4,50 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>TOUCAN - منو</title>
+  <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    body {
-      font-family: 'Segoe UI','Helvetica Neue',Tahoma,Arial;
-      background:#0b0b0b; color:#eee;
-      margin:0; padding:0 12px 80px 12px;
-    }
-    .header { padding:12px 0; display:flex; align-items:center; gap:12px; }
-    .brand { display:flex; align-items:center; gap:10px; }
-    .logo { width:44px;height:44px;border-radius:8px;background:#222;
-      display:flex;align-items:center;justify-content:center;
-      font-weight:800;font-size:20px;color:#fff; }
-    
-    /* شبکه کارت‌ها */
+    /* گرید کارت‌ها */
     .food-grid {
-      display:grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
-      gap:12px; /* فاصله حداقل 5px بین ستون و ردیف */
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px; /* فاصله بین ستون‌ها و ردیف‌ها */
     }
     @media (max-width:600px) {
       .food-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr); /* حداکثر ۲ ستون در موبایل */
       }
     }
-
-    /* کارت غذا */
     .food-card {
       background:#111; border-radius:12px; overflow:hidden;
       display:flex; flex-direction:column; gap:8px;
       padding:8px; align-items:center; text-align:center;
     }
-    /* تصویر غذا - دسکتاپ */
     .food-img {
       width:252px; height:252px; flex:0 0 auto;
       border-radius:12px; overflow:hidden; background:#222;
       display:flex; align-items:center; justify-content:center;
     }
-    .food-img img {
-      width:100%; height:100%; object-fit:cover; display:block;
-    }
-    /* تصویر غذا - موبایل */
+    .food-img img { width:100%; height:100%; object-fit:cover; display:block; }
     @media (max-width:600px) {
-      .food-img {
-        width:168px; height:168px;
-      }
+      .food-img { width:168px; height:168px; }
     }
-
-    .food-info { flex:1; min-width:0; width:100%; }
-    .food-info h3 { margin:6px 0; font-size:16px; line-height:1.2; }
-    .food-info p { margin:0 0 6px 0; font-size:13px; color:#bbb; }
-    .controls { display:flex; gap:8px; align-items:center; justify-content:space-between; margin-top:6px; }
-    .price { font-weight:800; font-size:14px; }
-    .add-btn { background:#ff6b6b;border:none;color:#fff;padding:6px 10px;border-radius:8px;cursor:pointer; font-weight:700; }
-
-    /* سبد خرید شناور */
-    .cart-floating {
-      position: fixed;
-      right: 12px;
-      bottom: 12px;
-      width: 360px;
-      max-width: calc(100% - 24px);
-      background: linear-gradient(180deg, rgba(10,10,10,0.95), rgba(12,12,12,0.95));
-      color: #fff;
-      padding: 14px 14px 44px 86px;
-      border-radius: 12px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-      display: flex; flex-direction: column; gap:8px;
-      z-index: 1100;
-      min-width: 280px; font-size: 13px;
-    }
-
-    .cart-list { max-height:160px; overflow:auto; padding-right:6px; }
-    .cart-item { display:flex; gap:8px; align-items:center; padding:6px 0; border-bottom:1px dashed rgba(255,255,255,0.04); }
-    .cart-item .qty { font-weight:800; width:48px; text-align:center; }
-    .cart-item button { background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff; padding:4px 6px; border-radius:6px; cursor:pointer; }
-
-    .cart-actions { display:flex; gap:8px; align-items:center; justify-content:flex-end; }
-    .send-btn { background:#0ea5b7; border:none; color:#fff; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:800; }
-    .send-btn[style] {}
 
     /* دکمه موزیک */
-    .music-button {
-      position: absolute;
-      left: 12px; top: 12px;
-      width: 56px; height: 56px; border-radius: 50%;
-      overflow: hidden;
-      border: 2px solid rgba(255,255,255,0.06);
-      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-      display:flex; align-items:center; justify-content:center;
-      cursor:pointer; z-index: 1200;
+    #music-toggle {
+      background: none; border: none;
+      width: 28px; height: 28px;
+      cursor: pointer; margin-right: 8px;
+      display: flex; align-items: center; justify-content: center;
     }
-    .music-button img { width: 86%; height: 86%; object-fit:contain; display:block; }
+    #music-toggle img { width:100%; height:100%; object-fit:contain; }
 
+    /* متن حقوقی */
     .rights-text {
-      position: absolute; bottom: 8px; left: 0; right: 0;
-      text-align: center; font-weight: 800; color: #fff; font-size:12px;
-      pointer-events: none;
-    }
-
-    @media (max-width:420px) {
-      .cart-floating { right: 8px; left: 8px; width: auto; padding-left:82px; }
-      .music-button { left: 8px; }
+      text-align:center;
+      font-weight:800;
+      color:#fff;
+      font-size:12px;
+      margin-top:6px;
     }
   </style>
 </head>
@@ -114,7 +57,7 @@
       <div class="logo">T</div>
       <div>
         <div style="font-weight:800;font-size:18px">TOUCAN</div>
-        <div style="font-size:13px;color:#bbb">منوی دیجیتال - سفارش با QR</div>
+        <div style="font-size:13px;color:#ddd">منوی دیجیتال - سفارش با QR</div>
       </div>
     </div>
   </div>
@@ -124,119 +67,67 @@
     <div id="food-grid" class="food-grid"></div>
   </div>
 
-  <!-- سبد خرید شناور -->
+  <!-- سبد خرید -->
   <div id="cart" class="cart-floating" aria-live="polite">
-    <button id="music-toggle" class="music-button" title="پخش/توقف موسیقی">
-      <img id="music-icon" src="https://www.dash-smal.ir/assets/images/player/play.png" alt="play">
-    </button>
     <div style="flex:1">
-      <div style="font-weight:800; margin-bottom:6px">فاکتور (<span id="cart-count">0</span>)</div>
+      <div style="font-weight:800">فاکتور (<span id="cart-count">0</span>)</div>
       <div class="cart-list" id="cart-list"></div>
       <div style="margin-top:6px;font-weight:800">کل: <span id="cart-total">0</span> تومان</div>
     </div>
     <div class="cart-actions">
+      <button id="music-toggle" title="پخش/توقف موسیقی">
+        <img id="music-icon" src="https://www.dash-smal.ir/assets/images/player/play.png" alt="play">
+      </button>
       <button id="send-whatsapp" class="send-btn">ارسال سفارش به واتس‌اپ</button>
       <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
     </div>
     <div class="rights-text">All rights reserved by Dash Smal Content Production Agency.</div>
   </div>
 
+  <!-- موزیک -->
   <audio id="background-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop preload="none"></audio>
-  
+
+  <!-- modal -->
+  <div id="modal" class="modal" style="display:none">
+    <div class="box" role="dialog" aria-modal="true">
+      <h3>چند شماره آشپزخانه پیدا شد</h3>
+      <p>سفارش به هر شماره جداگانه ارسال خواهد شد...</p>
+      <div id="recipient-list" style="display:flex;flex-direction:column;gap:8px;margin-top:12px"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-start">
+        <button id="send-all" class="send-btn">ارسال همه</button>
+        <button id="close-modal" class="send-btn" style="background:#ddd;color:#000">بستن</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // ================= داده‌های منو =================
-    const foods = [
-      {id:1, name:"پیتزا مارگاریتا", desc:"پنیر + ریحان تازه", price:180000, img:"https://www.dash-smal.ir/assets/images/menu/pizza1.jpg"},
-      {id:2, name:"پیتزا پپرونی", desc:"پپرونی تند + پنیر", price:220000, img:"https://www.dash-smal.ir/assets/images/menu/pizza2.jpg"},
-      {id:3, name:"برگر مخصوص", desc:"گوشت دوبل + پنیر", price:250000, img:"https://www.dash-smal.ir/assets/images/menu/burger1.jpg"},
-      {id:4, name:"ساندویچ مرغ", desc:"مرغ گریل + سس مخصوص", price:160000, img:"https://www.dash-smal.ir/assets/images/menu/chicken.jpg"},
-    ];
+    // --- مدیریت دکمه موزیک ---
+    const music = document.getElementById('background-music');
+    const toggleBtn = document.getElementById('music-toggle');
+    const icon = document.getElementById('music-icon');
 
-    // ================= رندر منو =================
-    const grid = document.getElementById("food-grid");
-    foods.forEach(f=>{
-      const card = document.createElement("div");
-      card.className="food-card";
-      card.innerHTML=`
-        <div class="food-img"><img src="${f.img}" alt="${f.name}"></div>
-        <div class="food-info">
-          <h3>${f.name}</h3>
-          <p>${f.desc}</p>
-          <div class="controls">
-            <span class="price">${f.price.toLocaleString()} تومان</span>
-            <button class="add-btn" data-id="${f.id}">+</button>
-          </div>
-        </div>`;
-      grid.appendChild(card);
-    });
-
-    // ================= سبد خرید =================
-    let cart = [];
-    const cartList = document.getElementById("cart-list");
-    const cartCount = document.getElementById("cart-count");
-    const cartTotal = document.getElementById("cart-total");
-
-    function updateCart(){
-      cartList.innerHTML="";
-      let total=0, count=0;
-      cart.forEach(item=>{
-        total += item.qty*item.price;
-        count += item.qty;
-        const el=document.createElement("div");
-        el.className="cart-item";
-        el.innerHTML=`
-          <div class="qty">${item.qty}x</div>
-          <div style="flex:1">${item.name}</div>
-          <button data-id="${item.id}" class="dec">-</button>
-          <button data-id="${item.id}" class="inc">+</button>`;
-        cartList.appendChild(el);
-      });
-      cartCount.textContent=count;
-      cartTotal.textContent=total.toLocaleString();
-    }
-
-    grid.addEventListener("click",e=>{
-      if(e.target.classList.contains("add-btn")){
-        const id=+e.target.dataset.id;
-        const food=foods.find(f=>f.id===id);
-        const item=cart.find(i=>i.id===id);
-        if(item) item.qty++; else cart.push({...food,qty:1});
-        updateCart();
+    toggleBtn.addEventListener('click', () => {
+      if (music.paused) {
+        music.play().catch(e => {
+          alert("برای پخش صدا، لطفاً یک بار روی صفحه کلیک کنید.");
+        });
+      } else {
+        music.pause();
       }
     });
-    cartList.addEventListener("click",e=>{
-      if(e.target.classList.contains("inc")){
-        const id=+e.target.dataset.id;
-        cart.find(i=>i.id===id).qty++;
-      } else if(e.target.classList.contains("dec")){
-        const id=+e.target.dataset.id;
-        const idx=cart.findIndex(i=>i.id===id);
-        if(cart[idx].qty>1) cart[idx].qty--; else cart.splice(idx,1);
-      }
-      updateCart();
+
+    music.addEventListener('play', () => {
+      icon.src = "https://www.dash-smal.ir/assets/images/player/puse.png";
+      icon.alt = "pause";
     });
 
-    document.getElementById("clear-cart").onclick=()=>{cart=[];updateCart();};
-
-    // ================= ارسال به واتس‌اپ =================
-    document.getElementById("send-whatsapp").onclick=()=>{
-      if(cart.length===0){alert("سبد خرید خالی است");return;}
-      let msg="سفارش میز "+(document.getElementById("table-number-display").textContent||"—")+":%0A";
-      cart.forEach(i=>{msg+=`${i.qty}x ${i.name} (${i.price.toLocaleString()} تومان)%0A`;});
-      msg+=`کل: ${cartTotal.textContent} تومان`;
-      window.open("https://wa.me/?text="+msg,"_blank");
-    };
-
-    // ================= موزیک =================
-    const music=document.getElementById("background-music");
-    const btn=document.getElementById("music-toggle");
-    const icon=document.getElementById("music-icon");
-    let playing=false;
-    btn.onclick=()=>{
-      if(playing){music.pause();icon.src="https://www.dash-smal.ir/assets/images/player/play.png";}
-      else{music.play();icon.src="https://www.dash-smal.ir/assets/images/player/pause.png";}
-      playing=!playing;
-    };
+    music.addEventListener('pause', () => {
+      icon.src = "https://www.dash-smal.ir/assets/images/player/play.png";
+      icon.alt = "play";
+    });
   </script>
+
+  <!-- اسکریپت اصلی منو و سبد خرید (از کد تو) -->
+  <script src="assets/js/menu.js"></script>
 </body>
 </html>
