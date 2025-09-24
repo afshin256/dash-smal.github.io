@@ -440,5 +440,24 @@ function updateGrid() {
 window.addEventListener('load', updateGrid);
 window.addEventListener('resize', updateGrid);
 </script>
+  <script>
+function forceTwoColumns() {
+  const grid = document.getElementById('food-grid');
+  if (window.innerWidth <= 768) {
+    grid.style.display = 'grid';
+    grid.style.gridTemplateColumns = '1fr 1fr';
+    grid.style.gap = '14px';
+    grid.style.justifyItems = 'center';
+  } else {
+    grid.style.display = 'grid';
+    grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+    grid.style.gap = '14px';
+    grid.style.justifyItems = 'center';
+  }
+}
+window.addEventListener('load', forceTwoColumns);
+window.addEventListener('resize', forceTwoColumns);
+setTimeout(forceTwoColumns, 1000);
+</script>
 </body>
 </html>
