@@ -144,7 +144,99 @@
   <audio id="background-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop preload="none"></audio>
   
   <script>
-    // اینجا اسکریپت مدیریت منو، سبد و موزیک قرار می‌گیرد (مثل نسخه قبل)
+    // ================= داده‌های منو =================
+    const foods = [
+      {id:1, name:"پیتزا مارگاریتا", desc:"پنیر + ریحان تازه", price:180000, img:"https://www.dash-smal.ir/assets/images/menu/pizza1.jpg"},
+      {id:2, name:"پیتزا پپرونی", desc:"پپرونی تند + پنیر", price:220000, img:"https://www.dash-smal.ir/assets/images/menu/pizza2.jpg"},
+      {id:3, name:"برگر مخصوص", desc:"گوشت دوبل + پنیر", price:250000, img:"https://www.dash-smal.ir/assets/images/menu/burger1.jpg"},
+      {id:4, name:"ساندویچ مرغ", desc:"مرغ گریل + سس مخصوص", price:160000, img:"https://www.dash-smal.ir/assets/images/menu/chicken.jpg"},
+    ];
+
+    // ================= رندر منو =================
+    const grid = document.getElementById("food-grid");
+    foods.forEach(f=>{
+      const card = document.createElement("div");
+      card.className="food-card";
+      card.innerHTML=`
+        <div class="food-img"><img src="${f.img}" alt="${f.name}"></div>
+        <div class="food-info">
+          <h3>${f.name}</h3>
+          <p>${f.desc}</p>
+          <div class="controls">
+            <span class="price">${f.price.toLocaleString()} تومان</span>
+            <button class="add-btn" data-id="${f.id}">+</button>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    // ================= سبد خرید =================
+    let cart = [];
+    const cartList = document.getElementById("cart-list");
+    const cartCount = document.getElementById("cart-count");
+    const cartTotal = document.getElementById("cart-total");
+
+    function updateCart(){
+      cartList.innerHTML="";
+      let total=0, count=0;
+      cart.forEach(item=>{
+        total += item.qty*item.price;
+        count += item.qty;
+        const el=document.createElement("div");
+        el.className="cart-item";
+        el.innerHTML=`
+          <div class="qty">${item.qty}x</div>
+          <div style="flex:1">${item.name}</div>
+          <button data-id="${item.id}" class="dec">-</button>
+          <button data-id="${item.id}" class="inc">+</button>`;
+        cartList.appendChild(el);
+      });
+      cartCount.textContent=count;
+      cartTotal.textContent=total.toLocaleString();
+    }
+
+    grid.addEventListener("click",e=>{
+      if(e.target.classList.contains("add-btn")){
+        const id=+e.target.dataset.id;
+        const food=foods.find(f=>f.id===id);
+        const item=cart.find(i=>i.id===id);
+        if(item) item.qty++; else cart.push({...food,qty:1});
+        updateCart();
+      }
+    });
+    cartList.addEventListener("click",e=>{
+      if(e.target.classList.contains("inc")){
+        const id=+e.target.dataset.id;
+        cart.find(i=>i.id===id).qty++;
+      } else if(e.target.classList.contains("dec")){
+        const id=+e.target.dataset.id;
+        const idx=cart.findIndex(i=>i.id===id);
+        if(cart[idx].qty>1) cart[idx].qty--; else cart.splice(idx,1);
+      }
+      updateCart();
+    });
+
+    document.getElementById("clear-cart").onclick=()=>{cart=[];updateCart();};
+
+    // ================= ارسال به واتس‌اپ =================
+    document.getElementById("send-whatsapp").onclick=()=>{
+      if(cart.length===0){alert("سبد خرید خالی است");return;}
+      let msg="سفارش میز "+(document.getElementById("table-number-display").textContent||"—")+":%0A";
+      cart.forEach(i=>{msg+=`${i.qty}x ${i.name} (${i.price.toLocaleString()} تومان)%0A`;});
+      msg+=`کل: ${cartTotal.textContent} تومان`;
+      window.open("https://wa.me/?text="+msg,"_blank");
+    };
+
+    // ================= موزیک =================
+    const music=document.getElementById("background-music");
+    const btn=document.getElementById("music-toggle");
+    const icon=document.getElementById("music-icon");
+    let playing=false;
+    btn.onclick=()=>{
+      if(playing){music.pause();icon.src="https://www.dash-smal.ir/assets/images/player/play.png";}
+      else{music.play();icon.src="https://www.dash-smal.ir/assets/images/player/pause.png";}
+      playing=!playing;
+    };
   </script>
 </body>
 </html>
