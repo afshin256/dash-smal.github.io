@@ -11,21 +11,119 @@
     .header { padding:12px 0; display:flex; align-items:center; gap:12px; }
     .brand { display:flex; align-items:center; gap:10px; }
     .logo { width:44px;height:44px;border-radius:8px;background:#222;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#fff; }
-    .food-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap:12px; }
-    @media (max-width:600px) {
-      .food-grid { grid-template-columns: repeat(2,1fr); } /* حداکثر دو ستون روی موبایل */
-      body { padding-bottom:120px; }
+
+    /* شبکه غذاها */
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
     }
 
-    .food-card { background: #111; border-radius:12px; overflow:hidden; display:flex; gap:8px; padding:8px; align-items:center; }
-    .food-img { width:84px; height:84px; flex:0 0 84px; border-radius:8px; overflow:hidden; background:#222; display:flex; align-items:center; justify-content:center; }
-    .food-img img{ width:100%; height:100%; object-fit:cover; display:block; }
-    .food-info { flex:1; min-width:0; }
-    .food-info h3 { margin:0 0 6px 0; font-size:15px; line-height:1.1; }
-    .food-info p { margin:0 0 6px 0; font-size:12px; color:#bbb; height:32px; overflow:hidden; }
-    .controls { display:flex; gap:8px; align-items:center; }
-    .price { font-weight:800; min-width:90px; font-size:13px; }
-    .add-btn { background:#ff6b6b;border:none;color:#fff;padding:6px 8px;border-radius:8px;cursor:pointer; font-weight:700; }
+    @media (max-width:600px) {
+      .food-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      body { padding-bottom: 120px; }
+    }
+
+    /* کارت غذا */
+    .food-card {
+      background: #111;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      align-items: center;
+    }
+
+    /* تصویر غذا — اندازه واکنش‌گرا */
+    .food-img {
+      width: 84px;
+      height: 84px;
+      flex: 0 0 84px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* موبایل: 2 برابر بزرگتر */
+    @media (max-width: 600px) {
+      .food-img {
+        width: 168px;
+        height: 168px;
+        flex: 0 0 168px;
+      }
+    }
+
+    /* دسکتاپ: 4 برابر بزرگتر، با حداکثر مناسب */
+    @media (min-width: 601px) {
+      .food-img {
+        width: 150px;
+        height: 150px;
+        flex: 0 0 150px;
+      }
+      .food-grid {
+        gap: 12px; /* فاصله بین ستون‌ها */
+      }
+    }
+
+    .food-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* اطلاعات غذا */
+    .food-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .food-info h3 {
+      margin: 0 0 6px 0;
+      font-size: 16px;
+      line-height: 1.2;
+      color: #fff; /* رنگ اسم غذا: سفید */
+      font-weight: 600;
+    }
+
+    .food-info p {
+      margin: 0 0 6px 0;
+      font-size: 13px;
+      color: #bbb;
+      height: 36px;
+      overflow: hidden;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .price {
+      font-weight: 800;
+      min-width: 90px;
+      font-size: 14px;
+      color: #ffb84d;
+    }
+
+    .add-btn {
+      background: #ff6b6b;
+      border: none;
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+    }
 
     /* سبد خرید شناور */
     .cart-floating {
@@ -36,32 +134,72 @@
       max-width: calc(100% - 24px);
       background: linear-gradient(180deg, rgba(10,10,10,0.95), rgba(12,12,12,0.95));
       color: #fff;
-      padding: 14px 14px 44px 86px; /* فضای سمت چپ برای دکمه موزیک */
+      padding: 14px 14px 44px 86px;
       border-radius: 12px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.6);
       display: flex;
       flex-direction: column;
-      gap:8px;
+      gap: 8px;
       z-index: 1100;
       min-width: 280px;
       font-size: 13px;
     }
 
     /* فضای داخلی سبد */
-    .cart-list { max-height:160px; overflow:auto; padding-right:6px; }
-    .cart-item { display:flex; gap:8px; align-items:center; padding:6px 0; border-bottom:1px dashed rgba(255,255,255,0.04); }
-    .cart-item .qty { font-weight:800; width:48px; text-align:center; }
-    .cart-item button { background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff; padding:4px 6px; border-radius:6px; cursor:pointer; }
+    .cart-list {
+      max-height: 160px;
+      overflow: auto;
+      padding-right: 6px;
+    }
 
-    .cart-actions { display:flex; gap:8px; align-items:center; justify-content:flex-end; }
-    .send-btn { background:#0ea5b7; border:none; color:#fff; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:800; }
-    .send-btn[style] { /* allow inline override */
+    .cart-item {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.04);
+    }
+
+    .cart-item .qty {
+      font-weight: 800;
+      width: 48px;
+      text-align: center;
+    }
+
+    .cart-item button {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.06);
+      color: #fff;
+      padding: 4px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .cart-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .send-btn {
+      background: #0ea5b7;
+      border: none;
+      color: #fff;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .send-btn[style] {
+      /* allow inline override */
     }
 
     /* دکمه موزیک - قرار گرفته در سمت چپ نوار */
     .music-button {
       position: absolute;
-      left: 12px; /* سمت چپ داخل کارت */
+      left: 12px;
       top: 12px;
       width: 56px;
       height: 56px;
@@ -69,13 +207,19 @@
       overflow: hidden;
       border: 2px solid rgba(255,255,255,0.06);
       background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
       z-index: 1200;
     }
-    .music-button img { width: 86%; height: 86%; object-fit:contain; display:block; }
+
+    .music-button img {
+      width: 86%;
+      height: 86%;
+      object-fit: contain;
+      display: block;
+    }
 
     /* متن حقوقی پایین و وسط سبد */
     .rights-text {
@@ -86,14 +230,21 @@
       text-align: center;
       font-weight: 800;
       color: #fff;
-      font-size:12px;
-      pointer-events: none; /* تداخلی ایجاد نکند */
+      font-size: 12px;
+      pointer-events: none;
     }
 
     /* وقتی سبد در صفحه کوچک است */
-    @media (max-width:420px) {
-      .cart-floating { right: 8px; left: 8px; width: auto; padding-left:82px; }
-      .music-button { left: 8px; }
+    @media (max-width: 420px) {
+      .cart-floating {
+        right: 8px;
+        left: 8px;
+        width: auto;
+        padding-left: 82px;
+      }
+      .music-button {
+        left: 8px;
+      }
     }
   </style>
 </head>
@@ -138,7 +289,7 @@
     <div class="rights-text">All rights reserved by Dash Smal Content Production Agency.</div>
   </div>
 
-  <!-- پلیر پنهان (فایل صوتی که کاربر داده) -->
+  <!-- پلیر پنهان -->
   <audio id="background-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop preload="none"></audio>
 
   <!-- modal -->
@@ -443,7 +594,7 @@
   const toggleBtn = document.getElementById('music-toggle');
   const icon = document.getElementById('music-icon');
   const PLAY_SRC = "https://www.dash-smal.ir/assets/images/player/play.png";
-  const PAUSE_SRC = "https://www.dash-smal.ir/assets/images/player/puse.png"; // نام فایل طبق ورودی شما
+  const PAUSE_SRC = "https://www.dash-smal.ir/assets/images/player/puse.png";
 
   // شروع وضعیت آیکون
   icon.src = PLAY_SRC;
@@ -453,7 +604,7 @@
     ev.preventDefault();
     try {
       if (music.paused) {
-        await music.play(); // کلیک کاربر اجازهٔ پخش را می‌دهد
+        await music.play();
         icon.src = PAUSE_SRC;
       } else {
         music.pause();
@@ -465,7 +616,7 @@
     }
   });
 
-  // اگر کاربر دستی پخش/پاز را در پلیر انجام داد (نادر ولی)، آیکون را هم بروزرسانی کن
+  // sync with player events
   music.addEventListener('play', () => icon.src = PAUSE_SRC);
   music.addEventListener('pause', () => icon.src = PLAY_SRC);
   music.addEventListener('ended', () => icon.src = PLAY_SRC);
