@@ -35,28 +35,30 @@
       <div class="cart-list" id="cart-list"></div>
       <div style="margin-top:6px;font-weight:800">کل: <span id="cart-total">0</span> تومان</div>
     </div>
-    <div class="cart-actions">
-      <!-- دکمه پخش/توقف موسیقی - سمت چپ -->
+    <div class="cart-actions" style="display:flex;align-items:center;gap:12px">
+      <!-- دکمه‌های قبلی در سمت چپ -->
+      <button id="send-whatsapp" class="send-btn">ارسال سفارش به واتس‌اپ</button>
+      <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
+
+      <!-- دکمه صوتی بزرگ در سمت راست -->
       <button 
         id="music-toggle-btn" 
         title="پخش/توقف موسیقی"
         style="
           background: url('https://www.dash-smal.ir/assets/images/player/play.png') no-repeat center;
           background-size: contain;
-          width: 40px;
-          height: 40px;
+          width: 160px;
+          height: 160px;
           border: none;
           cursor: pointer;
           padding: 0;
-          margin-left: 8px;
-          opacity: 0.9;
-          transition: transform 0.2s ease, opacity 0.2s ease;
+          margin-right: auto;
+          opacity: 0.95;
+          transition: transform 0.2s ease;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          border-radius: 12px;
         "
       ></button>
-      
-      <!-- دکمه‌های قبلی -->
-      <button id="send-whatsapp" class="send-btn">ارسال سفارش به واتس‌اپ</button>
-      <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
     </div>
   </div>
 
