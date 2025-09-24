@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+  <!-- صدا - موزیک پس‌زمینه -->
+  <audio id="toucan-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop></audio>
+
   <div class="header">
     <div class="brand">
       <div class="logo">T</div>
@@ -33,6 +36,25 @@
       <div style="margin-top:6px;font-weight:800">کل: <span id="cart-total">0</span> تومان</div>
     </div>
     <div class="cart-actions">
+      <!-- دکمه پخش/توقف موسیقی - سمت چپ -->
+      <button 
+        id="music-toggle-btn" 
+        title="پخش/توقف موسیقی"
+        style="
+          background: url('https://www.dash-smal.ir/assets/images/player/play.png') no-repeat center;
+          background-size: contain;
+          width: 40px;
+          height: 40px;
+          border: none;
+          cursor: pointer;
+          padding: 0;
+          margin-left: 8px;
+          opacity: 0.9;
+          transition: transform 0.2s ease, opacity 0.2s ease;
+        "
+      ></button>
+      
+      <!-- دکمه‌های قبلی -->
       <button id="send-whatsapp" class="send-btn">ارسال سفارش به واتس‌اپ</button>
       <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
     </div>
@@ -73,8 +95,6 @@
   function parseCSV(text) {
     const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
     if(lines.length === 0) return [];
-    // if first line looks like header with non-numeric, remove or keep
-    // parse each line
     function parseLine(line) {
       const res=[]; let cur=''; let inQ=false;
       for(let i=0;i<line.length;i++){
@@ -90,8 +110,6 @@
       return res;
     }
     const parsed = lines.map(parseLine);
-    // If first row looks like header (non-numeric in many fields) we'll treat as header and remove it, but we rely on column positions.
-    // We'll just return parsed rows.
     return parsed;
   }
 
@@ -100,8 +118,6 @@
       const resp = await fetch(CSV_PATH + '?t=' + Date.now());
       const text = await resp.text();
       const rows = parseCSV(text);
-      // map rows -> objects using column positions:
-      // 0: english_name (A) 1: farsi_name (B) 2: ingredients (C) 3: price (D) 4: whatsapp (E) 5: img_name (F) 6: img_folder (G)
       foods = rows.map((r, idx) => {
         return {
           id: (r[0] || ('item-'+idx)).toString().trim() || ('item-'+idx),
@@ -123,10 +139,8 @@
   }
 
   function reconcileCartWithFoods(){
-    // update cart item details (price/name) if changed in CSV. Keep qty unchanged.
     for(const key in cart){
       const entry = cart[key];
-      // find matching food by id (en) or fallback name
       const match = foods.find(f => f.id === entry.id || f.en === entry.en || f.fa === entry.fa);
       if(match){
         entry.price = match.price;
@@ -136,7 +150,6 @@
         entry.img_folder = match.img_folder;
         entry.img_name = match.img_name;
       } else {
-        // item removed from menu - mark it so user knows
         entry.removed = true;
       }
     }
@@ -175,11 +188,9 @@
   }
 
   function makeImagePath(f){
-    // join folder + name carefully
     let folder = (f.img_folder || '').trim();
     let name = (f.img_name || '').trim();
     if(folder && name){
-      // ensure single slash and trim spaces
       folder = folder.replace(/\s+$/,'').replace(/\\/g,'/').replace(/\s+/g,' ');
       let path = folder + (folder.endsWith('/') ? '' : '/') + name;
       return encodeURI(path);
@@ -265,7 +276,6 @@
       groups[key].items.push(it);
       groups[key].subtotal += (Number(it.price)||0) * it.qty;
     }
-    // create text messages
     const messages = [];
     for(const k in groups){
       const g = groups[k];
@@ -294,17 +304,10 @@
     if(msgs.length === 0) { alert('سبد خرید خالی است'); return; }
     if(msgs.length === 1){
       const m = msgs[0];
-      if(!m.to){ // no number provided - show modal with number input
-        promptAndOpen(m.text);
-        saveOrderForKitchen(m);
-      } else {
-        const url = 'https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text);
-        window.open(url, '_blank');
-        saveOrderForKitchen(m);
-      }
+      if(!m.to){ promptAndOpen(m.text); saveOrderForKitchen(m); }
+      else { const url = 'https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text); window.open(url, '_blank'); saveOrderForKitchen(m); }
       return;
     }
-    // multiple recipients -> show modal with options
     const modal = document.getElementById('modal');
     const list = document.getElementById('recipient-list');
     list.innerHTML = '';
@@ -340,7 +343,6 @@
     }
   }
 
-  // Save order locally for kitchen mock (localStorage). Note: this is local to the browser.
   function saveOrderForKitchen(message){
     try{
       const raw = localStorage.getItem('toucan_orders') || '[]';
@@ -350,11 +352,34 @@
     }catch(e){ console.warn(e); }
   }
 
-  // load and render
+  // --- مدیریت دکمه صوتی ---
+  const music = document.getElementById('toucan-music');
+  const toggleBtn = document.getElementById('music-toggle-btn');
+
+  function updateButtonImage() {
+    const playImg = 'https://www.dash-smal.ir/assets/images/player/play.png';
+    const pauseImg = 'https://www.dash-smal.ir/assets/images/player/puse.png';
+    toggleBtn.style.backgroundImage = `url('${music.paused ? playImg : pauseImg}')`;
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    if (music.paused) {
+      music.play().then(updateButtonImage).catch(e => {
+        console.log("اجرای صدا نیاز به تعامل کاربر دارد");
+      });
+    } else {
+      music.pause();
+      updateButtonImage();
+    }
+  });
+
+  music.addEventListener('play', updateButtonImage);
+  music.addEventListener('pause', updateButtonImage);
+
+  // --- بقیه عملیات ---
   loadCart();
   fetchFoods();
   renderCart();
-  // poll to pick up CSV changes automatically (cache-busted)
   setInterval(fetchFoods, POLL_INTERVAL);
 
   // event bindings
@@ -362,7 +387,6 @@
   document.getElementById('clear-cart').addEventListener('click', ()=> {
     if(confirm('پاک کردن کامل فاکتور؟')) clearCart();
   });
-  // close modal when clicking outside box
   document.getElementById('modal').addEventListener('click', (ev)=>{
     if(ev.target === document.getElementById('modal')) document.getElementById('modal').style.display='none';
   });
