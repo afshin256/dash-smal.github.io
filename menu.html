@@ -678,10 +678,13 @@
       avg += dataArray[i];
     }
     avg /= bufferLength;
-    let shadowIntensity = avg / 255 * 30;
+    let shadowIntensity = (avg / 255) * 50; // Increased sensitivity
     toggleBtn.style.boxShadow = `0 0 ${shadowIntensity}px 5px rgba(255, 69, 0, 0.7),
-      0 0 ${shadowIntensity * 2}px 10px rgba(255, 140, 0, 0.5),
-      0 0 ${shadowIntensity * 3}px 15px rgba(255, 215, 0, 0.3)`;
+      0 0 ${shadowIntensity * 1.5}px 10px rgba(255, 140, 0, 0.5),
+      0 0 ${shadowIntensity * 2}px 15px rgba(255, 215, 0, 0.3),
+      0 0 ${shadowIntensity * 0.8}px 8px rgba(0, 255, 255, 0.6), /* Neon blue */
+      0 0 ${shadowIntensity * 1.2}px 12px rgba(255, 105, 180, 0.6), /* Neon pink */
+      0 0 ${shadowIntensity * 1.6}px 16px rgba(138, 43, 226, 0.6)`; /* Neon purple */
     requestAnimationFrame(animateFlame);
   }
 
