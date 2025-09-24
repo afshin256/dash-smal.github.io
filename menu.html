@@ -25,7 +25,18 @@
       <strong>میز:</strong> <span id="table-number-display">—</span>
     </div>
 
-    <div id="food-grid" class="food-grid"></div>
+    <!-- food-grid با مدیریت واکنش‌گرا -->
+    <div 
+      id="food-grid" 
+      style="
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 14px;
+        justify-items: center;
+        padding: 10px;
+        margin-bottom: 200px;
+      "
+    ></div>
   </div>
 
   <!-- floating cart -->
@@ -92,7 +103,7 @@
     font-weight: bold;
     z-index: 999;
   ">
-    Powered by DASH-SMAL.IR
+    Powered by DASH-SMAL.IR — All rights reserved by Dash Smal Content Production Agency.
   </div>
 
 <script>
@@ -414,6 +425,20 @@
   });
 
 })();
+</script>
+
+<!-- مدیریت شبکه در موبایل: فقط 2 ستون -->
+<script>
+function updateGrid() {
+  const grid = document.getElementById('food-grid');
+  if (window.innerWidth <= 768) {
+    grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+  } else {
+    grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+  }
+}
+window.addEventListener('load', updateGrid);
+window.addEventListener('resize', updateGrid);
 </script>
 </body>
 </html>
