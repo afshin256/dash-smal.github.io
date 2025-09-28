@@ -14,10 +14,10 @@ body {
   box-sizing: border-box;
 }
 
-/* کادر غذا - ارتفاع افزایش یافته به 400px */
+/* کادر غذا - ارتفاع ثابت 400px */
 .food-card {
   width: 250px;
-  height: 400px; /* افزایش ارتفاع به 400px برای جلوگیری از تداخل */
+  height: 400px; /* کارت‌ها هم‌اندازه */
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 0 18px 4px rgba(255, 165, 0, 0.8); /* نئون */
@@ -31,34 +31,35 @@ body {
   overflow: hidden;
 }
 
-/* تصویر غذا — بدون فاصله پایین */
+/* تصویر غذا */
 .food-img {
   width: 100%;
   height: 55%; /* حفظ ارتفاع تصویر */
   object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 0; /* ❌ حذف فاصله عمودی — نام غذا چسبیده به تصویر */
+  margin-bottom: 0;
 }
 
 /* اطلاعات غذا */
 .food-info {
   flex-grow: 1;
   text-align: center;
-  padding: 6px 10px 8px; /* پدینگ بالا کم، پایین بیشتر برای فضای قیمت */
+  padding: 6px 10px 50px; /* 👈 فضای پایین برای قیمت */
   margin: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 6px; /* فاصله مناسب بین نام، توضیحات و قیمت */
+  gap: 6px;
   overflow: hidden;
-  min-height: 90px; /* فضای بیشتر برای متن */
+  min-height: 90px;
+  box-sizing: border-box;
 }
 
-/* نام غذا — چسبیده به تصویر */
+/* نام غذا */
 .food-info h3 {
-  font-size: 18px; /* بدون تغییر */
+  font-size: 18px;
   margin: 0;
   color: #000;
   line-height: 1.3;
@@ -73,7 +74,7 @@ body {
 
 /* توضیحات غذا */
 .food-info p {
-  font-size: 14px; /* بدون تغییر */
+  font-size: 14px;
   margin: 0;
   color: #000;
   line-height: 1.3;
@@ -87,7 +88,7 @@ body {
   -webkit-box-orient: vertical;
 }
 
-/* --- برچسب تخفیف (دایره قرمز کنار نام) --- */
+/* --- برچسب تخفیف --- */
 .food-info h3 .discount-badge {
   display: inline-flex;
   align-items: center;
@@ -106,22 +107,24 @@ body {
 /* قیمت غذا */
 .price {
   position: absolute;
-  bottom: 14px; /* کمی بالاتر از لبه پایین */
+  bottom: 14px;
   right: 12px;
   font-size: 16px;
   font-weight: bold;
-  color: #ffb84d; /* طلایی */
+  color: #ffb84d;
   text-align: right;
   direction: ltr;
-  width: auto;
-  min-width: 80px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   line-height: 1.4;
+  background: white;       /* 👈 متن روی قیمت نمی‌افته */
+  padding: 2px 4px;
+  border-radius: 6px;
+  z-index: 5;
 }
 
-/* قیمت اصلی با خط زدن */
+/* قیمت اصلی */
 .price del {
   color: #999;
   font-size: 14px;
@@ -280,11 +283,11 @@ body {
   .food-img {
     height: 160px;
     border-radius: 8px;
-    margin-bottom: 0; /* بدون فاصله */
+    margin-bottom: 0;
   }
 
   .food-info {
-    padding: 6px 10px;
+    padding: 6px 10px 50px; /* همچنان فضای پایین برای قیمت */
     gap: 6px;
   }
 
