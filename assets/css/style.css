@@ -78,14 +78,36 @@ body {
   max-width: 90%;
 }
 
-/* قیمت غذا */
+/* قیمت غذا - تبدیل به کانتینر برای پشتیبانی از تخفیف */
 .price {
   position: absolute;
   bottom: 10px;
   right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   font-size: 16px;
   font-weight: bold;
-  color: #ffb84d; /* رنگ طلایی برای قیمت */
+  gap: 2px; /* فاصله کوچک بین قیمت اصلی و تخفیف‌خورده */
+}
+
+.original-price {
+  color: #ffb84d; /* رنگ طلایی برای قیمت اصلی */
+}
+
+.discounted-price {
+  color: #ff0000; /* رنگ قرمز برای قیمت تخفیف‌خورده جهت برجسته‌سازی */
+  display: none; /* پیش‌فرض پنهان اگر تخفیفی نباشد */
+}
+
+/* وقتی تخفیف وجود دارد (کلاس has-discount به .price اضافه شود) */
+.price.has-discount .original-price {
+  text-decoration: line-through;
+  color: #999; /* رنگ خاکستری برای قیمت خط‌خورده */
+}
+
+.price.has-discount .discounted-price {
+  display: block; /* نمایش قیمت تخفیف‌خورده */
 }
 
 /* دکمه افزودن - ارتفاع کمتر و متن در وسط */
@@ -256,5 +278,16 @@ body {
   .add-btn {
     padding: 8px 16px;
     min-height: 32px;
+  }
+
+  /* تنظیم قیمت در موبایل برای جلوگیری از هم‌پوشانی */
+  .price {
+    bottom: 8px;
+    right: 8px;
+    font-size: 15px;
+  }
+
+  .price.has-discount {
+    bottom: 4px; /* کمی پایین‌تر برای فضای دو خط */
   }
 }
