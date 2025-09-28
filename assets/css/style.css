@@ -1,6 +1,6 @@
 /* عمومی */
 body {
-  background-color: #070606;
+  background-color: #070606;  /* بک‌گراند سیاه */
   color: #fff;
   font-family: Arial, sans-serif;
   margin: 0;
@@ -10,14 +10,17 @@ body {
   flex-direction: column;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
+/* کادر غذا - ارتفاع افزایش یافته برای فضای بیشتر */
 .food-card {
   width: 250px;
-  height: 300px;
+  height: 300px; /* افزایش ارتفاع: 250 → 300px (حدود 3 خط بیشتر) */
   background-color: white;
   border-radius: 12px;
-  box-shadow: 0 0 18px 4px rgba(255, 165, 0, 0.8);
+  box-shadow: 0 0 18px 4px rgba(255, 165, 0, 0.8); /* نئون */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -28,14 +31,16 @@ body {
   overflow: hidden;
 }
 
+/* تصویر غذا */
 .food-img {
   width: 100%;
-  height: 55%;
+  height: 55%; /* کمی کاهش داده شد تا فضای بیشتری برای متن بماند */
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 2px;
 }
 
+/* اطلاعات غذا - فضای بیشتر برای متن */
 .food-info {
   flex-grow: 1;
   text-align: center;
@@ -48,7 +53,7 @@ body {
   align-items: center;
   gap: 4px;
   overflow: hidden;
-  min-height: 60px;
+  min-height: 60px; /* حداقل فضا برای متن */
 }
 
 .food-info h3 {
@@ -73,31 +78,183 @@ body {
   max-width: 90%;
 }
 
+/* قیمت غذا */
 .price {
   position: absolute;
   bottom: 10px;
   right: 10px;
   font-size: 16px;
   font-weight: bold;
-  color: #ffb84d;
+  color: #ffb84d; /* رنگ طلایی برای قیمت */
+}
+
+/* دکمه افزودن - ارتفاع کمتر و متن در وسط */
+.add-btn {
+  position: absolute;
+  bottom: 8px;           /* کمی بالاتر از قبل */
+  left: 10px;
+  background-color: yellow;
+  color: black;
+  padding: 6px 14px;      /* کاهش پدینگ = ارتفاع کمتر */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 1;
+
+  /* مرکز کردن دقیق متن */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+
+  min-height: 28px;       /* ارتفاع واقعی دکمه کمتر شد */
+  width: auto;
+  max-width: 80px;
+}
+
+/* ریسپانسیو برای تصاویر */
+.food-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ریسپانسیو - کادرها کنار هم */
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+  justify-items: center;
+  padding: 10px;
+  margin-bottom: 200px;  /* فضای پایین برای سبد خرید */
+}
+
+/* سبد خرید معلق */
+.cart-floating {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333;
+  color: white;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  padding: 10px 20px;
+  align-items: flex-start;
+  z-index: 100;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.7);
 }
 
-/* قیمت اصلی (خط خورده وقتی تخفیف هست) */
-.old-price {
-  font-size: 14px;
-  color: #999;
-  text-decoration: line-through;
-  margin-bottom: 2px;
-  display: block;
-}
-
-/* قیمت تخفیف‌خورده */
-.discount-price {
-  font-size: 16px;
+.cart-floating .cart-header {
+  font-size: 18px;
   font-weight: bold;
-  color: #e60000;
-  display: block;
+  margin-bottom: 8px;
+}
+
+.cart-list {
+  max-height: 120px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  padding: 5px;
+  background-color: #444;
+  border-radius: 5px;
+}
+
+.cart-item .item-name {
+  font-size: 14px;
+}
+
+.cart-item .item-qty {
+  font-weight: bold;
+}
+
+.cart-item button {
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cart-footer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.cart-footer .total {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.cart-footer .send-btn {
+  background-color: yellow;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cart-footer .clear-btn {
+  background-color: #555;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* --- برای موبایل: فقط 2 ستون، فضای بهتر، عدم ریز شدن --- */
+@media (max-width: 768px) {
+  .food-grid {
+    grid-template-columns: repeat(2, 1fr); /* فقط 2 ستون در موبایل */
+    gap: 14px;
+    padding: 10px;
+  }
+
+  .food-card {
+    width: 100%;
+    height: auto;        /* ارتفاع انعطاف‌پذیر */
+    margin: 8px 0;
+    padding: 12px;
+  }
+
+  .food-img {
+    height: 160px;       /* ارتفاع ثابت مناسب برای موبایل */
+    border-radius: 8px;
+  }
+
+  .food-info {
+    padding: 6px 10px;
+    gap: 6px;
+  }
+
+  .food-info h3 {
+    font-size: 17px;     /* کمی بزرگ‌تر برای خوانایی */
+  }
+
+  .food-info p {
+    font-size: 13px;
+  }
+
+  .price,
+  .add-btn {
+    font-size: 15px;     /* بزرگ‌تر برای لمس آسان */
+  }
+
+  .add-btn {
+    padding: 8px 16px;
+    min-height: 32px;
+  }
 }
