@@ -1,293 +1,311 @@
 /* عمومی */
 body {
-    background-color: #070606; /* بک‌گراند سیاه */
-    color: #fff;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  background-color: #070606; /* بک‌گراند سیاه */
+  color: #fff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 /* کادر غذا - ارتفاع افزایش یافته برای فضای بیشتر */
 .food-card {
-    width: 250px;
-    height: 300px; /* افزایش ارتفاع: 250 → 300px */
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 0 18px 4px rgba(255, 165, 0, 0.8); /* نئون */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    margin: 10px;
-    padding: 10px;
-    position: relative;
-    overflow: hidden;
+  width: 250px;
+  height: 300px; /* افزایش ارتفاع برای جای بیشتر */
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 18px 4px rgba(255, 165, 0, 0.8); /* نئون */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  position: relative;
+  overflow: hidden;
 }
 
 /* تصویر غذا */
 .food-img {
-    width: 100%;
-    height: 55%; /* کمی کاهش داده شد تا فضای بیشتری برای متن بماند */
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 2px;
+  width: 100%;
+  height: 55%; /* کمی کاهش برای فضای متن */
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 2px;
 }
 
-/* اطلاعات غذا - فضای بیشتر برای متن */
+/* اطلاعات غذا */
 .food-info {
-    flex-grow: 1;
-    text-align: center;
-    padding: 2px 10px 5px;
-    margin: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 4px;
-    overflow: hidden;
-    min-height: 60px; /* حداقل فضا برای متن */
+  flex-grow: 1;
+  text-align: center;
+  padding: 2px 10px 5px;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  min-height: 60px;
 }
 
 .food-info h3 {
-    font-size: 18px;
-    margin: 0;
-    color: #000;
-    line-height: 1.3;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 90%;
+  font-size: 18px;
+  margin: 0;
+  color: #000;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .food-info p {
-    font-size: 14px;
-    margin: 0;
-    color: #000;
-    line-height: 1.3;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 90%;
+  font-size: 14px;
+  margin: 0;
+  color: #000;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90%;
 }
 
-/* --- قیمت غذا (با پشتیبانی از تخفیف) --- */
+/* --- برچسب تخفیف (دایره قرمز کنار نام) --- */
+.food-info h3 .discount-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background-color: #e63946; /* قرمز متون */
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+
+/* قیمت غذا */
 .price {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #ffb84d; /* رنگ طلایی برای قیمت */
-    text-align: right;
-    direction: ltr; /* برای نمایش صحیح اعداد و خط زدن */
-    width: auto;
-    min-width: 80px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    line-height: 1.3;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffb84d; /* طلایی */
+  text-align: right;
+  direction: ltr;
+  width: auto;
+  min-width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.3;
 }
 
-/* قیمت اصلی با خط زده (وقتی تخفیف دارد) */
+/* قیمت اصلی با خط زدن */
 .price del {
-    color: #999;
-    font-size: 14px;
-    margin-left: 4px;
-    text-decoration: line-through;
-    vertical-align: middle;
+  color: #999;
+  font-size: 14px;
+  margin-left: 4px;
+  text-decoration: line-through;
+  vertical-align: middle;
 }
 
-/* قیمت تخفیف‌خورده (برجسته و بزرگتر) */
+/* قیمت تخفیف‌خورده */
 .price .discounted {
-    color: #e63946; /* قرمز جذاب برای تخفیف */
-    font-size: 18px;
-    font-weight: bold;
-    vertical-align: middle;
+  color: #e63946; /* قرمز جذاب */
+  font-size: 18px;
+  font-weight: bold;
+  vertical-align: middle;
 }
 
-/* دکمه افزودن - ارتفاع کمتر و متن در وسط */
+/* دکمه افزودن */
 .add-btn {
-    position: absolute;
-    bottom: 8px; /* کمی بالاتر از قبل */
-    left: 10px;
-    background-color: yellow;
-    color: black;
-    padding: 6px 14px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    white-space: nowrap;
-    min-height: 28px;
-    width: auto;
-    max-width: 80px;
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  background-color: yellow;
+  color: black;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  min-height: 28px;
+  width: auto;
+  max-width: 80px;
 }
 
 /* ریسپانسیو برای تصاویر */
 .food-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* ریسپانسیو - کادرها کنار هم */
+/* شبکه غذاها */
 .food-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 10px;
-    justify-items: center;
-    padding: 10px;
-    margin-bottom: 200px; /* فضای پایین برای سبد خرید */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+  justify-items: center;
+  padding: 10px;
+  margin-bottom: 200px;
 }
 
 /* سبد خرید معلق */
 .cart-floating {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #333;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    padding: 10px 20px;
-    align-items: flex-start;
-    z-index: 100;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.7);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+  align-items: flex-start;
+  z-index: 100;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.7);
 }
 
 .cart-floating .cart-header {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
 .cart-list {
-    max-height: 120px;
-    overflow-y: auto;
-    width: 100%;
+  max-height: 120px;
+  overflow-y: auto;
+  width: 100%;
 }
 
 .cart-item {
-    display: flex;
-    justify-content: space-between;
-    margin: 5px 0;
-    padding: 5px;
-    background-color: #444;
-    border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  padding: 5px;
+  background-color: #444;
+  border-radius: 5px;
 }
 
 .cart-item .item-name {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .cart-item .item-qty {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .cart-item button {
-    background-color: red;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .cart-footer {
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .cart-footer .total {
-    font-weight: bold;
-    font-size: 16px;
+  font-weight: bold;
+  font-size: 16px;
 }
 
 .cart-footer .send-btn {
-    background-color: yellow;
-    color: black;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
+  background-color: yellow;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .cart-footer .clear-btn {
-    background-color: #555;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
+  background-color: #555;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-/* --- برای موبایل: فقط 2 ستون، فضای بهتر، عدم ریز شدن --- */
+/* --- ریسپانسیو: موبایل --- */
 @media (max-width: 768px) {
-    .food-grid {
-        grid-template-columns: repeat(2, 1fr); /* فقط 2 ستون در موبایل */
-        gap: 14px;
-        padding: 10px;
-    }
+  .food-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    padding: 10px;
+  }
 
-    .food-card {
-        width: 100%;
-        height: auto;
-        margin: 8px 0;
-        padding: 12px;
-    }
+  .food-card {
+    width: 100%;
+    height: auto;
+    margin: 8px 0;
+    padding: 12px;
+  }
 
-    .food-img {
-        height: 160px;
-        border-radius: 8px;
-    }
+  .food-img {
+    height: 160px;
+    border-radius: 8px;
+  }
 
-    .food-info {
-        padding: 6px 10px;
-        gap: 6px;
-    }
+  .food-info {
+    padding: 6px 10px;
+    gap: 6px;
+  }
 
-    .food-info h3 {
-        font-size: 17px;
-    }
+  .food-info h3 {
+    font-size: 17px;
+  }
 
-    .food-info p {
-        font-size: 13px;
-    }
+  .food-info p {
+    font-size: 13px;
+  }
 
-    .price {
-        font-size: 15px;
-        bottom: 8px;
-        right: 12px;
-        min-width: 70px;
-    }
+  .price {
+    font-size: 15px;
+    bottom: 8px;
+    right: 12px;
+  }
 
-    .price del {
-        font-size: 13px;
-    }
+  .price del {
+    font-size: 13px;
+  }
 
-    .price .discounted {
-        font-size: 17px;
-    }
+  .price .discounted {
+    font-size: 17px;
+  }
 
-    .add-btn {
-        padding: 8px 16px;
-        min-height: 32px;
-        font-size: 15px;
-    }
+  .add-btn {
+    padding: 8px 16px;
+    min-height: 32px;
+    font-size: 15px;
+  }
 }
