@@ -14,10 +14,10 @@ body {
   box-sizing: border-box;
 }
 
-/* کادر غذا - ارتفاع افزایش یافته برای فضای بیشتر */
+/* کادر غذا - ارتفاع افزایش یافته به 400px */
 .food-card {
   width: 250px;
-  height: 340px; /* افزایش از 300 به 340px — فقط 40px اضافه برای فضای پایین */
+  height: 400px; /* افزایش ارتفاع به 400px برای جلوگیری از تداخل */
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 0 18px 4px rgba(255, 165, 0, 0.8); /* نئون */
@@ -31,32 +31,32 @@ body {
   overflow: hidden;
 }
 
-/* تصویر غذا — بدون تغییر در اندازه یا فونت */
+/* تصویر غذا — بدون فاصله پایین */
 .food-img {
   width: 100%;
   height: 55%; /* حفظ ارتفاع تصویر */
   object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 6px; /* کمی فاصله بیشتر برای تنفس بصری */
+  margin-bottom: 0; /* ❌ حذف فاصله عمودی — نام غذا چسبیده به تصویر */
 }
 
 /* اطلاعات غذا */
 .food-info {
   flex-grow: 1;
   text-align: center;
-  padding: 2px 10px 5px;
+  padding: 6px 10px 8px; /* پدینگ بالا کم، پایین بیشتر برای فضای قیمت */
   margin: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 8px; /* افزایش gap برای جلوگیری از تداخل */
+  gap: 6px; /* فاصله مناسب بین نام، توضیحات و قیمت */
   overflow: hidden;
-  min-height: 80px; /* افزایش حداقل ارتفاع برای جای بیشتر */
+  min-height: 90px; /* فضای بیشتر برای متن */
 }
 
-/* نام غذا — فونت و اندازه بدون تغییر */
+/* نام غذا — چسبیده به تصویر */
 .food-info h3 {
   font-size: 18px; /* بدون تغییر */
   margin: 0;
@@ -71,7 +71,7 @@ body {
   gap: 6px;
 }
 
-/* توضیحات غذا — خط دوم اضافه شده، ولی فونت همان 14px */
+/* توضیحات غذا */
 .food-info p {
   font-size: 14px; /* بدون تغییر */
   margin: 0;
@@ -106,7 +106,7 @@ body {
 /* قیمت غذا */
 .price {
   position: absolute;
-  bottom: 12px; /* کمی بالاتر از حاشیه پایین */
+  bottom: 14px; /* کمی بالاتر از لبه پایین */
   right: 12px;
   font-size: 16px;
   font-weight: bold;
@@ -278,17 +278,18 @@ body {
   }
 
   .food-img {
-    height: 160px; /* ارتفاع ثابت مناسب برای موبایل */
+    height: 160px;
     border-radius: 8px;
+    margin-bottom: 0; /* بدون فاصله */
   }
 
   .food-info {
     padding: 6px 10px;
-    gap: 8px; /* حفظ فاصله مناسب */
+    gap: 6px;
   }
 
   .food-info h3 {
-    font-size: 18px; /* حفظ سایز فونت */
+    font-size: 18px;
   }
 
   .food-info p {
@@ -297,7 +298,7 @@ body {
 
   .price {
     font-size: 16px;
-    bottom: 10px;
+    bottom: 12px;
     right: 12px;
   }
 
