@@ -14,13 +14,13 @@ body {
   box-sizing: border-box;
 }
 
-/* کادر غذا - ارتفاع ثابت 400px */
+/* کادر غذا - ارتفاع ثابت 350px */
 .food-card {
   width: 250px;
-  height: 400px; /* کارت‌ها هم‌اندازه */
+  height: 350px; /* کارت‌ها هم‌اندازه */
   background-color: white;
   border-radius: 12px;
-  box-shadow: 0 0 18px 4px rgba(255, 165, 0, 0.8); /* نئون */
+  box-shadow: 0 0 18px 4px rgba(255, 165, 0, 0.8);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -34,7 +34,7 @@ body {
 /* تصویر غذا */
 .food-img {
   width: 100%;
-  height: 55%; /* حفظ ارتفاع تصویر */
+  height: 55%;
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 0;
@@ -44,7 +44,7 @@ body {
 .food-info {
   flex-grow: 1;
   text-align: center;
-  padding: 6px 10px 50px; /* 👈 فضای پایین برای قیمت */
+  padding: 6px 10px 50px; /* فضای پایین برای قیمت */
   margin: 0;
   width: 100%;
   display: flex;
@@ -88,7 +88,7 @@ body {
   -webkit-box-orient: vertical;
 }
 
-/* --- برچسب تخفیف --- */
+/* برچسب تخفیف */
 .food-info h3 .discount-badge {
   display: inline-flex;
   align-items: center;
@@ -111,15 +111,15 @@ body {
   right: 12px;
   font-size: 16px;
   font-weight: bold;
-  color: #ffb84d;
+  color: #fff; /* متن سفید */
   text-align: right;
   direction: ltr;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   line-height: 1.4;
-  background: white;       /* 👈 متن روی قیمت نمی‌افته */
-  padding: 2px 4px;
+  background: #000;       /* پس‌زمینه مشکی */
+  padding: 2px 6px;
   border-radius: 6px;
   z-index: 5;
 }
@@ -146,8 +146,8 @@ body {
   position: absolute;
   bottom: 8px;
   left: 10px;
-  background-color: yellow;
-  color: black;
+  background-color: black; /* بک‌گراند مشکی */
+  color: white;
   padding: 6px 14px;
   border: none;
   border-radius: 5px;
@@ -275,7 +275,7 @@ body {
 
   .food-card {
     width: 100%;
-    height: auto;
+    height: 350px; /* ارتفاع ثابت موبایل */
     margin: 8px 0;
     padding: 12px;
   }
@@ -287,7 +287,7 @@ body {
   }
 
   .food-info {
-    padding: 6px 10px 50px; /* همچنان فضای پایین برای قیمت */
+    padding: 6px 10px 50px; /* فضای پایین برای قیمت */
     gap: 6px;
   }
 
@@ -303,6 +303,7 @@ body {
     font-size: 16px;
     bottom: 12px;
     right: 12px;
+    background: #000; /* پس‌زمینه مشکی */
   }
 
   .price del {
