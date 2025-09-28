@@ -83,6 +83,9 @@
       line-height: 1.2;
       color: #fff;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .food-info p {
@@ -423,6 +426,7 @@
           price: price,
           discountedPrice: discountedPrice,
           hasDiscount: discountPercent > 0,
+          discountPercent: discountPercent,
           whatsapp: (r[4]||'').trim(),
           img_name: (r[5]||'').trim(),
           img_folder: (r[6]||'').trim()
@@ -444,6 +448,7 @@
         entry.price = match.price;
         entry.discountedPrice = match.discountedPrice;
         entry.hasDiscount = match.hasDiscount;
+        entry.discountPercent = match.discountPercent;
         entry.en = match.en;
         entry.fa = match.fa;
         entry.whatsapp = match.whatsapp;
@@ -475,11 +480,53 @@
       imgWrap.appendChild(img);
 
       const info = document.createElement('div'); info.className='food-info';
-      const h = document.createElement('h3'); h.textContent = f.fa || f.en;
+
+      // عنوان غذا با برچسب تخفیف (در صورت وجود)
+      const h = document.createElement('h3');
+      h.style.display = 'flex';
+      h.style.alignItems = 'center';
+      h.style.gap = '8px';
+      h.style.margin = '0';
+      h.style.fontWeight = '600';
+      h.style.fontSize = '16px';
+      h.style.lineHeight = '1.2';
+      h.style.color = '#fff';
+
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = f.fa || f.en;
+
+      // برچسب تخفیف: دایره قرمز با فونت سفید بویلد
+      if (f.hasDiscount && f.discountPercent > 0) {
+        const badge = document.createElement('div');
+        badge.style.cssText = `
+          background-color: #e63946;
+          color: white;
+          font-size: 12px;
+          font-weight: bold;
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          margin-right: 4px;
+        `;
+        badge.textContent = `${Math.round(f.discountPercent)}%`;
+        h.appendChild(badge);
+      }
+
+      h.appendChild(nameSpan);
+      info.appendChild(h);
+
+      // مواد تشکیل‌دهنده
       const p = document.createElement('p'); p.textContent = f.ingredients || '';
+      info.appendChild(p);
+
+      // کنترل‌ها (قیمت و دکمه)
       const controls = document.createElement('div'); controls.className='controls';
 
-      // ساختار قیمت: با تخفیف یا بدون آن
+      // قیمت
       const priceSpan = document.createElement('div');
       priceSpan.className = 'price';
 
@@ -497,20 +544,21 @@
         priceSpan.textContent = formatMoney(f.price) + ' تومان';
       }
 
-      // دکمه + به جای "افزودن"
+      // دکمه +
       const addBtn = document.createElement('button');
       addBtn.className = 'add-btn';
       addBtn.textContent = '+';
       addBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); // جلوگیری از trigger کارت
+        e.stopPropagation();
         addToCart(f);
       });
 
       controls.appendChild(priceSpan);
       controls.appendChild(addBtn);
 
-      info.appendChild(h); info.appendChild(p); info.appendChild(controls);
-      card.appendChild(imgWrap); card.appendChild(info);
+      info.appendChild(controls);
+      card.appendChild(imgWrap);
+      card.appendChild(info);
 
       grid.appendChild(card);
     });
@@ -579,7 +627,7 @@
     for(const id in cart){
       const it = cart[id];
       count += it.qty;
-      total += (Number(it.discountedPrice || it.price)||0) * it.qty; // استفاده از قیمت تخفیف‌خورده
+      total += (Number(it.discountedPrice || it.price)||0) * it.qty;
       const row = document.createElement('div'); row.className='cart-item';
       const name = document.createElement('div'); name.style.flex='1'; name.textContent = (it.fa||it.en) + (it.removed ? ' (حذف‌شده از منو)' : '');
       const qty = document.createElement('div'); qty.className='qty'; qty.textContent = it.qty + 'x';
