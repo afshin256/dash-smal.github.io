@@ -385,3 +385,11 @@ body.intro-blurred {
   height: 100%;
   object-fit: cover; /* fit داخل دایره */
 }
+
+/* ریسپانسیو برای GIF اینترو (برای دستگاه‌های کوچک‌تر) */
+@media (max-width: 400px) {
+  .gif-container {
+    width: 80vw;
+    height: 80vw;
+  }
+}
