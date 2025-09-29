@@ -344,7 +344,7 @@ body {
 }
 
 /* استایل‌های جدید برای intro GIF */
-body.intro-blurred {
+#main-content.intro-blurred {
   filter: blur(10px); /* بلور صفحه اصلی - قابل تنظیم */
   transition: filter 0.5s ease;
 }
@@ -361,7 +361,7 @@ body.intro-blurred {
   justify-content: center;
   z-index: 9999;
   opacity: 1;
-  transition: opacity 0.5s ease; /* fade out نرم */
+  transition: opacity 3s ease; /* fade out نرم - تغییر به 3 ثانیه */
 }
 
 #intro-overlay.hidden {
