@@ -432,7 +432,7 @@
           en: (r[0]||'').trim(),
           fa: (r[1]||'').trim(),
           ingredients: (r[2]||'').trim(),
-          price: price;
+          price: price,
           discountedPrice: discountedPrice,
           hasDiscount: discountPercent > 0,
           discountPercent: discountPercent,
@@ -446,6 +446,8 @@
       renderFoods();
     } catch(e){
       console.error('failed to load CSV', e);
+      // اضافه‌شده برای دیباگ: نمایش پیام در صفحه اگر CSV لود نشد
+      document.getElementById('food-grid').innerHTML = '<p style="color: red;">خطا در لود فایل foods.csv - چک کن فایل وجود داره و فرمتش درسته.</p>';
     }
   }
 
