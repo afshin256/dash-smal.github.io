@@ -21,7 +21,7 @@
 
     @media (max-width:768px) {
       .food-grid {
-        grid-template-columns: 1fr; /* تک‌ستونه مثل اینستاگرام در موبایل */
+        grid-template-columns: 1fr; /* تغییر: تک‌ستونه مثل اینستاگرام در موبایل */
         gap: 6px;
       }
       body { padding-bottom: 120px; }
@@ -34,8 +34,8 @@
       overflow: hidden;
       display: flex;
       flex-direction: column; /* column برای قرار دادن footer زیر */
-      gap: 12px;
-      padding: 12px;
+      gap: 8px; /* کاهش gap */
+      padding: 2px; /* کاهش padding برای fit بهتر */
       align-items: center;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       position: relative;
@@ -43,29 +43,28 @@
 
     /* تصویر غذا */
     .food-img {
-      flex: 0 0 84px;
+      position: relative; /* برای position absolute برچسب */
+      width: 100%;
       aspect-ratio: 3 / 4;
-      border-radius: 8px;
+      border-radius: 8px 8px 0 0;
       overflow: hidden;
       background: #222;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative; /* برای قرار دادن برچسب داخل تصویر */
-      width: 100%; /* فیت کامل */
-      margin: 0; /* بدون فاصله */
-      padding: 0;
+      margin: 0; /* صفر margin */
+      border: 1px solid #222; /* حاشیه 1px */
     }
 
     @media (max-width: 768px) {
       .food-img {
-        flex: 0 0 168px;
+        aspect-ratio: 16 / 9; /* عریض‌تر در موبایل */
       }
     }
 
     @media (min-width: 769px) {
       .food-img {
-        flex: 0 0 150px;
+        height: 200px; /* ثابت‌تر در دسکتاپ */
       }
     }
 
@@ -74,14 +73,52 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      border-radius: 0; /* بدون فاصله و گردی اضافه */
+      border-radius: inherit;
+    }
+
+    /* برچسب تخفیف جدید: دایره قرمز داخل عکس، پایین راست */
+    .discount-badge {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      background-color: #e63946;
+      color: white;
+      font-weight: bold;
+      font-size: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+      animation: pulse 2s infinite ease-in-out;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 768px) {
+      .discount-badge {
+        width: 35px;
+        height: 35px;
+        font-size: 11px;
+        bottom: 4px;
+        right: 4px;
+      }
     }
 
     /* اطلاعات غذا */
     .food-info {
       flex: 1;
       min-width: 0;
-      width: 100%; /* هم‌عرض کارت */
+      width: 100%;
+      padding: 8px 10px; /* padding جدا */
     }
 
     .food-info h3 {
@@ -106,13 +143,13 @@
     /* فوتر جدید برای قیمت و دکمه */
     .food-footer {
       width: 100%;
-      height: 40px; /* ارتفاع ثابت برای جلوگیری از تغییر */
-      background-color: #111; /* تغییر: سیاه هم‌رنگ کارت */
+      height: 40px;
+      background-color: #111;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 10px;
-      border-radius: 0 0 12px 12px; /* گرد کردن پایین کارت */
+      border-radius: 0 0 12px 12px;
     }
 
     /* --- قیمت غذا (با پشتیبانی از تخفیف) --- */
@@ -124,27 +161,27 @@
       text-align: right;
       direction: ltr;
       display: flex;
-      flex-direction: column; /* تغییر: column برای قرار دادن del بالای discounted */
+      flex-direction: column;
       align-items: flex-end;
-      line-height: 1.1; /* فضای کمتر بین خطوط */
+      line-height: 1.1;
     }
 
     .price del {
       color: #999;
       font-size: 13px;
       text-decoration: line-through;
-      order: 1; /* اول (بالا) */
+      order: 1;
     }
 
     .price .discounted {
       color: #e63946;
       font-size: 16px;
       font-weight: bold;
-      order: 2; /* دوم (زیر) */
+      order: 2;
     }
 
     .add-btn {
-      background: #c62828; /* تغییر: قرمز پررنگ */
+      background: #c62828;
       border: none;
       color: #fff;
       padding: 6px 8px;
@@ -451,7 +488,6 @@
       renderFoods();
     } catch(e){
       console.error('failed to load CSV', e);
-      // اضافه‌شده برای دیباگ: نمایش پیام در صفحه اگر CSV لود نشد
       document.getElementById('food-grid').innerHTML = '<p style="color: red;">خطا در لود فایل foods.csv - چک کن فایل وجود داره و فرمتش درسته.</p>';
     }
   }
@@ -482,11 +518,10 @@
     const grid = document.getElementById('food-grid');
     grid.innerHTML = '';
 
-    foods.forEach((f, index) => {
+    foods.forEach(f => {
       const card = document.createElement('div');
       card.className = 'food-card';
       card.dataset.id = f.id;
-      card.style.animationDelay = `${index * 0.1}s`; /* انیمیشن با delay برای ترتیب ورود */
 
       const imgWrap = document.createElement('div'); imgWrap.className='food-img';
       const img = document.createElement('img');
@@ -495,6 +530,13 @@
       img.onerror = () => img.src = PLACEHOLDER;
       img.alt = f.fa || f.en;
       imgWrap.appendChild(img);
+
+      if (f.hasDiscount) {
+        const badge = document.createElement('div');
+        badge.className = 'discount-badge';
+        badge.textContent = `${Math.round(f.discountPercent)}%`;
+        imgWrap.appendChild(badge);
+      }
 
       const info = document.createElement('div'); info.className='food-info';
 
@@ -537,12 +579,6 @@
         
         priceSpan.appendChild(original);
         priceSpan.appendChild(discounted);
-
-        // برچسب تخفیف دایره‌ای داخل تصویر (گوشه پایین راست)
-        const badge = document.createElement('div');
-        badge.className = 'discount-badge';
-        badge.textContent = `${Math.round(f.discountPercent)}%`;
-        imgWrap.appendChild(badge); // اضافه به imgWrap برای داخل تصویر
       } else {
         priceSpan.textContent = formatMoney(f.price) + ' تومان';
       }
@@ -561,7 +597,7 @@
 
       card.appendChild(imgWrap);
       card.appendChild(info);
-      card.appendChild(footer); /* اضافه کردن فوتر جدید */
+      card.appendChild(footer);
 
       grid.appendChild(card);
     });
