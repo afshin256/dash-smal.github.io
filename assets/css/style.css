@@ -344,6 +344,11 @@ body {
 }
 
 /* استایل‌های جدید برای intro GIF */
+#main-content.intro-blurred {
+  filter: blur(10px); /* بلور صفحه اصلی - قابل تنظیم */
+  transition: filter 0.5s ease;
+}
+
 #intro-overlay {
   position: fixed;
   top: 0;
@@ -351,7 +356,6 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5); /* نیمه‌شفاف برای دیدن بلور پشت */
-  backdrop-filter: blur(10px); /* بلور پشت overlay */
   display: flex;
   align-items: center;
   justify-content: center;
