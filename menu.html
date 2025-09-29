@@ -353,6 +353,13 @@
   </style>
 </head>
 <body>
+  <!-- intro GIF overlay جدید -->
+  <div id="intro-overlay">
+    <div class="gif-container">
+      <img id="intro-gif" src="https://www.dash-smal.ir/assets/images/777.gif" alt="لوگو موشن">
+    </div>
+  </div>
+
   <div class="header">
     <div class="brand">
       <div class="logo">T</div>
@@ -891,6 +898,30 @@
   });
   document.getElementById('modal').addEventListener('click', (ev)=>{
     if(ev.target === document.getElementById('modal')) document.getElementById('modal').style.display='none';
+  });
+
+  // ========== مدیریت intro GIF ==========
+  document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('intro-overlay');
+    const gif = document.getElementById('intro-gif');
+    const body = document.body;
+
+    // فعال کردن بلور صفحه اصلی
+    body.classList.add('intro-blurred');
+
+    // fade out بعد از ۷ ثانیه (توقف GIF اگر loop داشته باشه)
+    const gifDuration = 7000; // ۷ ثانیه
+    setTimeout(dismissOverlay, gifDuration);
+
+    // dismiss با تعامل کاربر (کلیک یا تاچ)
+    document.addEventListener('click', dismissOverlay, { once: true });
+    document.addEventListener('touchstart', dismissOverlay, { once: true });
+
+    function dismissOverlay() {
+      overlay.classList.add('hidden');
+      body.classList.remove('intro-blurred');
+      gif.src = ''; // توقف GIF با خالی کردن src
+    }
   });
 
 })();
