@@ -85,31 +85,33 @@ body {
 /* برچسب تخفیف خلاقانه (نوار مورب در گوشه بالا راست) */
 .discount-ribbon {
   position: absolute;
-  top: -10px;
-  right: -10px;
+  top: 0;
+  right: 0;
   background-color: #e63946;
   color: white;
   font-weight: bold;
   font-size: 12px;
-  padding: 5px 10px;
-  transform: rotate(45deg);
+  padding: 2px 8px;
+  transform: rotate(45deg) translate(50%, -50%); /* تغییر: تنظیم موقعیت برای کامل نمایش دادن */
   box-shadow: 0 0 10px rgba(230, 57, 70, 0.5); /* سایه نئون */
   animation: pulse 2s infinite ease-in-out; /* انیمیشن ملایم */
-  z-index: 1; /* بالای کارت اما بدون تداخل با محتوا */
-  pointer-events: none; /* clickable نباشه */
+  z-index: 1;
+  pointer-events: none;
+  min-width: 40px; /* حداقل عرض برای جلوگیری از ناقص بودن */
+  text-align: center;
 }
 
 @keyframes pulse {
-  0% { transform: rotate(45deg) scale(1); }
-  50% { transform: rotate(45deg) scale(1.05); }
-  100% { transform: rotate(45deg) scale(1); }
+  0% { transform: rotate(45deg) translate(50%, -50%) scale(1); }
+  50% { transform: rotate(45deg) translate(50%, -50%) scale(1.05); }
+  100% { transform: rotate(45deg) translate(50%, -50%) scale(1); }
 }
 
 /* فوتر جدید */
 .food-footer {
   width: 100%;
   height: 40px;
-  background-color: #111; /* سیاه هم‌رنگ کارت */
+  background-color: #111;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -127,9 +129,9 @@ body {
   width: auto;
   min-width: 80px;
   display: flex;
-  flex-direction: column; /* column برای بالا/پایین */
+  flex-direction: column;
   align-items: flex-end;
-  gap: 2px; /* فضای کم بین قیمت‌ها */
+  gap: 2px;
   line-height: 1.1;
 }
 
@@ -149,7 +151,7 @@ body {
 
 /* دکمه افزودن */
 .add-btn {
-  background-color: yellow;
+  background-color: #c62828 !important; /* تغییر: قرمز پررنگ با !important برای override */
   color: black;
   padding: 6px 14px;
   border: none;
@@ -271,7 +273,7 @@ body {
 /* ریسپانسیو: موبایل */
 @media (max-width: 768px) {
   .food-grid {
-    grid-template-columns: 1fr; /* تک‌ستونه فقط در موبایل */
+    grid-template-columns: 1fr !important; /* تک‌ستونه با !important برای override inline */
     gap: 14px;
     padding: 10px;
   }
@@ -329,9 +331,10 @@ body {
   }
 
   .discount-ribbon {
-    top: -8px;
-    right: -8px;
-    padding: 4px 8px;
-    font-size: 11px; /* کمی کوچکتر در موبایل */
+    top: 0;
+    right: 0;
+    padding: 2px 6px;
+    font-size: 11px; /* کوچکتر در موبایل */
+    transform: rotate(45deg) translate(30%, -30%);
   }
 }
