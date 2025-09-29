@@ -14,27 +14,27 @@ body {
   box-sizing: border-box;
 }
 
-/* کادر غذا - ارتفاع افزایش یافته برای فضای بیشتر */
+/* کادر غذا */
 .food-card {
   width: 250px;
-  height: 300px; /* افزایش ارتفاع برای جای بیشتر */
+  height: auto; /* تغییر: auto برای grow با محتوا */
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 0 18px 4px rgba(255, 165, 0, 0.8); /* نئون */
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* تغییر: column برای سازگاری با inline row اگر override بشه */
   justify-content: flex-start;
   align-items: center;
   margin: 10px;
   padding: 10px;
   position: relative;
-  overflow: visible; /* تغییر جدید: اجازه بده محتوا بیرون بزنه اگر لازم */
+  overflow: visible;
 }
 
 /* تصویر غذا */
 .food-img {
   width: 100%;
-  height: 55%; /* کمی کاهش برای فضای متن */
+  height: 55%;
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 2px;
@@ -44,15 +44,15 @@ body {
 .food-info {
   flex-grow: 1;
   text-align: center;
-  padding: 2px 10px 40px; /* تغییر جدید: padding-bottom برای فضای قیمت (40px برای پوشش del و discounted) */
+  padding: 2px 10px 5px;
   margin: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between; /* تغییر: controls رو پایین ببر */
   align-items: center;
   gap: 4px;
-  overflow: visible; /* تغییر جدید: اجازه بده متن طولانی نمایش داده بشه */
+  overflow: visible;
   min-height: 60px;
 }
 
@@ -75,20 +75,23 @@ body {
   margin: 0;
   color: #000;
   line-height: 1.3;
-  white-space: normal; /* تغییر جدید: اجازه بده متن چندخطی بشه */
-  overflow: visible; /* تغییر جدید: بدون ellipsis، متن کامل نمایش داده بشه */
-  text-overflow: unset; /* تغییر جدید */
+  white-space: normal; /* چندخطی */
+  overflow: visible;
+  text-overflow: unset;
   max-width: 90%;
+  word-wrap: break-word; /* شکستن کلمات طولانی */
+  /* اختیاری: اگر متن خیلی طولانی، اسکرول کن */
+  /* max-height: 100px; overflow-y: auto; */
 }
 
-/* --- برچسب تخفیف (دایره قرمز کنار نام) --- */
+/* برچسب تخفیف */
 .food-info h3 .discount-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 28px;
   height: 28px;
-  background-color: #e63946; /* قرمز متون */
+  background-color: #e63946;
   color: white;
   font-weight: bold;
   font-size: 12px;
@@ -99,19 +102,18 @@ body {
 
 /* قیمت غذا */
 .price {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
+  position: static; /* تغییر اصلی: خارج از absolute */
   font-size: 16px;
   font-weight: bold;
-  color: #ffb84d; /* طلایی */
+  color: #ffb84d;
   text-align: right;
   direction: ltr;
   width: auto;
   min-width: 80px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  flex-direction: row-reverse; /* تغییر: row برای کنار هم قرار دادن del و discounted */
+  align-items: center;
+  gap: 4px; /* فضای بین قیمت‌ها */
   line-height: 1.3;
 }
 
@@ -119,14 +121,13 @@ body {
 .price del {
   color: #999;
   font-size: 14px;
-  margin-left: 4px;
   text-decoration: line-through;
   vertical-align: middle;
 }
 
 /* قیمت تخفیف‌خورده */
 .price .discounted {
-  color: #e63946; /* قرمز جذاب */
+  color: #e63946;
   font-size: 18px;
   font-weight: bold;
   vertical-align: middle;
@@ -134,9 +135,7 @@ body {
 
 /* دکمه افزودن */
 .add-btn {
-  position: absolute;
-  bottom: 8px;
-  left: 10px;
+  position: static; /* تغییر اصلی: خارج از absolute */
   background-color: yellow;
   color: black;
   padding: 6px 14px;
@@ -256,7 +255,7 @@ body {
   cursor: pointer;
 }
 
-/* --- ریسپانسیو: موبایل --- */
+/* ریسپانسیو: موبایل */
 @media (max-width: 768px) {
   .food-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -277,8 +276,9 @@ body {
   }
 
   .food-info {
-    padding: 6px 10px 50px; /* تغییر جدید: padding-bottom بیشتر در موبایل برای فضای قیمت */
+    padding: 6px 10px;
     gap: 6px;
+    justify-content: space-between; /* پایین بردن controls در موبایل */
   }
 
   .food-info h3 {
@@ -287,15 +287,15 @@ body {
 
   .food-info p {
     font-size: 13px;
-    white-space: normal; /* تغییر جدید: چندخطی در موبایل */
+    white-space: normal;
     overflow: visible;
     text-overflow: unset;
   }
 
   .price {
     font-size: 15px;
-    bottom: 8px;
-    right: 12px;
+    flex-direction: row-reverse; /* row در موبایل */
+    gap: 4px;
   }
 
   .price del {
