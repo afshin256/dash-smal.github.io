@@ -360,56 +360,58 @@
     </div>
   </div>
 
-  <div class="header">
-    <div class="brand">
-      <div class="logo">T</div>
-      <div>
-        <div style="font-weight:800;font-size:18px">TOUCAN</div>
-        <div style="font-size:13px;color:#bbb">منوی دیجیتال - سفارش با QR</div>
+  <div id="main-content">
+    <div class="header">
+      <div class="brand">
+        <div class="logo">T</div>
+        <div>
+          <div style="font-weight:800;font-size:18px">TOUCAN</div>
+          <div style="font-size:13px;color:#bbb">منوی دیجیتال - سفارش با QR</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div>
-    <div style="margin-bottom:10px">
-      <strong>میز:</strong> <span id="table-number-display">—</span>
+    <div>
+      <div style="margin-bottom:10px">
+        <strong>میز:</strong> <span id="table-number-display">—</span>
+      </div>
+
+      <div id="food-grid" class="food-grid"></div>
     </div>
 
-    <div id="food-grid" class="food-grid"></div>
-  </div>
+    <!-- floating cart -->
+    <div id="cart" class="cart-floating" aria-live="polite">
+      <button id="music-toggle" class="music-button" title="پخش/توقف موسیقی">
+        <img id="music-icon" src="https://www.dash-smal.ir/assets/images/player/play.png" alt="play">
+      </button>
 
-  <!-- floating cart -->
-  <div id="cart" class="cart-floating" aria-live="polite">
-    <button id="music-toggle" class="music-button" title="پخش/توقف موسیقی">
-      <img id="music-icon" src="https://www.dash-smal.ir/assets/images/player/play.png" alt="play">
-    </button>
+      <div style="flex:1">
+        <div style="font-weight:800; margin-bottom:6px">فاکتور (<span id="cart-count">0</span>)</div>
+        <div class="cart-list" id="cart-list"></div>
+        <div style="margin-top:6px;font-weight:800">کل: <span id="cart-total">0</span> تومان</div>
+      </div>
 
-    <div style="flex:1">
-      <div style="font-weight:800; margin-bottom:6px">فاکتور (<span id="cart-count">0</span>)</div>
-      <div class="cart-list" id="cart-list"></div>
-      <div style="margin-top:6px;font-weight:800">کل: <span id="cart-total">0</span> تومان</div>
+      <div class="cart-actions">
+        <button id="send-whatsapp" class="send-btn">ارسال سفارش به واتس‌اپ</button>
+        <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
+      </div>
+
+      <div class="rights-text">All rights reserved by Dash Smal Content Production Agency.</div>
     </div>
 
-    <div class="cart-actions">
-      <button id="send-whatsapp" class="send-btn">ارسال سفارش به واتس‌اپ</button>
-      <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
-    </div>
+    <!-- پلیر پنهان -->
+    <audio id="background-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop preload="none"></audio>
 
-    <div class="rights-text">All rights reserved by Dash Smal Content Production Agency.</div>
-  </div>
-
-  <!-- پلیر پنهان -->
-  <audio id="background-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop preload="none"></audio>
-
-  <!-- modal -->
-  <div id="modal" class="modal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:2000">
-    <div class="box" role="dialog" aria-modal="true" style="background:#111;color:#fff;padding:16px;border-radius:10px;max-width:92%;width:420px">
-      <h3 style="margin-top:0">چند شماره آشپزخانه پیدا شد</h3>
-      <p style="color:#ccc">سفارش به هر شماره جداگانه ارسال خواهد شد. شماره مورد نظر را انتخاب کنید یا همه را با هم ارسال کنید.</p>
-      <div id="recipient-list" style="display:flex;flex-direction:column;gap:8px;margin-top:12px"></div>
-      <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-start">
-        <button id="send-all" class="send-btn">ارسال همه</button>
-        <button id="close-modal" class="send-btn" style="background:#ddd;color:#000">بستن</button>
+    <!-- modal -->
+    <div id="modal" class="modal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:2000">
+      <div class="box" role="dialog" aria-modal="true" style="background:#111;color:#fff;padding:16px;border-radius:10px;max-width:92%;width:420px">
+        <h3 style="margin-top:0">چند شماره آشپزخانه پیدا شد</h3>
+        <p style="color:#ccc">سفارش به هر شماره جداگانه ارسال خواهد شد. شماره مورد نظر را انتخاب کنید یا همه را با هم ارسال کنید.</p>
+        <div id="recipient-list" style="display:flex;flex-direction:column;gap:8px;margin-top:12px"></div>
+        <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-start">
+          <button id="send-all" class="send-btn">ارسال همه</button>
+          <button id="close-modal" class="send-btn" style="background:#ddd;color:#000">بستن</button>
+        </div>
       </div>
     </div>
   </div>
@@ -904,13 +906,13 @@
   document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('intro-overlay');
     const gif = document.getElementById('intro-gif');
-    const body = document.body;
+    const mainContent = document.getElementById('main-content');
 
     // فعال کردن بلور صفحه اصلی
-    body.classList.add('intro-blurred');
+    mainContent.classList.add('intro-blurred');
 
-    // fade out بعد از ۷ ثانیه (توقف GIF اگر loop داشته باشه)
-    const gifDuration = 7000; // ۷ ثانیه
+    // fade out بعد از ۱۰ ثانیه (توقف GIF اگر loop داشته باشه)
+    const gifDuration = 10000; // ۱۰ ثانیه
     setTimeout(dismissOverlay, gifDuration);
 
     // dismiss با تعامل کاربر (کلیک یا تاچ)
@@ -919,7 +921,7 @@
 
     function dismissOverlay() {
       overlay.classList.add('hidden');
-      body.classList.remove('intro-blurred');
+      mainContent.classList.remove('intro-blurred');
       gif.src = ''; // توقف GIF با خالی کردن src
     }
   });
