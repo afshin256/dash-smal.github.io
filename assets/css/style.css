@@ -26,21 +26,20 @@ body {
   justify-content: flex-start;
   align-items: center;
   margin: 10px;
-  padding: 10px;
+  padding: 2px; /* کاهش برای fit بهتر */
   position: relative;
   overflow: visible;
-  opacity: 0; /* برای شروع انیمیشن */
 }
 
 /* تصویر غذا */
 .food-img {
   width: 100%;
-  height: auto; /* ارتفاع اتوماتیک برای فیت */
+  aspect-ratio: 3 / 4;
   object-fit: cover;
-  border-radius: 12px 12px 0 0; /* گردی بالا برای فیت به کارت */
-  margin: 0;
-  padding: 0;
-  position: relative; /* برای برچسب */
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0; /* صفر برای fit */
+  position: relative; /* برای badge */
+  border: 1px solid #222; /* حاشیه کم */
 }
 
 /* اطلاعات غذا */
@@ -85,11 +84,11 @@ body {
   word-wrap: break-word;
 }
 
-/* برچسب تخفیف دایره‌ای داخل تصویر (گوشه پایین راست) */
+/* برچسب تخفیف جدید (دایره قرمز داخل عکس) */
 .discount-badge {
   position: absolute;
-  bottom: 10px;
-  right: 10px; /* گوشه پایین راست از زاویه بیننده */
+  bottom: 5px;
+  right: 5px;
   background-color: #e63946;
   color: white;
   font-weight: bold;
@@ -156,7 +155,7 @@ body {
 
 /* دکمه افزودن */
 .add-btn {
-  background-color: #c62828 !important; /* قرمز پررنگ با !important */
+  background-color: #c62828 !important; /* تغییر: قرمز پررنگ با !important برای override */
   color: black;
   padding: 6px 14px;
   border: none;
@@ -180,8 +179,6 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  margin: 0; /* بدون فاصله */
-  padding: 0;
 }
 
 /* شبکه غذاها */
@@ -280,7 +277,7 @@ body {
 /* ریسپانسیو: موبایل */
 @media (max-width: 768px) {
   .food-grid {
-    grid-template-columns: 1fr !important; /* تک‌ستونه با !important */
+    grid-template-columns: 1fr !important; /* تک‌ستونه با !important برای override inline */
     gap: 14px;
     padding: 10px;
   }
@@ -289,12 +286,12 @@ body {
     width: 100%;
     height: auto;
     margin: 8px 0;
-    padding: 12px;
+    padding: 2px; /* حفظ کم */
   }
 
   .food-img {
-    height: 160px;
-    border-radius: 12px 12px 0 0;
+    aspect-ratio: 16 / 9; /* تنظیم برای موبایل */
+    border-radius: 8px;
   }
 
   .food-info {
@@ -338,28 +335,10 @@ body {
   }
 
   .discount-badge {
-    bottom: 8px;
-    right: 8px;
     width: 35px;
     height: 35px;
-    font-size: 11px; /* کوچکتر در موبایل */
-  }
-}
-
-/* انیمیشن ورود کارت‌ها فقط در دسکتاپ */
-@media (min-width: 769px) {
-  .food-card {
-    animation: dealFromLeft 0.5s ease-out forwards;
-  }
-
-  @keyframes dealFromLeft {
-    from {
-      transform: translateX(-100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
+    font-size: 11px;
+    bottom: 4px;
+    right: 4px;
   }
 }
