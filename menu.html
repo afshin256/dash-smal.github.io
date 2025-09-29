@@ -33,6 +33,7 @@
       border-radius: 12px;
       overflow: hidden;
       display: flex;
+      flex-direction: column; /* تغییر: column برای قرار دادن footer زیر */
       gap: 12px;
       padding: 12px;
       align-items: center;
@@ -75,6 +76,7 @@
     .food-info {
       flex: 1;
       min-width: 0;
+      width: 100%; /* هم‌عرض کارت */
     }
 
     .food-info h3 {
@@ -96,10 +98,16 @@
       word-wrap: break-word;
     }
 
-    .controls {
+    /* فوتر جدید برای قیمت و دکمه */
+    .food-footer {
+      width: 100%;
+      height: 40px; /* ارتفاع ثابت برای جلوگیری از تغییر */
+      background-color: #222; /* کمی متفاوت برای جداسازی */
       display: flex;
-      gap: 8px;
+      justify-content: space-between;
       align-items: center;
+      padding: 0 10px;
+      border-radius: 0 0 12px 12px; /* گرد کردن پایین کارت */
     }
 
     /* --- قیمت غذا (با پشتیبانی از تخفیف) --- */
@@ -111,15 +119,15 @@
       text-align: right;
       direction: ltr;
       display: flex;
-      flex-direction: column;
-      align-items: flex-end;
+      flex-direction: row-reverse; /* row برای کنار هم */
+      align-items: center;
+      gap: 4px;
       line-height: 1.3;
     }
 
     .price del {
       color: #999;
       font-size: 13px;
-      margin-left: 4px;
       text-decoration: line-through;
     }
 
@@ -523,8 +531,9 @@
       const p = document.createElement('p'); p.textContent = f.ingredients || '';
       info.appendChild(p);
 
-      // کنترل‌ها (قیمت و دکمه)
-      const controls = document.createElement('div'); controls.className='controls';
+      // فوتر جدید (قیمت و دکمه)
+      const footer = document.createElement('div'); 
+      footer.className = 'food-footer';
 
       // قیمت
       const priceSpan = document.createElement('div');
@@ -553,12 +562,12 @@
         addToCart(f);
       });
 
-      controls.appendChild(priceSpan);
-      controls.appendChild(addBtn);
+      footer.appendChild(addBtn); /* دکمه چپ */
+      footer.appendChild(priceSpan); /* قیمت راست */
 
-      info.appendChild(controls);
       card.appendChild(imgWrap);
       card.appendChild(info);
+      card.appendChild(footer); /* اضافه کردن فوتر جدید */
 
       grid.appendChild(card);
     });
