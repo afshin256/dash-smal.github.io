@@ -19,9 +19,9 @@
       gap: 12px;
     }
 
-    @media (max-width:600px) {
+    @media (max-width:768px) {
       .food-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr; /* تغییر: تک‌ستونه مثل اینستاگرام در موبایل */
         gap: 6px;
       }
       body { padding-bottom: 120px; }
@@ -53,13 +53,13 @@
       justify-content: center;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       .food-img {
         flex: 0 0 168px;
       }
     }
 
-    @media (min-width: 601px) {
+    @media (min-width: 769px) {
       .food-img {
         flex: 0 0 150px;
       }
@@ -139,7 +139,7 @@
     }
 
     .add-btn {
-      background: #ff6b6b;
+      background: #c62828; /* تغییر: قرمز پررنگ */
       border: none;
       color: #fff;
       padding: 6px 8px;
