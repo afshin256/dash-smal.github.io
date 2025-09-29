@@ -18,7 +18,7 @@ body {
 .food-card {
   width: 250px;
   height: auto;
-  background-color: white;
+  background-color: #111;
   border-radius: 12px;
   box-shadow: 0 0 18px 4px rgba(255, 165, 0, 0.8); /* نئون */
   display: flex;
@@ -82,27 +82,34 @@ body {
   word-wrap: break-word;
 }
 
-/* برچسب تخفیف */
-.food-info h3 .discount-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
+/* برچسب تخفیف خلاقانه (نوار مورب در گوشه بالا راست) */
+.discount-ribbon {
+  position: absolute;
+  top: -10px;
+  right: -10px;
   background-color: #e63946;
   color: white;
   font-weight: bold;
   font-size: 12px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-right: 4px;
+  padding: 5px 10px;
+  transform: rotate(45deg);
+  box-shadow: 0 0 10px rgba(230, 57, 70, 0.5); /* سایه نئون */
+  animation: pulse 2s infinite ease-in-out; /* انیمیشن ملایم */
+  z-index: 1; /* بالای کارت اما بدون تداخل با محتوا */
+  pointer-events: none; /* clickable نباشه */
+}
+
+@keyframes pulse {
+  0% { transform: rotate(45deg) scale(1); }
+  50% { transform: rotate(45deg) scale(1.05); }
+  100% { transform: rotate(45deg) scale(1); }
 }
 
 /* فوتر جدید */
 .food-footer {
   width: 100%;
   height: 40px;
-  background-color: #f0f0f0; /* خاکستری روشن برای جداسازی */
+  background-color: #111; /* تغییر: سیاه هم‌رنگ کارت */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -120,10 +127,10 @@ body {
   width: auto;
   min-width: 80px;
   display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  gap: 4px;
-  line-height: 1.3;
+  flex-direction: column; /* تغییر: column برای بالا/پایین */
+  align-items: flex-end;
+  gap: 2px; /* فضای کم بین قیمت‌ها */
+  line-height: 1.1;
 }
 
 /* قیمت اصلی با خط زدن */
@@ -131,7 +138,6 @@ body {
   color: #999;
   font-size: 14px;
   text-decoration: line-through;
-  vertical-align: middle;
 }
 
 /* قیمت تخفیف‌خورده */
@@ -139,7 +145,6 @@ body {
   color: #e63946;
   font-size: 18px;
   font-weight: bold;
-  vertical-align: middle;
 }
 
 /* دکمه افزودن */
@@ -266,7 +271,7 @@ body {
 /* ریسپانسیو: موبایل */
 @media (max-width: 768px) {
   .food-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr; /* تغییر: تک‌ستونی مثل اینستاگرام */
     gap: 14px;
     padding: 10px;
   }
@@ -306,7 +311,7 @@ body {
 
   .price {
     font-size: 15px;
-    gap: 4px;
+    gap: 2px;
   }
 
   .price del {
@@ -321,5 +326,12 @@ body {
     padding: 8px 16px;
     min-height: 32px;
     font-size: 15px;
+  }
+
+  .discount-ribbon {
+    top: -8px;
+    right: -8px;
+    padding: 4px 8px;
+    font-size: 11px; /* کمی کوچکتر در موبایل */
   }
 }
