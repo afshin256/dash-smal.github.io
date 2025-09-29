@@ -14,10 +14,10 @@ body {
   box-sizing: border-box;
 }
 
-/* کادر غذا - ارتفاع افزایش یافته به 400px */
+/* کادر غذا - ارتفاع افزایش یافته برای فضای بیشتر */
 .food-card {
   width: 250px;
-  height: 400px; /* ارتفاع بالا برای فضای بیشتر */
+  height: 300px; /* افزایش ارتفاع برای جای بیشتر */
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 0 18px 4px rgba(255, 165, 0, 0.8); /* نئون */
@@ -28,35 +28,34 @@ body {
   margin: 10px;
   padding: 10px;
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* تغییر جدید: اجازه بده محتوا بیرون بزنه اگر لازم */
 }
 
-/* تصویر غذا — بدون فاصله پایین */
+/* تصویر غذا */
 .food-img {
   width: 100%;
-  height: 55%; /* حفظ ارتفاع تصویر */
+  height: 55%; /* کمی کاهش برای فضای متن */
   object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 0; /* ❌ فاصله حذف شد — نام غذا چسبیده به عکس */
+  margin-bottom: 2px;
 }
 
 /* اطلاعات غذا */
 .food-info {
   flex-grow: 1;
   text-align: center;
-  padding: 6px 10px 8px;
+  padding: 2px 10px 40px; /* تغییر جدید: padding-bottom برای فضای قیمت (40px برای پوشش del و discounted) */
   margin: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 6px; /* فاصله مناسب بین عناصر */
-  overflow: hidden;
-  min-height: 90px;
+  gap: 4px;
+  overflow: visible; /* تغییر جدید: اجازه بده متن طولانی نمایش داده بشه */
+  min-height: 60px;
 }
 
-/* نام غذا */
 .food-info h3 {
   font-size: 18px;
   margin: 0;
@@ -71,47 +70,41 @@ body {
   gap: 6px;
 }
 
-/* برچسب تخفیف (دایره قرمز کنار نام) */
-.food-info h3 .discount-badge,
-.food-info h3 span[style*="background-color"] {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  background-color: #e63946 !important;
-  color: white !important;
-  font-weight: bold !important;
-  font-size: 12px !important;
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-right: 4px;
-}
-
-/* توضیحات غذا */
 .food-info p {
   font-size: 14px;
   margin: 0;
   color: #000;
   line-height: 1.3;
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal; /* تغییر جدید: اجازه بده متن چندخطی بشه */
+  overflow: visible; /* تغییر جدید: بدون ellipsis، متن کامل نمایش داده بشه */
+  text-overflow: unset; /* تغییر جدید */
   max-width: 90%;
-  min-height: 1.3em;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+}
+
+/* --- برچسب تخفیف (دایره قرمز کنار نام) --- */
+.food-info h3 .discount-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background-color: #e63946; /* قرمز متون */
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: 4px;
 }
 
 /* قیمت غذا */
 .price {
   position: absolute;
-  bottom: 14px;
-  right: 12px;
+  bottom: 10px;
+  right: 10px;
   font-size: 16px;
   font-weight: bold;
-  color: #ffb84d;
+  color: #ffb84d; /* طلایی */
   text-align: right;
   direction: ltr;
   width: auto;
@@ -119,7 +112,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 /* قیمت اصلی با خط زدن */
@@ -133,7 +126,7 @@ body {
 
 /* قیمت تخفیف‌خورده */
 .price .discounted {
-  color: #e63946;
+  color: #e63946; /* قرمز جذاب */
   font-size: 18px;
   font-weight: bold;
   vertical-align: middle;
@@ -263,72 +256,59 @@ body {
   cursor: pointer;
 }
 
-/* --- ریسپانسیو: موبایل — اصلاح کامل تداخل --- */
+/* --- ریسپانسیو: موبایل --- */
 @media (max-width: 768px) {
   .food-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 14px;
     padding: 10px;
   }
 
   .food-card {
     width: 100%;
-    height: 420px; /* ارتفاع بیشتر در موبایل */
-    margin: 10px 0;
-    padding: 14px;
-    position: relative;
+    height: auto;
+    margin: 8px 0;
+    padding: 12px;
   }
 
   .food-img {
-    height: 170px; /* کمی بزرگ‌تر */
+    height: 160px;
     border-radius: 8px;
-    margin-bottom: 0;
   }
 
   .food-info {
-    padding: 8px 10px;
-    gap: 8px; /* فاصله بیشتر */
-    min-height: 90px;
+    padding: 6px 10px 50px; /* تغییر جدید: padding-bottom بیشتر در موبایل برای فضای قیمت */
+    gap: 6px;
   }
 
   .food-info h3 {
-    font-size: 18px;
-    line-height: 1.3;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 17px;
   }
 
   .food-info p {
-    font-size: 14px;
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    max-width: 90%;
+    font-size: 13px;
+    white-space: normal; /* تغییر جدید: چندخطی در موبایل */
+    overflow: visible;
+    text-overflow: unset;
   }
 
   .price {
-    font-size: 16px;
-    bottom: 16px; /* دورتر از پایین */
-    right: 14px;
-    min-width: 85px;
+    font-size: 15px;
+    bottom: 8px;
+    right: 12px;
   }
 
   .price del {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .price .discounted {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .add-btn {
     padding: 8px 16px;
     min-height: 32px;
-    font-size: 14px;
-    bottom: 10px;
-    left: 12px;
+    font-size: 15px;
   }
 }
