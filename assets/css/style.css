@@ -29,15 +29,18 @@ body {
   padding: 10px;
   position: relative;
   overflow: visible;
+  opacity: 0; /* برای شروع انیمیشن */
 }
 
 /* تصویر غذا */
 .food-img {
   width: 100%;
-  height: 55%;
+  height: auto; /* ارتفاع اتوماتیک برای فیت */
   object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 2px;
+  border-radius: 12px 12px 0 0; /* گردی بالا برای فیت به کارت */
+  margin: 0;
+  padding: 0;
+  position: relative; /* برای برچسب */
 }
 
 /* اطلاعات غذا */
@@ -82,29 +85,31 @@ body {
   word-wrap: break-word;
 }
 
-/* برچسب تخفیف خلاقانه (نوار مورب در گوشه بالا راست) */
-.discount-ribbon {
+/* برچسب تخفیف دایره‌ای داخل تصویر (گوشه پایین راست) */
+.discount-badge {
   position: absolute;
-  top: 0;
-  right: 0;
+  bottom: 10px;
+  right: 10px; /* گوشه پایین راست از زاویه بیننده */
   background-color: #e63946;
   color: white;
   font-weight: bold;
   font-size: 12px;
-  padding: 2px 8px;
-  transform: rotate(45deg) translate(50%, -50%); /* تغییر: تنظیم موقعیت برای کامل نمایش دادن */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 0 10px rgba(230, 57, 70, 0.5); /* سایه نئون */
   animation: pulse 2s infinite ease-in-out; /* انیمیشن ملایم */
   z-index: 1;
   pointer-events: none;
-  min-width: 40px; /* حداقل عرض برای جلوگیری از ناقص بودن */
-  text-align: center;
 }
 
 @keyframes pulse {
-  0% { transform: rotate(45deg) translate(50%, -50%) scale(1); }
-  50% { transform: rotate(45deg) translate(50%, -50%) scale(1.05); }
-  100% { transform: rotate(45deg) translate(50%, -50%) scale(1); }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
 /* فوتر جدید */
@@ -151,7 +156,7 @@ body {
 
 /* دکمه افزودن */
 .add-btn {
-  background-color: #c62828 !important; /* تغییر: قرمز پررنگ با !important برای override */
+  background-color: #c62828 !important; /* قرمز پررنگ با !important */
   color: black;
   padding: 6px 14px;
   border: none;
@@ -175,6 +180,8 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  margin: 0; /* بدون فاصله */
+  padding: 0;
 }
 
 /* شبکه غذاها */
@@ -273,7 +280,7 @@ body {
 /* ریسپانسیو: موبایل */
 @media (max-width: 768px) {
   .food-grid {
-    grid-template-columns: 1fr !important; /* تک‌ستونه با !important برای override inline */
+    grid-template-columns: 1fr !important; /* تک‌ستونه با !important */
     gap: 14px;
     padding: 10px;
   }
@@ -287,7 +294,7 @@ body {
 
   .food-img {
     height: 160px;
-    border-radius: 8px;
+    border-radius: 12px 12px 0 0;
   }
 
   .food-info {
@@ -330,11 +337,29 @@ body {
     font-size: 15px;
   }
 
-  .discount-ribbon {
-    top: 0;
-    right: 0;
-    padding: 2px 6px;
+  .discount-badge {
+    bottom: 8px;
+    right: 8px;
+    width: 35px;
+    height: 35px;
     font-size: 11px; /* کوچکتر در موبایل */
-    transform: rotate(45deg) translate(30%, -30%);
+  }
+}
+
+/* انیمیشن ورود کارت‌ها فقط در دسکتاپ */
+@media (min-width: 769px) {
+  .food-card {
+    animation: dealFromLeft 0.5s ease-out forwards;
+  }
+
+  @keyframes dealFromLeft {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
 }
