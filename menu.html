@@ -415,7 +415,7 @@
       const rows = parseCSV(text);
       foods = rows.map((r, idx) => {
         const price = r[3] ? Number(String(r[3]).replace(/[^0-9.-]/g,'')) : 0;
-        const discountPercent = r[9] ? parseFloat(r[9]) || 0 : 0; // ستون J
+        const discountPercent = r[9] ? parseFloat(r[9]) || 0 : 0; // ستون J (ایندکس 9)
         const discountedPrice = discountPercent > 0 ? Math.round(price * (1 - discountPercent / 100)) : price;
 
         return {
@@ -481,7 +481,7 @@
 
       const info = document.createElement('div'); info.className='food-info';
 
-      // عنوان غذا با برچسب تخفیف
+      // عنوان غذا با برچسب تخفیف (در صورت وجود)
       const h = document.createElement('h3');
       h.style.display = 'flex';
       h.style.alignItems = 'center';
@@ -495,6 +495,7 @@
       const nameSpan = document.createElement('span');
       nameSpan.textContent = f.fa || f.en;
 
+      // برچسب تخفیف: دایره قرمز با فونت سفید بویلد
       if (f.hasDiscount && f.discountPercent > 0) {
         const badge = document.createElement('div');
         badge.style.cssText = `
@@ -518,13 +519,14 @@
       h.appendChild(nameSpan);
       info.appendChild(h);
 
-      // توضیحات
+      // مواد تشکیل‌دهنده
       const p = document.createElement('p'); p.textContent = f.ingredients || '';
       info.appendChild(p);
 
       // کنترل‌ها (قیمت و دکمه)
       const controls = document.createElement('div'); controls.className='controls';
 
+      // قیمت
       const priceSpan = document.createElement('div');
       priceSpan.className = 'price';
 
@@ -542,6 +544,7 @@
         priceSpan.textContent = formatMoney(f.price) + ' تومان';
       }
 
+      // دکمه +
       const addBtn = document.createElement('button');
       addBtn.className = 'add-btn';
       addBtn.textContent = '+';
@@ -552,11 +555,12 @@
 
       controls.appendChild(priceSpan);
       controls.appendChild(addBtn);
-      info.appendChild(controls);
 
+      info.appendChild(controls);
       card.appendChild(imgWrap);
       card.appendChild(info);
-      document.getElementById('food-grid').appendChild(card);
+
+      grid.appendChild(card);
     });
   }
 
@@ -637,6 +641,7 @@
     document.getElementById('cart-count').textContent = count;
   }
 
+  // Build whatsapp messages grouped by number
   function buildMessages(){
     const groups = {};
     for(const id in cart){
