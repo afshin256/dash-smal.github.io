@@ -21,7 +21,7 @@
 
     @media (max-width:768px) {
       .food-grid {
-        grid-template-columns: 1fr; /* تغییر: تک‌ستونه مثل اینستاگرام در موبایل */
+        grid-template-columns: 1fr; /* تک‌ستونه مثل اینستاگرام در موبایل */
         gap: 6px;
       }
       body { padding-bottom: 120px; }
@@ -51,6 +51,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative; /* برای قرار دادن برچسب داخل تصویر */
+      width: 100%; /* فیت کامل */
+      margin: 0; /* بدون فاصله */
+      padding: 0;
     }
 
     @media (max-width: 768px) {
@@ -70,6 +74,7 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      border-radius: 0; /* بدون فاصله و گردی اضافه */
     }
 
     /* اطلاعات غذا */
@@ -477,10 +482,11 @@
     const grid = document.getElementById('food-grid');
     grid.innerHTML = '';
 
-    foods.forEach(f => {
+    foods.forEach((f, index) => {
       const card = document.createElement('div');
       card.className = 'food-card';
       card.dataset.id = f.id;
+      card.style.animationDelay = `${index * 0.1}s`; /* انیمیشن با delay برای ترتیب ورود */
 
       const imgWrap = document.createElement('div'); imgWrap.className='food-img';
       const img = document.createElement('img');
@@ -532,11 +538,11 @@
         priceSpan.appendChild(original);
         priceSpan.appendChild(discounted);
 
-        // برچسب تخفیف خلاقانه (نوار مورب در گوشه بالا راست کارت)
+        // برچسب تخفیف دایره‌ای داخل تصویر (گوشه پایین راست)
         const badge = document.createElement('div');
-        badge.className = 'discount-ribbon';
+        badge.className = 'discount-badge';
         badge.textContent = `${Math.round(f.discountPercent)}%`;
-        card.appendChild(badge); // اضافه به کارت، نه h3
+        imgWrap.appendChild(badge); // اضافه به imgWrap برای داخل تصویر
       } else {
         priceSpan.textContent = formatMoney(f.price) + ' تومان';
       }
