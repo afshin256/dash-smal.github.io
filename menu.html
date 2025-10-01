@@ -539,6 +539,7 @@
       img.src = imgPath;
       img.onerror = () => img.src = PLACEHOLDER;
       img.alt = f.fa || f.en;
+      img.setAttribute('loading', 'lazy'); // اضافه کردن lazy loading برای تصاویر غذا
       imgWrap.appendChild(img);
 
       if (f.hasDiscount) {
