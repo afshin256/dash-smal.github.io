@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>TOUCAN - منو</title>
   <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="preload" as="image" href="https://www.dash-smal.ir/assets/images/777.gif">
   <style>
     /* پایه‌ای برای کارت‌ها و شبکه */
     body { font-family: 'Segoe UI','Helvetica Neue',Tahoma,Arial; background:#0b0b0b; color:#eee; margin:0; padding:0 12px 80px 12px; }
@@ -442,6 +441,34 @@
   let isFadingOut = false;
   let currentAlpha = 0.6;
 
+  // تغییرات جدید برای گزارش‌گیری
+  const entryTime = Date.now(); // زمان ورود به صفحه
+  const referrer = document.referrer || 'Direct'; // منبع ورود
+  const userLanguage = navigator.language || 'fa'; // زبان کاربر
+  const userAgent = navigator.userAgent; // برای استخراج مرورگر و OS
+  const screenResolution = `${window.screen.width}x${window.screen.height}`; // رزولوشن
+  const deviceType = window.innerWidth < 768 ? 'Mobile' : (window.innerWidth < 1024 ? 'Tablet' : 'Desktop'); // نوع دستگاه
+
+  // تابع ساده برای استخراج مرورگر و OS از userAgent
+  function getBrowserAndOS(ua) {
+    let browser = 'Unknown';
+    let os = 'Unknown';
+    if (ua.indexOf('Chrome') > -1) browser = 'Chrome';
+    else if (ua.indexOf('Safari') > -1) browser = 'Safari';
+    else if (ua.indexOf('Firefox') > -1) browser = 'Firefox';
+    else if (ua.indexOf('Edge') > -1) browser = 'Edge';
+    else if (ua.indexOf('Trident') > -1) browser = 'IE';
+
+    if (ua.indexOf('Win') > -1) os = 'Windows';
+    else if (ua.indexOf('Mac') > -1) os = 'macOS';
+    else if (ua.indexOf('Android') > -1) os = 'Android';
+    else if (ua.indexOf('iPhone') > -1 || ua.indexOf('iPad') > -1) os = 'iOS';
+    else if (ua.indexOf('Linux') > -1) os = 'Linux';
+
+    return { browser, os };
+  }
+  const { browser, os } = getBrowserAndOS(userAgent);
+
   function getQueryParam(name) {
     const params = new URLSearchParams(location.search);
     return params.get(name);
@@ -781,6 +808,33 @@
       orders.unshift({to: message.to, text: message.text, items: message.items, subtotal: message.subtotal, table: table, ts: Date.now()});
       localStorage.setItem('toucan_orders', JSON.stringify(orders.slice(0,200)));
     }catch(e){ console.warn(e); }
+
+    // تغییرات جدید: ذخیره گزارش در localStorage برای report.html
+    const duration = Math.round((Date.now() - entryTime) / 1000); // مدت زمان حضور در ثانیه
+    const itemsList = message.items.map(it => `${it.qty}x ${it.fa || it.en} (${formatMoney(it.discountedPrice || it.price)})`).join(', ');
+    const report = {
+      timestamp: new Date().toISOString(),
+      table: table,
+      duration_seconds: duration,
+      device_type: deviceType,
+      browser: browser,
+      os: os,
+      screen_resolution: screenResolution,
+      user_language: userLanguage,
+      referrer: referrer,
+      items: itemsList,
+      total: message.subtotal,
+      recipient: message.to || 'None'
+    };
+
+    try {
+      const rawReports = localStorage.getItem('toucan_reports') || '[]';
+      const reports = JSON.parse(rawReports);
+      reports.unshift(report);
+      localStorage.setItem('toucan_reports', JSON.stringify(reports.slice(0, 500))); // حداکثر 500 گزارش نگه داریم
+    } catch (e) {
+      console.warn('Error saving report:', e);
+    }
   }
 
   // ========== مدیریت دکمه موزیک ==========
@@ -912,8 +966,8 @@
     // فعال کردن بلور صفحه اصلی
     mainContent.classList.add('intro-blurred');
 
-    // fade out بعد از ۴ ثانیه (توقف GIF اگر loop داشته باشه)
-    const gifDuration = 4000; // ۴ ثانیه
+    // fade out بعد از ۱۰ ثانیه (توقف GIF اگر loop داشته باشه)
+    const gifDuration = 10000; // ۱۰ ثانیه
     setTimeout(dismissOverlay, gifDuration);
 
     // dismiss با تعامل کاربر (کلیک یا تاچ)
