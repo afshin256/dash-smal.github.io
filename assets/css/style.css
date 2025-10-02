@@ -361,7 +361,7 @@ body {
   justify-content: center;
   z-index: 9999;
   opacity: 1;
-  transition: opacity 1s ease; /* fade out نرم - تغییر به ۱ ثانیه برای کاهش لگ */
+  transition: opacity 3s ease; /* fade out نرم - تغییر به 3 ثانیه */
 }
 
 #intro-overlay.hidden {
