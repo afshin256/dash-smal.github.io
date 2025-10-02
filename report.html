@@ -3,44 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>گزارش سفارشات - TOUCAN</title>
-  <style>
-    body {
-      background: #0b0b0b;
-      color: white;
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #ffb84d;
-      margin-bottom: 20px;
-    }
-    .order {
-      background: #111;
-      margin: 10px 0;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #222;
-    }
-    .loading {
-      text-align: center;
-      color: #999;
-      padding: 30px;
-    }
-  </style>
+  <title>گزارش - تست Firebase</title>
 </head>
-<body>
-  <h1>گزارش سفارشات - TOUCAN</h1>
-  <div id="orders-container" class="loading">در حال بارگذاری...</div>
+<body style="background:#000;color:#fff;padding:20px;font-family:Arial">
+  <h2>گزارش سفارشات (فقط از Firebase)</h2>
+  <div id="out"></div>
 
-  <!-- Firebase SDK (compat mode - بدون نیاز به npm) -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <script>
-    // 🔑 همان تنظیمات Firebase شما
-    const firebaseConfig = {
+    const config = {
       apiKey: "AIzaSyBBGJfA74Ef1haXMbjoW12yYcVNuLcxGEA",
       authDomain: "toucan-restaurant-menu.firebaseapp.com",
       projectId: "toucan-restaurant-menu",
@@ -48,64 +22,25 @@
       messagingSenderId: "142624701803",
       appId: "1:142624701803:web:334bbbc313ce35edb6a02e"
     };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(config);
     const db = firebase.firestore();
-  </script>
 
-  <script>
-    const container = document.getElementById('orders-container');
-
-    function formatTime(timestamp) {
-      if (!timestamp) return '—';
-      return timestamp.toDate().toLocaleString('fa-IR');
-    }
-
-    function renderOrders(orders) {
-      if (orders.length === 0) {
-        container.innerHTML = '<div class="loading">هیچ سفارشی وجود ندارد.</div>';
-        return;
-      }
-
-      let html = '';
-      orders.forEach(o => {
-        const items = (o.items || []).map(i => 
-          `<div>${i.qty} × ${i.name} — ${i.total?.toLocaleString() || '—'} تومان</div>`
-        ).join('');
-
-        html += `
-          <div class="order">
-            <div><strong>میز:</strong> ${o.table || '—'} | <strong>زمان:</strong> ${formatTime(o.timestamp)}</div>
-            <div><strong>مدت حضور:</strong> ${o.durationSeconds || '—'} ثانیه</div>
-            <div><strong>دستگاه:</strong> ${o.deviceType || '—'}, ${o.browser || '—'}, ${o.os || '—'}</div>
-            <div><strong>رزولوشن:</strong> ${o.resolution || '—'} | <strong>زبان:</strong> ${o.language || '—'}</div>
-            <div><strong>منبع ورود:</strong> ${o.referrer === 'direct' ? 'مستقیم' : o.referrer || '—'}</div>
-            <div style="margin:8px 0;"><strong>غذاها:</strong><br>${items}</div>
-            <div style="color:#ffb84d"><strong>جمع کل:</strong> ${o.subtotal?.toLocaleString() || '0'} تومان</div>
-            <div><strong>دریافت‌کننده:</strong> ${o.recipient || '—'}</div>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-    }
-
-    // 🔥 خواندن از Firestore (نه localStorage!)
     db.collection('orders')
       .orderBy('timestamp', 'desc')
-      .limit(100)
-      .onSnapshot(
-        (snapshot) => {
-          const orders = [];
-          snapshot.forEach(doc => orders.push(doc.data()));
-          renderOrders(orders);
-        },
-        (error) => {
-          console.error('خطا:', error);
-          container.innerHTML = `<div class="loading" style="color:red">خطا در اتصال به Firebase: ${error.message}</div>`;
+      .limit(10)
+      .onSnapshot(snap => {
+        const out = document.getElementById('out');
+        if (snap.empty) {
+          out.innerHTML = '<p>هیچ سفارشی در Firebase وجود ندارد.</p>';
+          return;
         }
-      );
-  </script>
-</body>
-</html>
+        let html = '<ul>';
+        snap.forEach(doc => {
+          const d = doc.data();
+          const time = d.timestamp ? d.timestamp.toDate().toLocaleString('fa-IR') : 'نامشخص';
+          html += `<li>میز: ${d.table || '—'} | زمان: ${time} | جمع: ${d.subtotal || 0}</li>`;
+        });
+        html += '</ul>';
+        out.innerHTML = html;
+      }, err => {
+        document.getElementById('out').innerHTML = `<p style="color:red
