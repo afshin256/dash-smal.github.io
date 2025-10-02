@@ -18,7 +18,6 @@
       margin-bottom: 20px;
       color: #ffb84d;
       font-weight: 800;
-      font-size: 24px;
     }
     .order {
       background: #111;
@@ -34,7 +33,6 @@
       font-weight: bold;
       margin-bottom: 10px;
       color: #0ea5b7;
-      font-size: 16px;
     }
     .order-meta {
       display: grid;
@@ -66,7 +64,7 @@
       flex: 1;
       color: #fff;
     }
-    .item-qty, .item-total {
+    .item-total {
       text-align: left;
       min-width: 70px;
       color: #ffb84d;
@@ -76,19 +74,16 @@
       font-weight: bold;
       color: #ffb84d;
       text-align: left;
-      font-size: 16px;
     }
     .loading {
       text-align: center;
       padding: 40px;
       color: #999;
-      font-size: 16px;
     }
     .error {
       color: #e63946;
       text-align: center;
       padding: 20px;
-      font-size: 16px;
     }
     @media (max-width: 600px) {
       .meta-item {
@@ -97,81 +92,72 @@
       }
       .meta-item strong {
         min-width: auto;
-        font-weight: bold;
       }
     }
   </style>
 </head>
 <body>
   <h1>📊 گزارش سفارشات - TOUCAN</h1>
-  <div id="orders-container">
-    <div class="loading">در حال بارگذاری سفارشات از Firebase...</div>
-  </div>
-
-  <!-- 🔥 Firebase SDK (compat mode - بدون نیاز به npm) -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <div id="orders-container" class="loading">در حال بارگذاری سفارشات از Google Sheet...</div>
 
   <script>
-    // 🔑 تنظیمات Firebase شما (همان که در menu.html استفاده کردید)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBBGJfA74Ef1haXMbjoW12yYcVNuLcxGEA",
-      authDomain: "toucan-restaurant-menu.firebaseapp.com",
-      projectId: "toucan-restaurant-menu",
-      storageBucket: "toucan-restaurant-menu.firebasestorage.app",
-      messagingSenderId: "142624701803",
-      appId: "1:142624701803:web:334bbbc313ce35edb6a02e"
-    };
+    // 🔗 لینک CSV عمومی Google Sheet شما
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/1aBcD.../export?format=csv&gid=0'; // 👈 اینجا لینک خودتان را جایگزین کنید
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-  </script>
-
-  <script>
     const container = document.getElementById('orders-container');
 
-    // تابع فرمت زمان فارسی
-    function formatTimestamp(firebaseTimestamp) {
-      if (!firebaseTimestamp) return '—';
-      const date = firebaseTimestamp.toDate();
-      return date.toLocaleString('fa-IR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      });
+    // تبدیل CSV به آرایه
+    function parseCSV(text) {
+      const lines = text.split('\n').filter(line => line.trim() !== '');
+      const headers = lines[0].split(',').map(h => h.trim());
+      const orders = [];
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/); // handle commas in quotes
+        if (values.length < headers.length) continue;
+        const order = {};
+        headers.forEach((header, index) => {
+          let val = values[index] || '';
+          // حذف "" اگر وجود داشت
+          if (val.startsWith('"') && val.endsWith('"')) {
+            val = val.slice(1, -1).replace(/""/g, '"');
+          }
+          order[header] = val;
+        });
+        orders.push(order);
+      }
+      return orders;
     }
 
     // نمایش سفارشات
     function renderOrders(orders) {
       if (orders.length === 0) {
-        container.innerHTML = '<div class="loading">هیچ سفارشی در سیستم ثبت نشده است.</div>';
+        container.innerHTML = '<div class="loading">هیچ سفارشی ثبت نشده است.</div>';
         return;
       }
 
+      // مرتب‌سازی بر اساس زمان (جدیدترین اول)
+      orders.sort((a, b) => new Date(b['زمان ارسال']) - new Date(a['زمان ارسال']));
+
       let html = '';
       orders.forEach(order => {
-        // هدر: زمان و میز
+        // هدر
         const header = `
           <div class="order-header">
-            <span>میز: ${order.table || '—'}</span>
-            <span>${formatTimestamp(order.timestamp)}</span>
+            <span>میز: ${order['میز'] || '—'}</span>
+            <span>${order['زمان ارسال'] || '—'}</span>
           </div>
         `;
 
-        // متا اطلاعات
+        // متا
         const metaFields = [
-          { label: 'مدت حضور', value: order.durationSeconds ? `${order.durationSeconds} ثانیه` : '—' },
-          { label: 'دستگاه', value: order.deviceType || '—' },
-          { label: 'مرورگر', value: order.browser || '—' },
-          { label: 'سیستم‌عامل', value: order.os || '—' },
-          { label: 'رزولوشن', value: order.resolution || '—' },
-          { label: 'زبان', value: order.language || '—' },
-          { label: 'منبع ورود', value: order.referrer === 'direct' ? 'مستقیم' : (order.referrer || '—') },
-          { label: 'دریافت‌کننده', value: order.recipient || '—' }
+          { label: 'مدت حضور', value: order['مدت حضور (ثانیه)'] ? `${order['مدت حضور (ثانیه)']} ثانیه` : '—' },
+          { label: 'دستگاه', value: order['نوع دستگاه'] || '—' },
+          { label: 'مرورگر', value: order['مرورگر'] || '—' },
+          { label: 'سیستم‌عامل', value: order['سیستم‌عامل'] || '—' },
+          { label: 'رزولوشن', value: order['رزولوشن صفحه'] || '—' },
+          { label: 'زبان', value: order['زبان کاربر'] || '—' },
+          { label: 'منبع ورود', value: order['منبع ورود'] === 'direct' ? 'مستقیم' : (order['منبع ورود'] || '—') },
+          { label: 'دریافت‌کننده', value: order['دریافت‌کننده'] || '—' }
         ];
 
         let metaHtml = '<div class="order-meta">';
@@ -180,49 +166,51 @@
         });
         metaHtml += '</div>';
 
-        // آیتم‌های سفارش
+        // غذاها
         let itemsHtml = '';
-        if (order.items && order.items.length > 0) {
-          itemsHtml = '<div class="items-list"><div style="font-weight:bold;margin-bottom:6px;color:#fff;">غذاها:</div>';
-          order.items.forEach(item => {
-            const name = item.name || '—';
-            const qty = item.qty || 0;
-            const total = item.total ? item.total.toLocaleString() : '—';
-            itemsHtml += `<div class="item-row">
-              <span class="item-name">${qty} × ${name}</span>
-              <span class="item-total">${total} تومان</span>
-            </div>`;
-          });
-          itemsHtml += '</div>';
+        try {
+          const items = JSON.parse(order['غذاهای سفارش‌داده شده'] || '[]');
+          if (items.length > 0) {
+            itemsHtml = '<div class="items-list"><div style="font-weight:bold;margin-bottom:6px;color:#fff;">غذاها:</div>';
+            items.forEach(item => {
+              const name = item.name || '—';
+              const qty = item.qty || 0;
+              const total = item.total ? parseInt(item.total).toLocaleString() : '—';
+              itemsHtml += `<div class="item-row">
+                <span class="item-name">${qty} × ${name}</span>
+                <span class="item-total">${total} تومان</span>
+              </div>`;
+            });
+            itemsHtml += '</div>';
+          }
+        } catch (e) {
+          itemsHtml = '<div class="items-list"><div style="color:#e63946">خطا در خواندن لیست غذاها</div></div>';
         }
 
         // جمع کل
-        const totalSection = `<div class="total-section">جمع کل: ${order.subtotal ? order.subtotal.toLocaleString() : '0'} تومان</div>`;
+        const totalAmount = order['مجموع مبلغ'] ? parseInt(order['مجموع مبلغ']).toLocaleString() : '0';
+        const totalSection = `<div class="total-section">جمع کل: ${totalAmount} تومان</div>`;
 
-        // ترکیب همه چیز
         html += `<div class="order">${header}${metaHtml}${itemsHtml}${totalSection}</div>`;
       });
 
       container.innerHTML = html;
     }
 
-    // 🔥 خواندن بلادرنگ از Firestore
-    db.collection('orders')
-      .orderBy('timestamp', 'desc')
-      .limit(100)
-      .onSnapshot(
-        (snapshot) => {
-          const orders = [];
-          snapshot.forEach(doc => {
-            orders.push(doc.data());
-          });
-          renderOrders(orders);
-        },
-        (error) => {
-          console.error('خطا در اتصال به Firebase:', error);
-          container.innerHTML = `<div class="error">❌ خطا: ${error.message}</div>`;
-        }
-      );
+    // بارگذاری CSV
+    fetch(CSV_URL)
+      .then(response => {
+        if (!response.ok) throw new Error('خطا در دریافت داده‌ها');
+        return response.text();
+      })
+      .then(text => {
+        const orders = parseCSV(text);
+        renderOrders(orders);
+      })
+      .catch(err => {
+        console.error('خطا:', err);
+        container.innerHTML = `<div class="error">❌ خطا در بارگذاری گزارش: ${err.message}</div>`;
+      });
   </script>
 </body>
 </html>
