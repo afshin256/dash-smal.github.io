@@ -416,8 +416,24 @@
     </div>
   </div>
 
-<script>
+<script type="module">
 /* menu.js - client side logic */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBjLXcNNRAEwJw5CaTknfCr_Y1saeXlvTw",
+  authDomain: "toucan-reports.firebaseapp.com",
+  projectId: "toucan-reports",
+  storageBucket: "toucan-reports.firebasestorage.app",
+  messagingSenderId: "977430999383",
+  appId: "1:977430999383:web:1c4b38f0bcee85bf620e12"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// بقیه کد JS همان قبلی است (از DOCUMENT html.txt)
 (() => {
   const CSV_PATH = 'data/foods.csv';
   const PLACEHOLDER = 'assets/images/placeholder.png';
@@ -781,8 +797,8 @@
       list.appendChild(div);
     });
     modal.style.display = 'flex';
-    document.getElementById('close-modal').onclick = ()=> modal.style.display='none';
-    document.getElementById('send-all').onclick = ()=> {
+    document.getElementById('close-modal').onclick = () => modal.style.display='none';
+    document.getElementById('send-all').onclick = () => {
       msgs.forEach(m=>{
         if(m.to) window.open('https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text), '_blank');
         else promptAndOpen(m.text);
@@ -809,58 +825,29 @@
       localStorage.setItem('toucan_orders', JSON.stringify(orders.slice(0,200)));
     }catch(e){ console.warn(e); }
 
-    // تغییرات جدید: ذخیره گزارش در data/report.csv از طریق POST به save_report.php
+    // ذخیره گزارش در Firestore
     const duration = Math.round((Date.now() - entryTime) / 1000); // مدت زمان حضور در ثانیه
     const itemsList = message.items.map(it => `${it.qty}x ${it.fa || it.en} (${formatMoney(it.discountedPrice || it.price)})`).join(', ');
-    const report = [
-      new Date().toISOString(),
-      table,
-      duration,
-      deviceType,
-      browser,
-      os,
-      screenResolution,
-      userLanguage,
-      referrer,
-      itemsList,
-      message.subtotal,
-      message.to || 'None'
-    ];
+    const report = {
+      timestamp: new Date().toISOString(),
+      table: table,
+      duration_seconds: duration,
+      device_type: deviceType,
+      browser: browser,
+      os: os,
+      screen_resolution: screenResolution,
+      user_language: userLanguage,
+      referrer: referrer,
+      items: itemsList,
+      total: message.subtotal,
+      recipient: message.to || 'None'
+    };
 
     try {
-      const response = await fetch('save_report.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(report)
-      });
-      if (!response.ok) {
-        console.warn('Error saving to CSV:', response.statusText);
-      }
+      await addDoc(collection(db, "reports"), report);
+      console.log('گزارش با موفقیت در Firebase ذخیره شد');
     } catch (e) {
-      console.warn('Error sending report to server:', e);
-    }
-
-    // همچنان در localStorage برای بک‌آپ محلی
-    try {
-      const rawReports = localStorage.getItem('toucan_reports') || '[]';
-      const reports = JSON.parse(rawReports);
-      reports.unshift({
-        timestamp: report[0],
-        table: report[1],
-        duration_seconds: report[2],
-        device_type: report[3],
-        browser: report[4],
-        os: report[5],
-        screen_resolution: report[6],
-        user_language: report[7],
-        referrer: report[8],
-        items: report[9],
-        total: report[10],
-        recipient: report[11]
-      });
-      localStorage.setItem('toucan_reports', JSON.stringify(reports.slice(0, 500)));
-    } catch (e) {
-      console.warn('Error saving report locally:', e);
+      console.warn('خطا در ذخیره گزارش در Firebase:', e);
     }
   }
 
