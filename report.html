@@ -5,16 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>گزارش - تست Firebase</title>
 </head>
-<body style="background:#000;color:#fff;padding:20px;font-family:Arial">
+<body style="background:#000;color:#0ea5b7;padding:20px;font-family:Arial">
   <h2>گزارش سفارشات (فقط از Firebase)</h2>
-  <div id="out"></div>
+  <div id="status">در حال اتصال به Firebase...</div>
+  <div id="orders"></div>
 
-  <!-- Firebase -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <script>
-    const config = {
+    // 🔑 تنظیمات شما
+    const firebaseConfig = {
       apiKey: "AIzaSyBBGJfA74Ef1haXMbjoW12yYcVNuLcxGEA",
       authDomain: "toucan-restaurant-menu.firebaseapp.com",
       projectId: "toucan-restaurant-menu",
@@ -22,25 +24,43 @@
       messagingSenderId: "142624701803",
       appId: "1:142624701803:web:334bbbc313ce35edb6a02e"
     };
-    firebase.initializeApp(config);
+
+    // Initialize
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    const statusEl = document.getElementById('status');
+    const ordersEl = document.getElementById('orders');
+
+    // تست اتصال
+    db.collection('orders').limit(1).get().then(() => {
+      statusEl.textContent = '✅ متصل شد. در حال بارگذاری سفارشات...';
+    }).catch(err => {
+      statusEl.innerHTML = `<span style="color:red">❌ خطا در اتصال: ${err.message}</span>`;
+      console.error(err);
+    });
+
+    // خواندن سفارشات
     db.collection('orders')
       .orderBy('timestamp', 'desc')
-      .limit(10)
-      .onSnapshot(snap => {
-        const out = document.getElementById('out');
-        if (snap.empty) {
-          out.innerHTML = '<p>هیچ سفارشی در Firebase وجود ندارد.</p>';
+      .limit(50)
+      .onSnapshot(snapshot => {
+        if (snapshot.empty) {
+          ordersEl.innerHTML = '<p>هیچ سفارشی در Firebase وجود ندارد.</p>';
           return;
         }
         let html = '<ul>';
-        snap.forEach(doc => {
+        snapshot.forEach(doc => {
           const d = doc.data();
           const time = d.timestamp ? d.timestamp.toDate().toLocaleString('fa-IR') : 'نامشخص';
-          html += `<li>میز: ${d.table || '—'} | زمان: ${time} | جمع: ${d.subtotal || 0}</li>`;
+          html += `<li>میز: ${d.table || '—'} | زمان: ${time} | جمع: ${d.subtotal || 0} تومان</li>`;
         });
         html += '</ul>';
-        out.innerHTML = html;
+        ordersEl.innerHTML = html;
       }, err => {
-        document.getElementById('out').innerHTML = `<p style="color:red
+        ordersEl.innerHTML = `<p style="color:red">خطا در خواندن داده‌ها: ${err.message}</p>`;
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
