@@ -416,10 +416,6 @@
     </div>
   </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js"></script>
-
 <script>
 /* menu.js - client side logic */
 (() => {
@@ -444,25 +440,6 @@
   let transitionDuration = 1000; // 1 second fade
   let isFadingOut = false;
   let currentAlpha = 0.6;
-
-  // Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyBBGJfA74Ef1haXMbjoW12yYcVNuLcxGEA",
-    authDomain: "toucan-restaurant-menu.firebaseapp.com",
-    projectId: "toucan-restaurant-menu",
-    storageBucket: "toucan-restaurant-menu.firebasestorage.app",
-    messagingSenderId: "142624701803",
-    appId: "1:142624701803:web:334bbbc313ce35edb6a02e",
-    measurementId: "G-FHR0H5KD25"
-  };
-
-  // Initialize Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore(app);
-
-  // Session tracking variables
-  let sessionStartTime = Date.now();
-  let sessionId = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 
   function getQueryParam(name) {
     const params = new URLSearchParams(location.search);
@@ -533,11 +510,17 @@
         entry.discountedPrice = match.discountedPrice;
         entry.hasDiscount = match.hasDiscount;
         entry.discountPercent = match.discountPercent;
+        entry.en = match.en;
+        entry.fa = match.fa;
         entry.whatsapp = match.whatsapp;
+        entry.img_folder = match.img_folder;
+        entry.img_name = match.img_name;
       } else {
         entry.removed = true;
       }
     }
+    saveCart();
+    renderCart();
   }
 
   function renderFoods(){
@@ -741,13 +724,13 @@
     return String(n).replace(/[^0-9]/g,'');
   }
 
-  async function sendToWhatsApp(){
+  function sendToWhatsApp(){
     const msgs = buildMessages();
     if(msgs.length === 0) { alert('سبد خرید خالی است'); return; }
     if(msgs.length === 1){
       const m = msgs[0];
-      if(!m.to){ promptAndOpen(m.text); await logOrder(m, true); }
-      else { const url = 'https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text); window.open(url, '_blank'); await logOrder(m, true); }
+      if(!m.to){ promptAndOpen(m.text); saveOrderForKitchen(m); }
+      else { const url = 'https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text); window.open(url, '_blank'); saveOrderForKitchen(m); }
       return;
     }
     const modal = document.getElementById('modal');
@@ -762,9 +745,9 @@
       div.style.padding = '6px 0';
       const label = document.createElement('div'); label.textContent = (m.to || '(بدون شماره)') + ' — مجموع: ' + formatMoney(m.subtotal) + ' تومان';
       const btn = document.createElement('button'); btn.className='send-btn'; btn.textContent='ارسال به ' + (m.to || '(وارد کنید)');
-      btn.addEventListener('click', async () => {
-        if(!m.to) { promptAndOpen(m.text); await logOrder(m, true); }
-        else { window.open('https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text), '_blank'); await logOrder(m, true); }
+      btn.addEventListener('click', ()=> {
+        if(!m.to) { promptAndOpen(m.text); saveOrderForKitchen(m); }
+        else { window.open('https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text), '_blank'); saveOrderForKitchen(m); }
       });
       div.appendChild(label); div.appendChild(btn);
       list.appendChild(div);
@@ -772,10 +755,10 @@
     modal.style.display = 'flex';
     document.getElementById('close-modal').onclick = ()=> modal.style.display='none';
     document.getElementById('send-all').onclick = ()=> {
-      msgs.forEach(async m=>{
+      msgs.forEach(m=>{
         if(m.to) window.open('https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text), '_blank');
         else promptAndOpen(m.text);
-        await logOrder(m, true);
+        saveOrderForKitchen(m);
       });
     };
   }
@@ -785,79 +768,19 @@
     if(number){
       const num = sanitizeNumber(number);
       window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(text), '_blank');
-      return num;
     } else {
       alert('شماره وارد نشد. ارسال انجام نشد.');
-      return null;
     }
   }
 
-  // Log order to Firebase
-  async function logOrder(message, isSent) {
-    const userAgent = navigator.userAgent;
-    const deviceType = /mobile/i.test(userAgent) ? 'Mobile' : 'Desktop';
-    const os = getOSFromUserAgent(userAgent);
-    const browser = getBrowserFromUserAgent(userAgent);
-    const resolution = `${window.innerWidth}x${window.innerHeight}`;
-    const language = navigator.language || navigator.userLanguage;
-    const referrer = document.referrer || 'Direct';
-
-    const orderedFoods = message.items.map(item => ({
-      name: item.fa || item.en,
-      qty: item.qty,
-      price: item.discountedPrice || item.price
-    }));
-
-    const logData = {
-      sessionId: sessionId,
-      table: table,
-      submitTime: firebase.firestore.FieldValue.serverTimestamp(),
-      durationSeconds: Math.round((Date.now() - sessionStartTime) / 1000),
-      deviceType: deviceType,
-      browser: browser,
-      os: os,
-      resolution: resolution,
-      language: language,
-      referrer: referrer,
-      orderedFoods: orderedFoods,
-      totalAmount: message.subtotal,
-      recipient: message.to || 'Unknown',
-      isOrderSent: isSent // true for orders, false for sessions without order
-    };
-
-    try {
-      await db.collection('reports').add(logData);
-      console.log('Logged to Firebase');
-    } catch (e) {
-      console.error('Error logging to Firebase:', e);
-    }
+  function saveOrderForKitchen(message){
+    try{
+      const raw = localStorage.getItem('toucan_orders') || '[]';
+      const orders = JSON.parse(raw);
+      orders.unshift({to: message.to, text: message.text, items: message.items, subtotal: message.subtotal, table: table, ts: Date.now()});
+      localStorage.setItem('toucan_orders', JSON.stringify(orders.slice(0,200)));
+    }catch(e){ console.warn(e); }
   }
-
-  function getOSFromUserAgent(ua) {
-    if (/windows/i.test(ua)) return 'Windows';
-    if (/mac os x/i.test(ua)) return 'macOS';
-    if (/android/i.test(ua)) return 'Android';
-    if (/iphone|ipad|ipod/i.test(ua)) return 'iOS';
-    if (/linux/i.test(ua)) return 'Linux';
-    return 'Unknown';
-  }
-
-  function getBrowserFromUserAgent(ua) {
-    if (/chrome/i.test(ua)) return 'Chrome';
-    if (/firefox/i.test(ua)) return 'Firefox';
-    if (/safari/i.test(ua)) return 'Safari';
-    if (/edge/i.test(ua)) return 'Edge';
-    if (/opera/i.test(ua)) return 'Opera';
-    return 'Unknown';
-  }
-
-  // Log session even if no order (on unload)
-  window.addEventListener('beforeunload', async () => {
-    // If cart is empty, log as non-order session
-    if (Object.keys(cart).length === 0) {
-      await logOrder({items: [], subtotal: 0, to: null}, false);
-    }
-  });
 
   // ========== مدیریت دکمه موزیک ==========
   const music = document.getElementById('background-music');
