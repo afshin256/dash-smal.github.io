@@ -1,123 +1,228 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TOUCAN - گزارش‌گیری</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>گزارش سفارشات - TOUCAN</title>
   <style>
     body {
-      background-color: #070606;
-      color: #fff;
-      font-family: Arial, sans-serif;
+      background: #0b0b0b;
+      color: #eee;
+      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
       margin: 0;
       padding: 20px;
+      line-height: 1.5;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #333;
-      padding: 8px;
+    h1 {
       text-align: center;
+      margin-bottom: 20px;
+      color: #ffb84d;
+      font-weight: 800;
+      font-size: 24px;
     }
-    th {
-      background-color: #222;
+    .order {
+      background: #111;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      border: 1px solid #222;
     }
-    .no-data {
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #0ea5b7;
+      font-size: 16px;
+    }
+    .order-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      margin: 12px 0;
+      font-size: 13px;
+      color: #bbb;
+    }
+    .meta-item {
+      display: flex;
+      gap: 6px;
+    }
+    .meta-item strong {
+      color: #fff;
+      min-width: 110px;
+    }
+    .items-list {
+      margin: 12px 0;
+    }
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      font-size: 14px;
+      border-bottom: 1px dashed rgba(255,255,255,0.06);
+    }
+    .item-name {
+      flex: 1;
+      color: #fff;
+    }
+    .item-qty, .item-total {
+      text-align: left;
+      min-width: 70px;
+      color: #ffb84d;
+    }
+    .total-section {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #ffb84d;
+      text-align: left;
+      font-size: 16px;
+    }
+    .loading {
       text-align: center;
-      color: #ccc;
+      padding: 40px;
+      color: #999;
+      font-size: 16px;
+    }
+    .error {
+      color: #e63946;
+      text-align: center;
+      padding: 20px;
+      font-size: 16px;
+    }
+    @media (max-width: 600px) {
+      .meta-item {
+        flex-direction: column;
+        gap: 2px;
+      }
+      .meta-item strong {
+        min-width: auto;
+        font-weight: bold;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>گزارش‌گیری سفارشات و بازدیدها</h1>
-  <table id="reports-table">
-    <thead>
-      <tr>
-        <th>شناسه جلسه</th>
-        <th>میز</th>
-        <th>زمان ارسال</th>
-        <th>مدت زمان حضور (ثانیه)</th>
-        <th>نوع دستگاه</th>
-        <th>مرورگر</th>
-        <th>سیستم‌عامل</th>
-        <th>رزولوشن صفحه</th>
-        <th>زبان کاربر</th>
-        <th>منبع ورود</th>
-        <th>غذاهای سفارش‌شده</th>
-        <th>مجموع مبلغ</th>
-        <th>دریافت‌کننده</th>
-        <th>سفارش ارسال شده؟</th>
-      </tr>
-    </thead>
-    <tbody id="reports-body"></tbody>
-  </table>
+  <h1>📊 گزارش سفارشات - TOUCAN</h1>
+  <div id="orders-container">
+    <div class="loading">در حال بارگذاری سفارشات از Firebase...</div>
+  </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js"></script>
+  <!-- 🔥 Firebase SDK (compat mode - بدون نیاز به npm) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <script>
-    // Firebase Config
+    // 🔑 تنظیمات Firebase شما (همان که در menu.html استفاده کردید)
     const firebaseConfig = {
       apiKey: "AIzaSyBBGJfA74Ef1haXMbjoW12yYcVNuLcxGEA",
       authDomain: "toucan-restaurant-menu.firebaseapp.com",
       projectId: "toucan-restaurant-menu",
       storageBucket: "toucan-restaurant-menu.firebasestorage.app",
       messagingSenderId: "142624701803",
-      appId: "1:142624701803:web:334bbbc313ce35edb6a02e",
-      measurementId: "G-FHR0H5KD25"
+      appId: "1:142624701803:web:334bbbc313ce35edb6a02e"
     };
 
     // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore(app);
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
 
-    // Fetch and display reports
-    async function loadReports() {
-      const reportsBody = document.getElementById('reports-body');
-      reportsBody.innerHTML = '';
+  <script>
+    const container = document.getElementById('orders-container');
 
-      try {
-        const snapshot = await db.collection('reports').orderBy('submitTime', 'desc').get();
-        if (snapshot.empty) {
-          reportsBody.innerHTML = '<tr><td colspan="14" class="no-data">هیچ گزارشی موجود نیست.</td></tr>';
-          return;
-        }
-
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const row = document.createElement('tr');
-
-          row.innerHTML = `
-            <td>${data.sessionId || '-'}</td>
-            <td>${data.table || '-'}</td>
-            <td>${data.submitTime?.toDate().toLocaleString('fa-IR') || '-'}</td>
-            <td>${data.durationSeconds || '-'}</td>
-            <td>${data.deviceType || '-'}</td>
-            <td>${data.browser || '-'}</td>
-            <td>${data.os || '-'}</td>
-            <td>${data.resolution || '-'}</td>
-            <td>${data.language || '-'}</td>
-            <td>${data.referrer || '-'}</td>
-            <td>${data.orderedFoods?.map(f => `${f.qty}x ${f.name} (${f.price} تومان)`).join('<br>') || 'هیچ سفارشی'}</td>
-            <td>${data.totalAmount || 0} تومان</td>
-            <td>${data.recipient || '-'}</td>
-            <td>${data.isOrderSent ? 'بله' : 'خیر'}</td>
-          `;
-
-          reportsBody.appendChild(row);
-        });
-      } catch (e) {
-        console.error('Error loading reports:', e);
-        reportsBody.innerHTML = '<tr><td colspan="14" class="no-data">خطا در بارگذاری گزارش‌ها.</td></tr>';
-      }
+    // تابع فرمت زمان فارسی
+    function formatTimestamp(firebaseTimestamp) {
+      if (!firebaseTimestamp) return '—';
+      const date = firebaseTimestamp.toDate();
+      return date.toLocaleString('fa-IR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
     }
 
-    // Load reports on page load
-    loadReports();
+    // نمایش سفارشات
+    function renderOrders(orders) {
+      if (orders.length === 0) {
+        container.innerHTML = '<div class="loading">هیچ سفارشی در سیستم ثبت نشده است.</div>';
+        return;
+      }
+
+      let html = '';
+      orders.forEach(order => {
+        // هدر: زمان و میز
+        const header = `
+          <div class="order-header">
+            <span>میز: ${order.table || '—'}</span>
+            <span>${formatTimestamp(order.timestamp)}</span>
+          </div>
+        `;
+
+        // متا اطلاعات
+        const metaFields = [
+          { label: 'مدت حضور', value: order.durationSeconds ? `${order.durationSeconds} ثانیه` : '—' },
+          { label: 'دستگاه', value: order.deviceType || '—' },
+          { label: 'مرورگر', value: order.browser || '—' },
+          { label: 'سیستم‌عامل', value: order.os || '—' },
+          { label: 'رزولوشن', value: order.resolution || '—' },
+          { label: 'زبان', value: order.language || '—' },
+          { label: 'منبع ورود', value: order.referrer === 'direct' ? 'مستقیم' : (order.referrer || '—') },
+          { label: 'دریافت‌کننده', value: order.recipient || '—' }
+        ];
+
+        let metaHtml = '<div class="order-meta">';
+        metaFields.forEach(field => {
+          metaHtml += `<div class="meta-item"><strong>${field.label}:</strong> ${field.value}</div>`;
+        });
+        metaHtml += '</div>';
+
+        // آیتم‌های سفارش
+        let itemsHtml = '';
+        if (order.items && order.items.length > 0) {
+          itemsHtml = '<div class="items-list"><div style="font-weight:bold;margin-bottom:6px;color:#fff;">غذاها:</div>';
+          order.items.forEach(item => {
+            const name = item.name || '—';
+            const qty = item.qty || 0;
+            const total = item.total ? item.total.toLocaleString() : '—';
+            itemsHtml += `<div class="item-row">
+              <span class="item-name">${qty} × ${name}</span>
+              <span class="item-total">${total} تومان</span>
+            </div>`;
+          });
+          itemsHtml += '</div>';
+        }
+
+        // جمع کل
+        const totalSection = `<div class="total-section">جمع کل: ${order.subtotal ? order.subtotal.toLocaleString() : '0'} تومان</div>`;
+
+        // ترکیب همه چیز
+        html += `<div class="order">${header}${metaHtml}${itemsHtml}${totalSection}</div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // 🔥 خواندن بلادرنگ از Firestore
+    db.collection('orders')
+      .orderBy('timestamp', 'desc')
+      .limit(100)
+      .onSnapshot(
+        (snapshot) => {
+          const orders = [];
+          snapshot.forEach(doc => {
+            orders.push(doc.data());
+          });
+          renderOrders(orders);
+        },
+        (error) => {
+          console.error('خطا در اتصال به Firebase:', error);
+          container.innerHTML = `<div class="error">❌ خطا: ${error.message}</div>`;
+        }
+      );
   </script>
 </body>
 </html>
