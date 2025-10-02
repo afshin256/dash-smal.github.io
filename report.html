@@ -7,105 +7,39 @@
   <style>
     body {
       background: #0b0b0b;
-      color: #eee;
-      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
-      margin: 0;
+      color: white;
+      font-family: Arial, sans-serif;
       padding: 20px;
-      line-height: 1.5;
     }
     h1 {
       text-align: center;
-      margin-bottom: 20px;
       color: #ffb84d;
-      font-weight: 800;
+      margin-bottom: 20px;
     }
     .order {
       background: #111;
-      border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 8px;
       border: 1px solid #222;
-    }
-    .order-header {
-      display: flex;
-      justify-content: space-between;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #0ea5b7;
-    }
-    .order-meta {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 8px;
-      margin: 12px 0;
-      font-size: 13px;
-      color: #bbb;
-    }
-    .meta-item {
-      display: flex;
-      gap: 6px;
-    }
-    .meta-item strong {
-      color: #fff;
-      min-width: 120px;
-    }
-    .items-list {
-      margin: 12px 0;
-    }
-    .item-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 4px 0;
-      font-size: 14px;
-      border-bottom: 1px dashed rgba(255,255,255,0.06);
-    }
-    .item-name {
-      flex: 1;
-    }
-    .item-qty, .item-total {
-      text-align: left;
-      min-width: 60px;
-    }
-    .total-section {
-      margin-top: 10px;
-      font-weight: bold;
-      color: #ffb84d;
-      text-align: left;
     }
     .loading {
       text-align: center;
-      padding: 40px;
       color: #999;
-    }
-    .error {
-      color: #e63946;
-      text-align: center;
-      padding: 20px;
-    }
-    @media (max-width: 600px) {
-      .meta-item {
-        flex-direction: column;
-        gap: 2px;
-      }
-      .meta-item strong {
-        min-width: auto;
-      }
+      padding: 30px;
     }
   </style>
 </head>
 <body>
   <h1>گزارش سفارشات - TOUCAN</h1>
-  <div id="orders-container">
-    <div class="loading">در حال بارگذاری سفارشات...</div>
-  </div>
+  <div id="orders-container" class="loading">در حال بارگذاری...</div>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDK (compat mode - بدون نیاز به npm) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <script>
-    // 🔑 Firebase Configuration (همان تنظیمات menu.html)
+    // 🔑 همان تنظیمات Firebase شما
     const firebaseConfig = {
       apiKey: "AIzaSyBBGJfA74Ef1haXMbjoW12yYcVNuLcxGEA",
       authDomain: "toucan-restaurant-menu.firebaseapp.com",
@@ -123,17 +57,9 @@
   <script>
     const container = document.getElementById('orders-container');
 
-    function formatTimestamp(firebaseTimestamp) {
-      if (!firebaseTimestamp) return 'نامشخص';
-      const date = firebaseTimestamp.toDate();
-      return date.toLocaleString('fa-IR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      });
+    function formatTime(timestamp) {
+      if (!timestamp) return '—';
+      return timestamp.toDate().toLocaleString('fa-IR');
     }
 
     function renderOrders(orders) {
@@ -142,86 +68,42 @@
         return;
       }
 
-      container.innerHTML = '';
-      orders.forEach(order => {
-        const div = document.createElement('div');
-        div.className = 'order';
+      let html = '';
+      orders.forEach(o => {
+        const items = (o.items || []).map(i => 
+          `<div>${i.qty} × ${i.name} — ${i.total?.toLocaleString() || '—'} تومان</div>`
+        ).join('');
 
-        // هدر: زمان و میز
-        const header = document.createElement('div');
-        header.className = 'order-header';
-        header.innerHTML = `
-          <span>میز: ${order.table || '—'}</span>
-          <span>${formatTimestamp(order.timestamp)}</span>
+        html += `
+          <div class="order">
+            <div><strong>میز:</strong> ${o.table || '—'} | <strong>زمان:</strong> ${formatTime(o.timestamp)}</div>
+            <div><strong>مدت حضور:</strong> ${o.durationSeconds || '—'} ثانیه</div>
+            <div><strong>دستگاه:</strong> ${o.deviceType || '—'}, ${o.browser || '—'}, ${o.os || '—'}</div>
+            <div><strong>رزولوشن:</strong> ${o.resolution || '—'} | <strong>زبان:</strong> ${o.language || '—'}</div>
+            <div><strong>منبع ورود:</strong> ${o.referrer === 'direct' ? 'مستقیم' : o.referrer || '—'}</div>
+            <div style="margin:8px 0;"><strong>غذاها:</strong><br>${items}</div>
+            <div style="color:#ffb84d"><strong>جمع کل:</strong> ${o.subtotal?.toLocaleString() || '0'} تومان</div>
+            <div><strong>دریافت‌کننده:</strong> ${o.recipient || '—'}</div>
+          </div>
         `;
-        div.appendChild(header);
-
-        // متا اطلاعات
-        const meta = document.createElement('div');
-        meta.className = 'order-meta';
-        const metaFields = [
-          { label: 'مدت حضور', value: order.durationSeconds ? `${order.durationSeconds} ثانیه` : '—' },
-          { label: 'دستگاه', value: order.deviceType || '—' },
-          { label: 'مرورگر', value: order.browser || '—' },
-          { label: 'سیستم‌عامل', value: order.os || '—' },
-          { label: 'رزولوشن', value: order.resolution || '—' },
-          { label: 'زبان', value: order.language || '—' },
-          { label: 'منبع ورود', value: order.referrer === 'direct' ? 'مستقیم' : order.referrer || '—' },
-          { label: 'دریافت‌کننده', value: order.recipient || '—' }
-        ];
-
-        metaFields.forEach(field => {
-          const item = document.createElement('div');
-          item.className = 'meta-item';
-          item.innerHTML = `<strong>${field.label}:</strong> ${field.value}`;
-          meta.appendChild(item);
-        });
-        div.appendChild(meta);
-
-        // آیتم‌های سفارش
-        if (order.items && order.items.length > 0) {
-          const itemsList = document.createElement('div');
-          itemsList.className = 'items-list';
-          itemsList.innerHTML = '<div style="font-weight:bold;margin-bottom:6px;color:#fff;">غذاها:</div>';
-
-          order.items.forEach(item => {
-            const row = document.createElement('div');
-            row.className = 'item-row';
-            row.innerHTML = `
-              <span class="item-name">${item.qty} × ${item.name}</span>
-              <span class="item-qty">${item.price ? item.price.toLocaleString() + ' تومان' : ''}</span>
-              <span class="item-total">${item.total ? item.total.toLocaleString() + ' تومان' : ''}</span>
-            `;
-            itemsList.appendChild(row);
-          });
-          div.appendChild(itemsList);
-        }
-
-        // مجموع
-        const totalDiv = document.createElement('div');
-        totalDiv.className = 'total-section';
-        totalDiv.textContent = `جمع کل: ${order.subtotal ? order.subtotal.toLocaleString() : '0'} تومان`;
-        div.appendChild(totalDiv);
-
-        container.appendChild(div);
       });
+
+      container.innerHTML = html;
     }
 
-    // خواندن سفارشات از Firestore (جدیدترین اول)
+    // 🔥 خواندن از Firestore (نه localStorage!)
     db.collection('orders')
       .orderBy('timestamp', 'desc')
-      .limit(100) // حداکثر 100 سفارش آخر
+      .limit(100)
       .onSnapshot(
         (snapshot) => {
           const orders = [];
-          snapshot.forEach(doc => {
-            orders.push(doc.data());
-          });
+          snapshot.forEach(doc => orders.push(doc.data()));
           renderOrders(orders);
         },
         (error) => {
-          console.error('خطا در خواندن سفارشات:', error);
-          container.innerHTML = `<div class="error">❌ خطایی در دریافت داده‌ها رخ داد: ${error.message}</div>`;
+          console.error('خطا:', error);
+          container.innerHTML = `<div class="loading" style="color:red">خطا در اتصال به Firebase: ${error.message}</div>`;
         }
       );
   </script>
