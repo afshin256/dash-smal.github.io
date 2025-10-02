@@ -20,128 +20,96 @@
   <button id="export-csv">دانلود گزارش به عنوان report.csv</button>
   <div id="report-table"></div>
 
-<script>
-(() => {
-  // CSV parser (کپی از menu.html)
-  function parseCSV(text) {
-    const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
-    if (lines.length === 0) return [];
-    function parseLine(line) {
-      const res = []; let cur = ''; let inQ = false;
-      for (let i = 0; i < line.length; i++) {
-        const ch = line[i];
-        if (ch === '"') {
-          if (inQ && line[i + 1] === '"') { cur += '"'; i++; }
-          else inQ = !inQ;
-        } else if (ch === ',' && !inQ) {
-          res.push(cur); cur = '';
-        } else { cur += ch; }
-      }
-      res.push(cur);
-      return res;
-    }
-    const parsed = lines.map(parseLine);
-    return parsed;
-  }
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-  async function loadReports() {
-    try {
-      const resp = await fetch('data/report.csv?t=' + Date.now());
-      if (!resp.ok) throw new Error('CSV not found');
-      const text = await resp.text();
-      const rows = parseCSV(text);
-      // فرض بر این که ردیف اول هدر است، پس از ایندکس 1 شروع می‌کنیم
-      return rows.slice(1).map(row => ({
-        timestamp: row[0],
-        table: row[1],
-        duration_seconds: row[2],
-        device_type: row[3],
-        browser: row[4],
-        os: row[5],
-        screen_resolution: row[6],
-        user_language: row[7],
-        referrer: row[8],
-        items: row[9],
-        total: row[10],
-        recipient: row[11]
-      }));
-    } catch (e) {
-      console.warn('Error loading from CSV, falling back to localStorage:', e);
-      try {
-        const raw = localStorage.getItem('toucan_reports') || '[]';
-        return JSON.parse(raw);
-      } catch (e) {
-        console.warn('Error loading local reports:', e);
-        return [];
-      }
-    }
-  }
+const firebaseConfig = {
+  apiKey: "AIzaSyBjLXcNNRAEwJw5CaTknfCr_Y1saeXlvTw",
+  authDomain: "toucan-reports.firebaseapp.com",
+  projectId: "toucan-reports",
+  storageBucket: "toucan-reports.firebasestorage.app",
+  messagingSenderId: "977430999383",
+  appId: "1:977430999383:web:1c4b38f0bcee85bf620e12"
+};
 
-  function renderReports(reports) {
-    const table = document.createElement('table');
-    const thead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    const headers = ['زمان ارسال', 'میز', 'مدت زمان حضور (ثانیه)', 'نوع دستگاه', 'مرورگر', 'سیستم‌عامل', 'رزولوشن صفحه', 'زبان کاربر', 'منبع ورود', 'غذاهای سفارش‌شده', 'مجموع مبلغ', 'دریافت‌کننده'];
-    headers.forEach(h => {
-      const th = document.createElement('th');
-      th.textContent = h;
-      headerRow.appendChild(th);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function loadReports() {
+  try {
+    const querySnapshot = await getDocs(collection(db, "reports"));
+    return querySnapshot.docs.map(doc => doc.data());
+  } catch (e) {
+    console.warn('خطا در بارگذاری گزارش‌ها از Firebase:', e);
+    return [];
+  }
+}
+
+function renderReports(reports) {
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+  const headers = ['زمان ارسال', 'میز', 'مدت زمان حضور (ثانیه)', 'نوع دستگاه', 'مرورگر', 'سیستم‌عامل', 'رزولوشن صفحه', 'زبان کاربر', 'منبع ورود', 'غذاهای سفارش‌شده', 'مجموع مبلغ', 'دریافت‌کننده'];
+  headers.forEach(h => {
+    const th = document.createElement('th');
+    th.textContent = h;
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  reports.forEach(report => {
+    const row = document.createElement('tr');
+    [
+      report.timestamp,
+      report.table,
+      report.duration_seconds,
+      report.device_type,
+      report.browser,
+      report.os,
+      report.screen_resolution,
+      report.user_language,
+      report.referrer,
+      report.items,
+      report.total,
+      report.recipient
+    ].forEach(val => {
+      const td = document.createElement('td');
+      td.textContent = val || 'نامشخص';
+      row.appendChild(td);
     });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
+    tbody.appendChild(row);
+  });
+  table.appendChild(tbody);
 
-    const tbody = document.createElement('tbody');
-    reports.forEach(report => {
-      const row = document.createElement('tr');
-      [
-        report.timestamp,
-        report.table,
-        report.duration_seconds,
-        report.device_type,
-        report.browser,
-        report.os,
-        report.screen_resolution,
-        report.user_language,
-        report.referrer,
-        report.items,
-        report.total,
-        report.recipient
-      ].forEach(val => {
-        const td = document.createElement('td');
-        td.textContent = val;
-        row.appendChild(td);
-      });
-      tbody.appendChild(row);
-    });
-    table.appendChild(tbody);
+  document.getElementById('report-table').appendChild(table);
+}
 
-    document.getElementById('report-table').appendChild(table);
-  }
+function exportToCSV(reports) {
+  const csvHeaders = ['timestamp', 'table', 'duration_seconds', 'device_type', 'browser', 'os', 'screen_resolution', 'user_language', 'referrer', 'items', 'total', 'recipient'];
+  let csvContent = csvHeaders.join(',') + '\n';
+  reports.forEach(report => {
+    const row = csvHeaders.map(key => `"${(report[key] || 'نامشخص').toString().replace(/"/g, '""')}"`).join(',');
+    csvContent += row + '\n';
+  });
 
-  function exportToCSV(reports) {
-    const csvHeaders = ['timestamp', 'table', 'duration_seconds', 'device_type', 'browser', 'os', 'screen_resolution', 'user_language', 'referrer', 'items', 'total', 'recipient'];
-    let csvContent = csvHeaders.join(',') + '\n';
-    reports.forEach(report => {
-      const row = csvHeaders.map(key => `"${report[key].toString().replace(/"/g, '""')}"`).join(',');
-      csvContent += row + '\n';
-    });
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'report.csv');
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'report.csv');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-
-  (async () => {
-    const reports = await loadReports();
-    renderReports(reports);
-    document.getElementById('export-csv').addEventListener('click', () => exportToCSV(reports));
-  })();
+(async () => {
+  const reports = await loadReports();
+  renderReports(reports);
+  document.getElementById('export-csv').addEventListener('click', () => exportToCSV(reports));
 })();
 </script>
 </body>
