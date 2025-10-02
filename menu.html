@@ -6,37 +6,44 @@
   <title>TOUCAN - منو</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    /* استایل‌ها بدون تغییر */
+    /* پایه‌ای برای کارت‌ها و شبکه */
     body { font-family: 'Segoe UI','Helvetica Neue',Tahoma,Arial; background:#0b0b0b; color:#eee; margin:0; padding:0 12px 80px 12px; }
     .header { padding:12px 0; display:flex; align-items:center; gap:12px; }
     .brand { display:flex; align-items:center; gap:10px; }
     .logo { width:44px;height:44px;border-radius:8px;background:#222;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#fff; }
+
+    /* شبکه غذاها */
     .food-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 12px;
     }
+
     @media (max-width:768px) {
       .food-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* تغییر: تک‌ستونه مثل اینستاگرام در موبایل */
         gap: 6px;
       }
       body { padding-bottom: 120px; }
     }
+
+    /* کارت غذا */
     .food-card {
       background: #111;
       border-radius: 12px;
       overflow: hidden;
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 2px;
+      flex-direction: column; /* column برای قرار دادن footer زیر */
+      gap: 8px; /* کاهش gap */
+      padding: 2px; /* کاهش padding برای fit بهتر */
       align-items: center;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       position: relative;
     }
+
+    /* تصویر غذا */
     .food-img {
-      position: relative;
+      position: relative; /* برای position absolute برچسب */
       width: 100%;
       aspect-ratio: 3 / 4;
       border-radius: 8px 8px 0 0;
@@ -45,19 +52,22 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0;
-      border: 1px solid #222;
+      margin: 0; /* صفر margin */
+      border: 1px solid #222; /* حاشیه 1px */
     }
+
     @media (max-width: 768px) {
       .food-img {
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 16 / 9; /* عریض‌تر در موبایل */
       }
     }
+
     @media (min-width: 769px) {
       .food-img {
-        height: 200px;
+        height: 200px; /* ثابت‌تر در دسکتاپ */
       }
     }
+
     .food-img img {
       width: 100%;
       height: 100%;
@@ -65,6 +75,8 @@
       display: block;
       border-radius: inherit;
     }
+
+    /* برچسب تخفیف جدید: دایره قرمز داخل عکس، پایین راست */
     .discount-badge {
       position: absolute;
       bottom: 5px;
@@ -84,11 +96,13 @@
       z-index: 1;
       pointer-events: none;
     }
+
     @keyframes pulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.05); }
       100% { transform: scale(1); }
     }
+
     @media (max-width: 768px) {
       .discount-badge {
         width: 35px;
@@ -98,12 +112,15 @@
         right: 4px;
       }
     }
+
+    /* اطلاعات غذا */
     .food-info {
       flex: 1;
       min-width: 0;
       width: 100%;
-      padding: 8px 10px;
+      padding: 8px 10px; /* padding جدا */
     }
+
     .food-info h3 {
       margin: 0 0 6px 0;
       font-size: 16px;
@@ -114,6 +131,7 @@
       align-items: center;
       gap: 8px;
     }
+
     .food-info p {
       margin: 0 0 6px 0;
       font-size: 13px;
@@ -121,6 +139,8 @@
       white-space: normal;
       word-wrap: break-word;
     }
+
+    /* فوتر جدید برای قیمت و دکمه */
     .food-footer {
       width: 100%;
       height: 40px;
@@ -131,6 +151,8 @@
       padding: 0 10px;
       border-radius: 0 0 12px 12px;
     }
+
+    /* --- قیمت غذا (با پشتیبانی از تخفیف) --- */
     .price {
       font-weight: 800;
       min-width: 90px;
@@ -143,18 +165,21 @@
       align-items: flex-end;
       line-height: 1.1;
     }
+
     .price del {
       color: #999;
       font-size: 13px;
       text-decoration: line-through;
       order: 1;
     }
+
     .price .discounted {
       color: #e63946;
       font-size: 16px;
       font-weight: bold;
       order: 2;
     }
+
     .add-btn {
       background: #c62828;
       border: none;
@@ -170,11 +195,14 @@
       align-items: center;
       justify-content: center;
     }
+
+    /* --- افکت کارت --- */
     .food-card:hover {
       transform: translateY(-10px) scale(1.05);
       animation: flame 1.5s infinite alternate ease-in-out;
       z-index: 10;
     }
+
     @keyframes flame {
       0% {
         box-shadow: 
@@ -201,6 +229,8 @@
           0 0 30px 15px rgba(255, 215, 0, 0.3);
       }
     }
+
+    /* سبد خرید شناور */
     .cart-floating {
       position: fixed;
       right: 12px;
@@ -219,11 +249,13 @@
       min-width: 280px;
       font-size: 13px;
     }
+
     .cart-list {
       max-height: 160px;
       overflow: auto;
       padding-right: 6px;
     }
+
     .cart-item {
       display: flex;
       gap: 8px;
@@ -231,11 +263,13 @@
       padding: 6px 0;
       border-bottom: 1px dashed rgba(255,255,255,0.04);
     }
+
     .cart-item .qty {
       font-weight: 800;
       width: 48px;
       text-align: center;
     }
+
     .cart-item button {
       background: transparent;
       border: 1px solid rgba(255,255,255,0.06);
@@ -244,12 +278,14 @@
       border-radius: 6px;
       cursor: pointer;
     }
+
     .cart-actions {
       display: flex;
       gap: 8px;
       align-items: center;
       justify-content: flex-end;
     }
+
     .send-btn {
       background: #0ea5b7;
       border: none;
@@ -259,7 +295,12 @@
       cursor: pointer;
       font-weight: 800;
     }
-    .send-btn[style] {}
+
+    .send-btn[style] {
+      /* allow inline override */
+    }
+
+    /* دکمه موزیک */
     .music-button {
       position: absolute;
       left: 12px;
@@ -277,12 +318,15 @@
       z-index: 1200;
       transition: box-shadow 0.1s ease;
     }
+
     .music-button img {
       width: 86%;
       height: 86%;
       object-fit: contain;
       display: block;
     }
+
+    /* متن حقوقی */
     .rights-text {
       position: absolute;
       bottom: 8px;
@@ -294,6 +338,7 @@
       font-size: 12px;
       pointer-events: none;
     }
+
     @media (max-width: 420px) {
       .cart-floating {
         right: 8px;
@@ -308,12 +353,13 @@
   </style>
 </head>
 <body>
-  <!-- intro GIF overlay -->
+  <!-- intro GIF overlay جدید -->
   <div id="intro-overlay">
     <div class="gif-container">
       <img id="intro-gif" src="https://www.dash-smal.ir/assets/images/777.gif" alt="لوگو موشن">
     </div>
   </div>
+
   <div id="main-content">
     <div class="header">
       <div class="brand">
@@ -324,30 +370,38 @@
         </div>
       </div>
     </div>
+
     <div>
       <div style="margin-bottom:10px">
         <strong>میز:</strong> <span id="table-number-display">—</span>
       </div>
+
       <div id="food-grid" class="food-grid"></div>
     </div>
+
     <!-- floating cart -->
     <div id="cart" class="cart-floating" aria-live="polite">
       <button id="music-toggle" class="music-button" title="پخش/توقف موسیقی">
         <img id="music-icon" src="https://www.dash-smal.ir/assets/images/player/play.png" alt="play">
       </button>
+
       <div style="flex:1">
         <div style="font-weight:800; margin-bottom:6px">فاکتور (<span id="cart-count">0</span>)</div>
         <div class="cart-list" id="cart-list"></div>
         <div style="margin-top:6px;font-weight:800">کل: <span id="cart-total">0</span> تومان</div>
       </div>
+
       <div class="cart-actions">
         <button id="send-whatsapp" class="send-btn">ارسال سفارش به واتس‌اپ</button>
         <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
       </div>
+
       <div class="rights-text">All rights reserved by Dash Smal Content Production Agency.</div>
     </div>
-    <!-- hidden audio -->
+
+    <!-- پلیر پنهان -->
     <audio id="background-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop preload="none"></audio>
+
     <!-- modal -->
     <div id="modal" class="modal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:2000">
       <div class="box" role="dialog" aria-modal="true" style="background:#111;color:#fff;padding:16px;border-radius:10px;max-width:92%;width:420px">
@@ -362,123 +416,60 @@
     </div>
   </div>
 
-  <!-- 🔥 Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js"></script>
 
-  <script>
-    // 🔑 Firebase Configuration (بدون analytics)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBBGJfA74Ef1haXMbjoW12yYcVNuLcxGEA",
-      authDomain: "toucan-restaurant-menu.firebaseapp.com",
-      projectId: "toucan-restaurant-menu",
-      storageBucket: "toucan-restaurant-menu.firebasestorage.app",
-      messagingSenderId: "142624701803",
-      appId: "1:142624701803:web:334bbbc313ce35edb6a02e"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-  </script>
-
-  <script>
+<script>
 /* menu.js - client side logic */
 (() => {
-  // ⏱️ زمان شروع بازدید
-  const pageLoadTime = Date.now();
-
-  // 📱 تابع تشخیص اطلاعات دستگاه
-  function getDeviceInfo() {
-    const ua = navigator.userAgent;
-    const screenWidth = window.screen.width;
-    const screenHeight = window.screen.height;
-    
-    let deviceType = 'desktop';
-    if (/Mobi|Android/i.test(ua)) deviceType = 'mobile';
-    else if (/iPad|Tablet/i.test(ua)) deviceType = 'tablet';
-
-    let browser = 'unknown';
-    if (ua.includes('Chrome')) browser = 'Chrome';
-    else if (ua.includes('Safari')) browser = 'Safari';
-    else if (ua.includes('Firefox')) browser = 'Firefox';
-    else if (ua.includes('Edg')) browser = 'Edge';
-
-    let os = 'unknown';
-    if (ua.includes('Win')) os = 'Windows';
-    else if (ua.includes('Mac')) os = 'macOS';
-    else if (ua.includes('Linux')) os = 'Linux';
-    else if (ua.includes('Android')) os = 'Android';
-    else if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
-
-    return {
-      deviceType,
-      browser,
-      os,
-      resolution: `${screenWidth}x${screenHeight}`,
-      language: navigator.language || 'unknown',
-      referrer: document.referrer || 'direct'
-    };
-  }
-
-  // 📤 تابع ذخیره سفارش در Firebase
-  function saveOrderToFirebase(message) {
-    const now = Date.now();
-    const durationSeconds = Math.round((now - pageLoadTime) / 1000);
-    const deviceInfo = getDeviceInfo();
-
-    const orderData = {
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      table: table || '—',
-      durationSeconds: durationSeconds,
-      deviceType: deviceInfo.deviceType,
-      browser: deviceInfo.browser,
-      os: deviceInfo.os,
-      resolution: deviceInfo.resolution,
-      language: deviceInfo.language,
-      referrer: deviceInfo.referrer,
-      items: message.items.map(item => ({
-        name: item.fa || item.en,
-        qty: item.qty,
-        price: item.discountedPrice || item.price,
-        total: (item.discountedPrice || item.price) * item.qty
-      })),
-      subtotal: message.subtotal,
-      recipient: message.to || 'بدون شماره'
-    };
-
-    db.collection('orders').add(orderData)
-      .then(() => console.log('✅ سفارش در Firebase ذخیره شد'))
-      .catch(err => console.error('❌ خطا در ذخیره سفارش:', err));
-  }
-
-  // --- بقیه کد بدون تغییر ---
   const CSV_PATH = 'data/foods.csv';
   const PLACEHOLDER = 'assets/images/placeholder.png';
-  const POLL_INTERVAL = 12000;
+  const POLL_INTERVAL = 12000; // ms
   const table = getQueryParam('table') || localStorage.getItem('toucan_table') || '—';
   document.getElementById('table-number-display').textContent = table;
   localStorage.setItem('toucan_table', table);
-  let foods = [];
-  let cart = {};
+
+  let foods = []; // array of food objects
+  let cart = {}; // id -> {id, en, fa, price, whatsapp, qty}
   let audioCtx, source, analyser, bufferLength, dataArray;
   const neonColors = [
-    {r: 0, g: 255, b: 255},
-    {r: 255, g: 105, b: 180},
-    {r: 138, g: 43, b: 226}
+    {r: 0, g: 255, b: 255}, // blue
+    {r: 255, g: 105, b: 180}, // pink
+    {r: 138, g: 43, b: 226} // purple
   ];
   let currentNeonIndex = 0;
   let nextChangeTime = Date.now() + 5000;
   let transitionStartTime = 0;
-  let transitionDuration = 1000;
+  let transitionDuration = 1000; // 1 second fade
   let isFadingOut = false;
   let currentAlpha = 0.6;
+
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBBGJfA74Ef1haXMbjoW12yYcVNuLcxGEA",
+    authDomain: "toucan-restaurant-menu.firebaseapp.com",
+    projectId: "toucan-restaurant-menu",
+    storageBucket: "toucan-restaurant-menu.firebasestorage.app",
+    messagingSenderId: "142624701803",
+    appId: "1:142624701803:web:334bbbc313ce35edb6a02e",
+    measurementId: "G-FHR0H5KD25"
+  };
+
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore(app);
+
+  // Session tracking variables
+  let sessionStartTime = Date.now();
+  let sessionId = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 
   function getQueryParam(name) {
     const params = new URLSearchParams(location.search);
     return params.get(name);
   }
 
+  // CSV parser
   function parseCSV(text) {
     const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
     if(lines.length === 0) return [];
@@ -507,8 +498,9 @@
       const rows = parseCSV(text);
       foods = rows.map((r, idx) => {
         const price = r[3] ? Number(String(r[3]).replace(/[^0-9.-]/g,'')) : 0;
-        const discountPercent = r[9] ? parseFloat(r[9]) || 0 : 0;
+        const discountPercent = r[9] ? parseFloat(r[9]) || 0 : 0; // ستون J (ایندکس 9)
         const discountedPrice = discountPercent > 0 ? Math.round(price * (1 - discountPercent / 100)) : price;
+
         return {
           id: (r[0] || ('item-'+idx)).toString().trim() || ('item-'+idx),
           en: (r[0]||'').trim(),
@@ -523,11 +515,12 @@
           img_folder: (r[6]||'').trim()
         };
       }).filter(it => it.en || it.fa);
+
       reconcileCartWithFoods();
       renderFoods();
     } catch(e){
       console.error('failed to load CSV', e);
-      document.getElementById('food-grid').innerHTML = '<p style="color: red;">خطا در لود فایل foods.csv</p>';
+      document.getElementById('food-grid').innerHTML = '<p style="color: red;">خطا در لود فایل foods.csv - چک کن فایل وجود داره و فرمتش درسته.</p>';
     }
   }
 
@@ -540,26 +533,22 @@
         entry.discountedPrice = match.discountedPrice;
         entry.hasDiscount = match.hasDiscount;
         entry.discountPercent = match.discountPercent;
-        entry.en = match.en;
-        entry.fa = match.fa;
         entry.whatsapp = match.whatsapp;
-        entry.img_folder = match.img_folder;
-        entry.img_name = match.img_name;
       } else {
         entry.removed = true;
       }
     }
-    saveCart();
-    renderCart();
   }
 
   function renderFoods(){
     const grid = document.getElementById('food-grid');
     grid.innerHTML = '';
+
     foods.forEach(f => {
       const card = document.createElement('div');
       card.className = 'food-card';
       card.dataset.id = f.id;
+
       const imgWrap = document.createElement('div'); imgWrap.className='food-img';
       const img = document.createElement('img');
       const imgPath = makeImagePath(f);
@@ -567,13 +556,17 @@
       img.onerror = () => img.src = PLACEHOLDER;
       img.alt = f.fa || f.en;
       imgWrap.appendChild(img);
+
       if (f.hasDiscount) {
         const badge = document.createElement('div');
         badge.className = 'discount-badge';
         badge.textContent = `${Math.round(f.discountPercent)}%`;
         imgWrap.appendChild(badge);
       }
+
       const info = document.createElement('div'); info.className='food-info';
+
+      // عنوان غذا
       const h = document.createElement('h3');
       h.style.display = 'flex';
       h.style.alignItems = 'center';
@@ -583,27 +576,40 @@
       h.style.fontSize = '16px';
       h.style.lineHeight = '1.2';
       h.style.color = '#fff';
+
       const nameSpan = document.createElement('span');
       nameSpan.textContent = f.fa || f.en;
+
       h.appendChild(nameSpan);
       info.appendChild(h);
+
+      // مواد تشکیل‌دهنده
       const p = document.createElement('p'); p.textContent = f.ingredients || '';
       info.appendChild(p);
+
+      // فوتر جدید (قیمت و دکمه)
       const footer = document.createElement('div'); 
       footer.className = 'food-footer';
+
+      // قیمت
       const priceSpan = document.createElement('div');
       priceSpan.className = 'price';
+
       if (f.hasDiscount) {
         const original = document.createElement('del');
         original.textContent = formatMoney(f.price);
+        
         const discounted = document.createElement('span');
         discounted.className = 'discounted';
         discounted.textContent = formatMoney(f.discountedPrice);
+        
         priceSpan.appendChild(original);
         priceSpan.appendChild(discounted);
       } else {
         priceSpan.textContent = formatMoney(f.price) + ' تومان';
       }
+
+      // دکمه +
       const addBtn = document.createElement('button');
       addBtn.className = 'add-btn';
       addBtn.textContent = '+';
@@ -611,11 +617,14 @@
         e.stopPropagation();
         addToCart(f);
       });
-      footer.appendChild(addBtn);
-      footer.appendChild(priceSpan);
+
+      footer.appendChild(addBtn); /* دکمه چپ */
+      footer.appendChild(priceSpan); /* قیمت راست */
+
       card.appendChild(imgWrap);
       card.appendChild(info);
       card.appendChild(footer);
+
       grid.appendChild(card);
     });
   }
@@ -638,6 +647,7 @@
     }catch(e){ return String(num); }
   }
 
+  // Cart operations
   function addToCart(food){
     const id = food.id || (food.en||food.fa).toString().trim();
     if(!cart[id]) cart[id] = Object.assign({}, food, {qid:id, qty:0});
@@ -646,13 +656,11 @@
     saveCart();
     renderCart();
   }
-
   function removeFromCart(id){
     delete cart[id];
     saveCart();
     renderCart();
   }
-
   function changeQty(id, delta){
     if(!cart[id]) return;
     cart[id].qty += delta;
@@ -660,20 +668,17 @@
     saveCart();
     renderCart();
   }
-
   function saveCart(){
     try{
       localStorage.setItem('toucan_cart', JSON.stringify(cart));
     }catch(e){}
   }
-
   function loadCart(){
     try{
       const raw = localStorage.getItem('toucan_cart');
       if(raw) cart = JSON.parse(raw);
     }catch(e){ cart = {}; }
   }
-
   function clearCart(){
     cart = {};
     saveCart();
@@ -701,11 +706,12 @@
     document.getElementById('cart-count').textContent = count;
   }
 
+  // Build whatsapp messages grouped by number
   function buildMessages(){
     const groups = {};
     for(const id in cart){
       const it = cart[id];
-      if(!it.whatsapp) it.whatsapp = '';
+      if(!it.whatsapp) it.whatsapp = ''; // blank
       const num = sanitizeNumber(it.whatsapp || '');
       const key = num || '__NO_NUM__';
       if(!groups[key]) groups[key] = {num: num, items: [], subtotal:0};
@@ -735,20 +741,13 @@
     return String(n).replace(/[^0-9]/g,'');
   }
 
-  function sendToWhatsApp(){
+  async function sendToWhatsApp(){
     const msgs = buildMessages();
     if(msgs.length === 0) { alert('سبد خرید خالی است'); return; }
     if(msgs.length === 1){
       const m = msgs[0];
-      if(!m.to){ 
-        promptAndOpen(m.text); 
-        saveOrderForKitchen(m); 
-        saveOrderToFirebase(m); // ✅ اضافه شد
-      } else { 
-        window.open('https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text), '_blank'); 
-        saveOrderForKitchen(m); 
-        saveOrderToFirebase(m); // ✅ اضافه شد
-      }
+      if(!m.to){ promptAndOpen(m.text); await logOrder(m, true); }
+      else { const url = 'https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text); window.open(url, '_blank'); await logOrder(m, true); }
       return;
     }
     const modal = document.getElementById('modal');
@@ -763,16 +762,9 @@
       div.style.padding = '6px 0';
       const label = document.createElement('div'); label.textContent = (m.to || '(بدون شماره)') + ' — مجموع: ' + formatMoney(m.subtotal) + ' تومان';
       const btn = document.createElement('button'); btn.className='send-btn'; btn.textContent='ارسال به ' + (m.to || '(وارد کنید)');
-      btn.addEventListener('click', ()=> {
-        if(!m.to) { 
-          promptAndOpen(m.text); 
-          saveOrderForKitchen(m); 
-          saveOrderToFirebase(m); // ✅ اضافه شد
-        } else { 
-          window.open('https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text), '_blank'); 
-          saveOrderForKitchen(m); 
-          saveOrderToFirebase(m); // ✅ اضافه شد
-        }
+      btn.addEventListener('click', async () => {
+        if(!m.to) { promptAndOpen(m.text); await logOrder(m, true); }
+        else { window.open('https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text), '_blank'); await logOrder(m, true); }
       });
       div.appendChild(label); div.appendChild(btn);
       list.appendChild(div);
@@ -780,41 +772,102 @@
     modal.style.display = 'flex';
     document.getElementById('close-modal').onclick = ()=> modal.style.display='none';
     document.getElementById('send-all').onclick = ()=> {
-      msgs.forEach(m=>{
+      msgs.forEach(async m=>{
         if(m.to) window.open('https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text), '_blank');
         else promptAndOpen(m.text);
-        saveOrderForKitchen(m);
-        saveOrderToFirebase(m); // ✅ اضافه شد
+        await logOrder(m, true);
       });
     };
   }
 
   function promptAndOpen(text){
-    const number = prompt('شماره واتس‌اپ آشپزخانه را وارد کنید (مثال: 98912...)');
+    const number = prompt('شماره واتس‌اپ آشپزخانه برای این بخش را وارد کنید (مثال: 98912...)');
     if(number){
       const num = sanitizeNumber(number);
       window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(text), '_blank');
+      return num;
     } else {
-      alert('شماره وارد نشد.');
+      alert('شماره وارد نشد. ارسال انجام نشد.');
+      return null;
     }
   }
 
-  function saveOrderForKitchen(message){
-    try{
-      const raw = localStorage.getItem('toucan_orders') || '[]';
-      const orders = JSON.parse(raw);
-      orders.unshift({to: message.to, text: message.text, items: message.items, subtotal: message.subtotal, table: table, ts: Date.now()});
-      localStorage.setItem('toucan_orders', JSON.stringify(orders.slice(0,200)));
-    }catch(e){ console.warn(e); }
+  // Log order to Firebase
+  async function logOrder(message, isSent) {
+    const userAgent = navigator.userAgent;
+    const deviceType = /mobile/i.test(userAgent) ? 'Mobile' : 'Desktop';
+    const os = getOSFromUserAgent(userAgent);
+    const browser = getBrowserFromUserAgent(userAgent);
+    const resolution = `${window.innerWidth}x${window.innerHeight}`;
+    const language = navigator.language || navigator.userLanguage;
+    const referrer = document.referrer || 'Direct';
+
+    const orderedFoods = message.items.map(item => ({
+      name: item.fa || item.en,
+      qty: item.qty,
+      price: item.discountedPrice || item.price
+    }));
+
+    const logData = {
+      sessionId: sessionId,
+      table: table,
+      submitTime: firebase.firestore.FieldValue.serverTimestamp(),
+      durationSeconds: Math.round((Date.now() - sessionStartTime) / 1000),
+      deviceType: deviceType,
+      browser: browser,
+      os: os,
+      resolution: resolution,
+      language: language,
+      referrer: referrer,
+      orderedFoods: orderedFoods,
+      totalAmount: message.subtotal,
+      recipient: message.to || 'Unknown',
+      isOrderSent: isSent // true for orders, false for sessions without order
+    };
+
+    try {
+      await db.collection('reports').add(logData);
+      console.log('Logged to Firebase');
+    } catch (e) {
+      console.error('Error logging to Firebase:', e);
+    }
   }
 
-  // ========== مدیریت موزیک ==========
+  function getOSFromUserAgent(ua) {
+    if (/windows/i.test(ua)) return 'Windows';
+    if (/mac os x/i.test(ua)) return 'macOS';
+    if (/android/i.test(ua)) return 'Android';
+    if (/iphone|ipad|ipod/i.test(ua)) return 'iOS';
+    if (/linux/i.test(ua)) return 'Linux';
+    return 'Unknown';
+  }
+
+  function getBrowserFromUserAgent(ua) {
+    if (/chrome/i.test(ua)) return 'Chrome';
+    if (/firefox/i.test(ua)) return 'Firefox';
+    if (/safari/i.test(ua)) return 'Safari';
+    if (/edge/i.test(ua)) return 'Edge';
+    if (/opera/i.test(ua)) return 'Opera';
+    return 'Unknown';
+  }
+
+  // Log session even if no order (on unload)
+  window.addEventListener('beforeunload', async () => {
+    // If cart is empty, log as non-order session
+    if (Object.keys(cart).length === 0) {
+      await logOrder({items: [], subtotal: 0, to: null}, false);
+    }
+  });
+
+  // ========== مدیریت دکمه موزیک ==========
   const music = document.getElementById('background-music');
   const toggleBtn = document.getElementById('music-toggle');
   const icon = document.getElementById('music-icon');
   const PLAY_SRC = "https://www.dash-smal.ir/assets/images/player/play.png";
   const PAUSE_SRC = "https://www.dash-smal.ir/assets/images/player/puse.png";
+
   icon.src = PLAY_SRC;
+
   toggleBtn.addEventListener('click', async (ev) => {
     ev.preventDefault();
     try {
@@ -829,7 +882,7 @@
       }
     } catch (err) {
       console.warn('cannot play audio yet', err);
-      alert('برای پخش صدا، لطفاً یک بار دیگر روی صفحه کلیک کنید.');
+      alert('برای پخش صدا، لطفاً یک بار دیگر روی صفحه کلیک کنید یا از تنظیمات مرورگر دسترسی صوتی را بررسی کنید.');
     }
   });
 
@@ -857,15 +910,18 @@
     avgLow /= third;
     avgMid /= third;
     avgHigh /= (bufferLength - 2 * third);
+
     let intensityLow = (avgLow / 255) * 80;
     let intensityMid = (avgMid / 255) * 80;
     let intensityHigh = (avgHigh / 255) * 80;
+
     const now = Date.now();
     if (now >= nextChangeTime) {
       transitionStartTime = now;
       isFadingOut = true;
       nextChangeTime = now + 5000;
     }
+
     let neonShadow = '';
     if (transitionStartTime > 0) {
       const elapsed = now - transitionStartTime;
@@ -886,14 +942,17 @@
     } else {
       currentAlpha = 0.6;
     }
+
     const neon = neonColors[currentNeonIndex];
     neonShadow = `0 0 ${intensityLow * 0.8}px 8px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha}),
       0 0 ${intensityMid * 1.2}px 12px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha}),
       0 0 ${intensityHigh * 1.6}px 16px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha})`;
+
     toggleBtn.style.boxShadow = `0 0 ${intensityLow}px 3px rgba(255, 69, 0, 0.7),
       0 0 ${intensityMid * 1.5}px 3px rgba(255, 140, 0, 0.5),
       0 0 ${intensityHigh * 2}px 3px rgba(255, 215, 0, 0.3),
       ${neonShadow}`;
+
     requestAnimationFrame(animateFlame);
   }
 
@@ -910,6 +969,8 @@
   fetchFoods();
   renderCart();
   setInterval(fetchFoods, POLL_INTERVAL);
+
+  // event bindings
   document.getElementById('send-whatsapp').addEventListener('click', sendToWhatsApp);
   document.getElementById('clear-cart').addEventListener('click', ()=> {
     if(confirm('پاک کردن کامل فاکتور؟')) clearCart();
@@ -923,16 +984,25 @@
     const overlay = document.getElementById('intro-overlay');
     const gif = document.getElementById('intro-gif');
     const mainContent = document.getElementById('main-content');
+
+    // فعال کردن بلور صفحه اصلی
     mainContent.classList.add('intro-blurred');
-    setTimeout(dismissOverlay, 10000);
+
+    // fade out بعد از ۱۰ ثانیه (توقف GIF اگر loop داشته باشه)
+    const gifDuration = 10000; // ۱۰ ثانیه
+    setTimeout(dismissOverlay, gifDuration);
+
+    // dismiss با تعامل کاربر (کلیک یا تاچ)
     document.addEventListener('click', dismissOverlay, { once: true });
     document.addEventListener('touchstart', dismissOverlay, { once: true });
+
     function dismissOverlay() {
       overlay.classList.add('hidden');
       mainContent.classList.remove('intro-blurred');
-      gif.src = '';
+      gif.src = ''; // توقف GIF با خالی کردن src
     }
   });
+
 })();
 </script>
 </body>
