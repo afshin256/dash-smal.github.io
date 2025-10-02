@@ -622,18 +622,18 @@
       card.appendChild(info);
       card.appendChild(footer);
 
-      card.addEventListener('click', async () => {
-        try {
-          await addDoc(collection(db, "events"), {
-            userId: userId,
-            table: table,
-            eventType: "food_click",
-            details: { food: f.fa || f.en },
-            timestamp: Date.now()
-          });
-        } catch (e) {
+      card.addEventListener('click', () => {
+        addDoc(collection(db, "events"), {
+          userId: userId,
+          table: table,
+          eventType: "food_click",
+          details: { food: f.fa || f.en },
+          timestamp: Date.now()
+        }).then(() => {
+          console.log("food_click sent successfully");
+        }).catch(e => {
           console.error("Error sending food_click:", e);
-        }
+        });
       });
 
       grid.appendChild(card);
@@ -664,17 +664,17 @@
     if(!cart[id]) cart[id] = Object.assign({}, food, {qid:id, qty:0});
     cart[id].qty += 1;
     delete cart[id].removed;
-    try {
-      addDoc(collection(db, "events"), {
-        userId: userId,
-        table: table,
-        eventType: "add_to_cart",
-        details: { food: food.fa || food.en, qty: cart[id].qty },
-        timestamp: Date.now()
-      });
-    } catch (e) {
+    addDoc(collection(db, "events"), {
+      userId: userId,
+      table: table,
+      eventType: "add_to_cart",
+      details: { food: food.fa || food.en, qty: cart[id].qty },
+      timestamp: Date.now()
+    }).then(() => {
+      console.log("add_to_cart sent successfully");
+    }).catch(e => {
       console.error("Error sending add_to_cart:", e);
-    }
+    });
     saveCart();
     renderCart();
   }
@@ -766,17 +766,17 @@
   function sendToWhatsApp(){
     const msgs = buildMessages();
     if (msgs.length > 0) {
-      try {
-        addDoc(collection(db, "events"), {
-          userId: userId,
-          table: table,
-          eventType: "order_sent",
-          details: { messages: msgs.map(m => ({ to: m.to, subtotal: m.subtotal })) },
-          timestamp: Date.now()
-        });
-      } catch (e) {
+      addDoc(collection(db, "events"), {
+        userId: userId,
+        table: table,
+        eventType: "order_sent",
+        details: { messages: msgs.map(m => ({ to: m.to, subtotal: m.subtotal })) },
+        timestamp: Date.now()
+      }).then(() => {
+        console.log("order_sent sent successfully");
+      }).catch(e => {
         console.error("Error sending order_sent:", e);
-      }
+      });
     }
     if(msgs.length === 0) { alert('سبد خرید خالی است'); return; }
     if(msgs.length === 1){
@@ -966,19 +966,19 @@
     isVisible = !document.hidden;
   });
 
-  window.addEventListener('beforeunload', async () => {
+  window.addEventListener('beforeunload', () => {
     updateTime();
-    try {
-      await addDoc(collection(db, "events"), {
-        userId: userId,
-        table: table,
-        eventType: "page_time",
-        details: { duration: Math.round(totalTime / 1000) + " seconds" },
-        timestamp: Date.now()
-      });
-    } catch (e) {
+    addDoc(collection(db, "events"), {
+      userId: userId,
+      table: table,
+      eventType: "page_time",
+      details: { duration: Math.round(totalTime / 1000) + " seconds" },
+      timestamp: Date.now()
+    }).then(() => {
+      console.log("page_time sent successfully");
+    }).catch(e => {
       console.error("Error sending time:", e);
-    }
+    });
   });
 
   loadCart();
