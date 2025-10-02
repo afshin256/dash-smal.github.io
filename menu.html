@@ -416,24 +416,8 @@
     </div>
   </div>
 
-<script type="module">
+<script>
 /* menu.js - client side logic */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBjLXcNNRAEwJw5CaTknfCr_Y1saeXlvTw",
-  authDomain: "toucan-reports.firebaseapp.com",
-  projectId: "toucan-reports",
-  storageBucket: "toucan-reports.firebasestorage.app",
-  messagingSenderId: "977430999383",
-  appId: "1:977430999383:web:1c4b38f0bcee85bf620e12"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// بقیه کد JS همان قبلی است (از DOCUMENT html.txt)
 (() => {
   const CSV_PATH = 'data/foods.csv';
   const PLACEHOLDER = 'assets/images/placeholder.png';
@@ -456,34 +440,6 @@ const db = getFirestore(app);
   let transitionDuration = 1000; // 1 second fade
   let isFadingOut = false;
   let currentAlpha = 0.6;
-
-  // تغییرات جدید برای گزارش‌گیری
-  const entryTime = Date.now(); // زمان ورود به صفحه
-  const referrer = document.referrer || 'Direct'; // منبع ورود
-  const userLanguage = navigator.language || 'fa'; // زبان کاربر
-  const userAgent = navigator.userAgent; // برای استخراج مرورگر و OS
-  const screenResolution = `${window.screen.width}x${window.screen.height}`; // رزولوشن
-  const deviceType = window.innerWidth < 768 ? 'Mobile' : (window.innerWidth < 1024 ? 'Tablet' : 'Desktop'); // نوع دستگاه
-
-  // تابع ساده برای استخراج مرورگر و OS از userAgent
-  function getBrowserAndOS(ua) {
-    let browser = 'Unknown';
-    let os = 'Unknown';
-    if (ua.indexOf('Chrome') > -1) browser = 'Chrome';
-    else if (ua.indexOf('Safari') > -1) browser = 'Safari';
-    else if (ua.indexOf('Firefox') > -1) browser = 'Firefox';
-    else if (ua.indexOf('Edge') > -1) browser = 'Edge';
-    else if (ua.indexOf('Trident') > -1) browser = 'IE';
-
-    if (ua.indexOf('Win') > -1) os = 'Windows';
-    else if (ua.indexOf('Mac') > -1) os = 'macOS';
-    else if (ua.indexOf('Android') > -1) os = 'Android';
-    else if (ua.indexOf('iPhone') > -1 || ua.indexOf('iPad') > -1) os = 'iOS';
-    else if (ua.indexOf('Linux') > -1) os = 'Linux';
-
-    return { browser, os };
-  }
-  const { browser, os } = getBrowserAndOS(userAgent);
 
   function getQueryParam(name) {
     const params = new URLSearchParams(location.search);
@@ -797,8 +753,8 @@ const db = getFirestore(app);
       list.appendChild(div);
     });
     modal.style.display = 'flex';
-    document.getElementById('close-modal').onclick = () => modal.style.display='none';
-    document.getElementById('send-all').onclick = () => {
+    document.getElementById('close-modal').onclick = ()=> modal.style.display='none';
+    document.getElementById('send-all').onclick = ()=> {
       msgs.forEach(m=>{
         if(m.to) window.open('https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text), '_blank');
         else promptAndOpen(m.text);
@@ -817,38 +773,13 @@ const db = getFirestore(app);
     }
   }
 
-  async function saveOrderForKitchen(message){
+  function saveOrderForKitchen(message){
     try{
       const raw = localStorage.getItem('toucan_orders') || '[]';
       const orders = JSON.parse(raw);
       orders.unshift({to: message.to, text: message.text, items: message.items, subtotal: message.subtotal, table: table, ts: Date.now()});
       localStorage.setItem('toucan_orders', JSON.stringify(orders.slice(0,200)));
     }catch(e){ console.warn(e); }
-
-    // ذخیره گزارش در Firestore
-    const duration = Math.round((Date.now() - entryTime) / 1000); // مدت زمان حضور در ثانیه
-    const itemsList = message.items.map(it => `${it.qty}x ${it.fa || it.en} (${formatMoney(it.discountedPrice || it.price)})`).join(', ');
-    const report = {
-      timestamp: new Date().toISOString(),
-      table: table,
-      duration_seconds: duration,
-      device_type: deviceType,
-      browser: browser,
-      os: os,
-      screen_resolution: screenResolution,
-      user_language: userLanguage,
-      referrer: referrer,
-      items: itemsList,
-      total: message.subtotal,
-      recipient: message.to || 'None'
-    };
-
-    try {
-      await addDoc(collection(db, "reports"), report);
-      console.log('گزارش با موفقیت در Firebase ذخیره شد');
-    } catch (e) {
-      console.warn('خطا در ذخیره گزارش در Firebase:', e);
-    }
   }
 
   // ========== مدیریت دکمه موزیک ==========
@@ -980,8 +911,13 @@ const db = getFirestore(app);
     // فعال کردن بلور صفحه اصلی
     mainContent.classList.add('intro-blurred');
 
-    // fade out بعد از ۱۰ ثانیه (توقف GIF اگر loop داشته باشه)
-    const gifDuration = 10000; // ۱۰ ثانیه
+    // fade out بعد از زمان مشخص (توقف GIF اگر loop داشته باشه)
+    let gifDuration;
+    if (window.innerWidth <= 768) {
+      gifDuration = 4000; // موبایل: ۴ ثانیه
+    } else {
+      gifDuration = 3000; // کامپیوتر: ۳ ثانیه
+    }
     setTimeout(dismissOverlay, gifDuration);
 
     // dismiss با تعامل کاربر (کلیک یا تاچ)
