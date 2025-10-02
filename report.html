@@ -1,66 +1,123 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>گزارش - تست Firebase</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TOUCAN - گزارش‌گیری</title>
+  <style>
+    body {
+      background-color: #070606;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #222;
+    }
+    .no-data {
+      text-align: center;
+      color: #ccc;
+    }
+  </style>
 </head>
-<body style="background:#000;color:#0ea5b7;padding:20px;font-family:Arial">
-  <h2>گزارش سفارشات (فقط از Firebase)</h2>
-  <div id="status">در حال اتصال به Firebase...</div>
-  <div id="orders"></div>
+<body>
+  <h1>گزارش‌گیری سفارشات و بازدیدها</h1>
+  <table id="reports-table">
+    <thead>
+      <tr>
+        <th>شناسه جلسه</th>
+        <th>میز</th>
+        <th>زمان ارسال</th>
+        <th>مدت زمان حضور (ثانیه)</th>
+        <th>نوع دستگاه</th>
+        <th>مرورگر</th>
+        <th>سیستم‌عامل</th>
+        <th>رزولوشن صفحه</th>
+        <th>زبان کاربر</th>
+        <th>منبع ورود</th>
+        <th>غذاهای سفارش‌شده</th>
+        <th>مجموع مبلغ</th>
+        <th>دریافت‌کننده</th>
+        <th>سفارش ارسال شده؟</th>
+      </tr>
+    </thead>
+    <tbody id="reports-body"></tbody>
+  </table>
 
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js"></script>
 
   <script>
-    // 🔑 تنظیمات شما
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBBGJfA74Ef1haXMbjoW12yYcVNuLcxGEA",
       authDomain: "toucan-restaurant-menu.firebaseapp.com",
       projectId: "toucan-restaurant-menu",
       storageBucket: "toucan-restaurant-menu.firebasestorage.app",
       messagingSenderId: "142624701803",
-      appId: "1:142624701803:web:334bbbc313ce35edb6a02e"
+      appId: "1:142624701803:web:334bbbc313ce35edb6a02e",
+      measurementId: "G-FHR0H5KD25"
     };
 
-    // Initialize
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore(app);
 
-    const statusEl = document.getElementById('status');
-    const ordersEl = document.getElementById('orders');
+    // Fetch and display reports
+    async function loadReports() {
+      const reportsBody = document.getElementById('reports-body');
+      reportsBody.innerHTML = '';
 
-    // تست اتصال
-    db.collection('orders').limit(1).get().then(() => {
-      statusEl.textContent = '✅ متصل شد. در حال بارگذاری سفارشات...';
-    }).catch(err => {
-      statusEl.innerHTML = `<span style="color:red">❌ خطا در اتصال: ${err.message}</span>`;
-      console.error(err);
-    });
-
-    // خواندن سفارشات
-    db.collection('orders')
-      .orderBy('timestamp', 'desc')
-      .limit(50)
-      .onSnapshot(snapshot => {
+      try {
+        const snapshot = await db.collection('reports').orderBy('submitTime', 'desc').get();
         if (snapshot.empty) {
-          ordersEl.innerHTML = '<p>هیچ سفارشی در Firebase وجود ندارد.</p>';
+          reportsBody.innerHTML = '<tr><td colspan="14" class="no-data">هیچ گزارشی موجود نیست.</td></tr>';
           return;
         }
-        let html = '<ul>';
+
         snapshot.forEach(doc => {
-          const d = doc.data();
-          const time = d.timestamp ? d.timestamp.toDate().toLocaleString('fa-IR') : 'نامشخص';
-          html += `<li>میز: ${d.table || '—'} | زمان: ${time} | جمع: ${d.subtotal || 0} تومان</li>`;
+          const data = doc.data();
+          const row = document.createElement('tr');
+
+          row.innerHTML = `
+            <td>${data.sessionId || '-'}</td>
+            <td>${data.table || '-'}</td>
+            <td>${data.submitTime?.toDate().toLocaleString('fa-IR') || '-'}</td>
+            <td>${data.durationSeconds || '-'}</td>
+            <td>${data.deviceType || '-'}</td>
+            <td>${data.browser || '-'}</td>
+            <td>${data.os || '-'}</td>
+            <td>${data.resolution || '-'}</td>
+            <td>${data.language || '-'}</td>
+            <td>${data.referrer || '-'}</td>
+            <td>${data.orderedFoods?.map(f => `${f.qty}x ${f.name} (${f.price} تومان)`).join('<br>') || 'هیچ سفارشی'}</td>
+            <td>${data.totalAmount || 0} تومان</td>
+            <td>${data.recipient || '-'}</td>
+            <td>${data.isOrderSent ? 'بله' : 'خیر'}</td>
+          `;
+
+          reportsBody.appendChild(row);
         });
-        html += '</ul>';
-        ordersEl.innerHTML = html;
-      }, err => {
-        ordersEl.innerHTML = `<p style="color:red">خطا در خواندن داده‌ها: ${err.message}</p>`;
-        console.error(err);
-      });
+      } catch (e) {
+        console.error('Error loading reports:', e);
+        reportsBody.innerHTML = '<tr><td colspan="14" class="no-data">خطا در بارگذاری گزارش‌ها.</td></tr>';
+      }
+    }
+
+    // Load reports on page load
+    loadReports();
   </script>
 </body>
 </html>
