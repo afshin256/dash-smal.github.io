@@ -5,112 +5,76 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>TOUCAN - گزارش‌گیری</title>
   <style>
-    body { font-family: 'Segoe UI', 'Helvetica Neue', Tahoma, Arial; background: #0b0b0b; color: #eee; margin: 0; padding: 20px; }
-    .header { padding: 12px 0; font-size: 24px; font-weight: bold; text-align: center; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    body { background: #0b0b0b; color: #eee; font-family: Arial; margin: 20px; }
+    table { width: 100%; border-collapse: collapse; }
     th, td { border: 1px solid #333; padding: 8px; text-align: right; }
-    th { background: #222; }
-    button { background: #0ea5b7; color: #fff; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
-    #report-table { overflow-x: auto; }
-    @media (max-width: 768px) { table { font-size: 12px; } }
+    #login { text-align: center; }
+    #reports { display: none; }
   </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjLXcNNRAEwJw5CaTknfCr_Y1saeXlvTw",
+      authDomain: "toucan-reports.firebaseapp.com",
+      projectId: "toucan-reports",
+      storageBucket: "toucan-reports.firebasestorage.app",
+      messagingSenderId: "977430999383",
+      appId: "1:977430999383:web:1c4b38f0bcee85bf620e12"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const PASSWORD = "4441425";
+
+    document.getElementById('login-btn').addEventListener('click', async () => {
+      const input = document.getElementById('password').value;
+      if (input === PASSWORD) {
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('reports').style.display = 'block';
+        await loadReports();
+      } else {
+        alert('پسورد اشتباه است!');
+      }
+    });
+
+    async function loadReports() {
+      const q = query(collection(db, "events"), orderBy("timestamp", "desc"));
+      const querySnapshot = await getDocs(q);
+      const table = document.getElementById('report-table').getElementsByTagName('tbody')[0];
+      table.innerHTML = '';
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const row = table.insertRow();
+        row.insertCell(0).textContent = data.userId;
+        row.insertCell(1).textContent = data.table || '—';
+        row.insertCell(2).textContent = data.eventType;
+        row.insertCell(3).textContent = JSON.stringify(data.details);
+        row.insertCell(4).textContent = new Date(data.timestamp).toLocaleString('fa-IR');
+      });
+    }
+  </script>
 </head>
 <body>
-  <div class="header">گزارش‌گیری سفارش‌ها - TOUCAN</div>
-  <button id="export-csv">دانلود گزارش به عنوان report.csv</button>
-  <div id="report-table"></div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBjLXcNNRAEwJw5CaTknfCr_Y1saeXlvTw",
-  authDomain: "toucan-reports.firebaseapp.com",
-  projectId: "toucan-reports",
-  storageBucket: "toucan-reports.firebasestorage.app",
-  messagingSenderId: "977430999383",
-  appId: "1:977430999383:web:1c4b38f0bcee85bf620e12"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-async function loadReports() {
-  try {
-    const querySnapshot = await getDocs(collection(db, "reports"));
-    return querySnapshot.docs.map(doc => doc.data());
-  } catch (e) {
-    console.warn('خطا در بارگذاری گزارش‌ها از Firebase:', e);
-    return [];
-  }
-}
-
-function renderReports(reports) {
-  const table = document.createElement('table');
-  const thead = document.createElement('thead');
-  const headerRow = document.createElement('tr');
-  const headers = ['زمان ارسال', 'میز', 'مدت زمان حضور (ثانیه)', 'نوع دستگاه', 'مرورگر', 'سیستم‌عامل', 'رزولوشن صفحه', 'زبان کاربر', 'منبع ورود', 'غذاهای سفارش‌شده', 'مجموع مبلغ', 'دریافت‌کننده'];
-  headers.forEach(h => {
-    const th = document.createElement('th');
-    th.textContent = h;
-    headerRow.appendChild(th);
-  });
-  thead.appendChild(headerRow);
-  table.appendChild(thead);
-
-  const tbody = document.createElement('tbody');
-  reports.forEach(report => {
-    const row = document.createElement('tr');
-    [
-      report.timestamp,
-      report.table,
-      report.duration_seconds,
-      report.device_type,
-      report.browser,
-      report.os,
-      report.screen_resolution,
-      report.user_language,
-      report.referrer,
-      report.items,
-      report.total,
-      report.recipient
-    ].forEach(val => {
-      const td = document.createElement('td');
-      td.textContent = val || 'نامشخص';
-      row.appendChild(td);
-    });
-    tbody.appendChild(row);
-  });
-  table.appendChild(tbody);
-
-  document.getElementById('report-table').appendChild(table);
-}
-
-function exportToCSV(reports) {
-  const csvHeaders = ['timestamp', 'table', 'duration_seconds', 'device_type', 'browser', 'os', 'screen_resolution', 'user_language', 'referrer', 'items', 'total', 'recipient'];
-  let csvContent = csvHeaders.join(',') + '\n';
-  reports.forEach(report => {
-    const row = csvHeaders.map(key => `"${(report[key] || 'نامشخص').toString().replace(/"/g, '""')}"`).join(',');
-    csvContent += row + '\n';
-  });
-
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.setAttribute('href', url);
-  link.setAttribute('download', 'report.csv');
-  link.style.visibility = 'hidden';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-(async () => {
-  const reports = await loadReports();
-  renderReports(reports);
-  document.getElementById('export-csv').addEventListener('click', () => exportToCSV(reports));
-})();
-</script>
+  <div id="login">
+    <h1>ورود به گزارش‌گیری</h1>
+    <input type="password" id="password" placeholder="پسورد را وارد کنید" />
+    <button id="login-btn">ورود</button>
+  </div>
+  <div id="reports">
+    <h1>گزارش رویدادها</h1>
+    <table id="report-table">
+      <thead>
+        <tr>
+          <th>شناسه کاربر</th>
+          <th>میز</th>
+          <th>نوع رویداد</th>
+          <th>جزئیات</th>
+          <th>زمان</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 </body>
 </html>
