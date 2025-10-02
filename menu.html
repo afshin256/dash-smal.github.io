@@ -351,20 +351,6 @@
       }
     }
   </style>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
-    const firebaseConfig = {
-      apiKey: "AIzaSyBjLXcNNRAEwJw5CaTknfCr_Y1saeXlvTw",
-      authDomain: "toucan-reports.firebaseapp.com",
-      projectId: "toucan-reports",
-      storageBucket: "toucan-reports.firebasestorage.app",
-      messagingSenderId: "977430999383",
-      appId: "1:977430999383:web:1c4b38f0bcee85bf620e12"
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-  </script>
 </head>
 <body>
   <!-- intro GIF overlay جدید -->
@@ -622,20 +608,6 @@
       card.appendChild(info);
       card.appendChild(footer);
 
-      card.addEventListener('click', () => {
-        addDoc(collection(db, "events"), {
-          userId: userId,
-          table: table,
-          eventType: "food_click",
-          details: { food: f.fa || f.en },
-          timestamp: Date.now()
-        }).then(() => {
-          console.log("food_click sent successfully");
-        }).catch(e => {
-          console.error("Error sending food_click:", e);
-        });
-      });
-
       grid.appendChild(card);
     });
   }
@@ -664,17 +636,6 @@
     if(!cart[id]) cart[id] = Object.assign({}, food, {qid:id, qty:0});
     cart[id].qty += 1;
     delete cart[id].removed;
-    addDoc(collection(db, "events"), {
-      userId: userId,
-      table: table,
-      eventType: "add_to_cart",
-      details: { food: food.fa || food.en, qty: cart[id].qty },
-      timestamp: Date.now()
-    }).then(() => {
-      console.log("add_to_cart sent successfully");
-    }).catch(e => {
-      console.error("Error sending add_to_cart:", e);
-    });
     saveCart();
     renderCart();
   }
@@ -765,19 +726,6 @@
 
   function sendToWhatsApp(){
     const msgs = buildMessages();
-    if (msgs.length > 0) {
-      addDoc(collection(db, "events"), {
-        userId: userId,
-        table: table,
-        eventType: "order_sent",
-        details: { messages: msgs.map(m => ({ to: m.to, subtotal: m.subtotal })) },
-        timestamp: Date.now()
-      }).then(() => {
-        console.log("order_sent sent successfully");
-      }).catch(e => {
-        console.error("Error sending order_sent:", e);
-      });
-    }
     if(msgs.length === 0) { alert('سبد خرید خالی است'); return; }
     if(msgs.length === 1){
       const m = msgs[0];
@@ -940,47 +888,6 @@
   music.addEventListener('ended', () => icon.src = PLAY_SRC);
 
   // ================= load & init =================
-  function generateUUID() {
-    return crypto.randomUUID();
-  }
-
-  let userId = localStorage.getItem('toucan_user_id');
-  if (!userId) {
-    userId = generateUUID();
-    localStorage.setItem('toucan_user_id', userId);
-  }
-
-  let startTime = performance.now();
-  let isVisible = true;
-  let totalTime = 0;
-
-  function updateTime() {
-    if (isVisible) {
-      totalTime += performance.now() - startTime;
-    }
-    startTime = performance.now();
-  }
-
-  document.addEventListener('visibilitychange', () => {
-    updateTime();
-    isVisible = !document.hidden;
-  });
-
-  window.addEventListener('beforeunload', () => {
-    updateTime();
-    addDoc(collection(db, "events"), {
-      userId: userId,
-      table: table,
-      eventType: "page_time",
-      details: { duration: Math.round(totalTime / 1000) + " seconds" },
-      timestamp: Date.now()
-    }).then(() => {
-      console.log("page_time sent successfully");
-    }).catch(e => {
-      console.error("Error sending time:", e);
-    });
-  });
-
   loadCart();
   fetchFoods();
   renderCart();
