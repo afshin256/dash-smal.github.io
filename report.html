@@ -22,13 +22,58 @@
 
 <script>
 (() => {
-  function loadReports() {
+  // CSV parser (کپی از menu.html)
+  function parseCSV(text) {
+    const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+    if (lines.length === 0) return [];
+    function parseLine(line) {
+      const res = []; let cur = ''; let inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQ && line[i + 1] === '"') { cur += '"'; i++; }
+          else inQ = !inQ;
+        } else if (ch === ',' && !inQ) {
+          res.push(cur); cur = '';
+        } else { cur += ch; }
+      }
+      res.push(cur);
+      return res;
+    }
+    const parsed = lines.map(parseLine);
+    return parsed;
+  }
+
+  async function loadReports() {
     try {
-      const raw = localStorage.getItem('toucan_reports') || '[]';
-      return JSON.parse(raw);
+      const resp = await fetch('data/report.csv?t=' + Date.now());
+      if (!resp.ok) throw new Error('CSV not found');
+      const text = await resp.text();
+      const rows = parseCSV(text);
+      // فرض بر این که ردیف اول هدر است، پس از ایندکس 1 شروع می‌کنیم
+      return rows.slice(1).map(row => ({
+        timestamp: row[0],
+        table: row[1],
+        duration_seconds: row[2],
+        device_type: row[3],
+        browser: row[4],
+        os: row[5],
+        screen_resolution: row[6],
+        user_language: row[7],
+        referrer: row[8],
+        items: row[9],
+        total: row[10],
+        recipient: row[11]
+      }));
     } catch (e) {
-      console.warn('Error loading reports:', e);
-      return [];
+      console.warn('Error loading from CSV, falling back to localStorage:', e);
+      try {
+        const raw = localStorage.getItem('toucan_reports') || '[]';
+        return JSON.parse(raw);
+      } catch (e) {
+        console.warn('Error loading local reports:', e);
+        return [];
+      }
     }
   }
 
@@ -92,10 +137,11 @@
     document.body.removeChild(link);
   }
 
-  const reports = loadReports();
-  renderReports(reports);
-
-  document.getElementById('export-csv').addEventListener('click', () => exportToCSV(reports));
+  (async () => {
+    const reports = await loadReports();
+    renderReports(reports);
+    document.getElementById('export-csv').addEventListener('click', () => exportToCSV(reports));
+  })();
 })();
 </script>
 </body>
