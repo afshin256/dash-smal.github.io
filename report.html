@@ -1,216 +1,919 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>گزارش سفارشات - TOUCAN</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TOUCAN - منو</title>
+  <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    body {
-      background: #0b0b0b;
-      color: #eee;
-      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      line-height: 1.5;
+    /* پایه‌ای برای کارت‌ها و شبکه */
+    body { font-family: 'Segoe UI','Helvetica Neue',Tahoma,Arial; background:#0b0b0b; color:#eee; margin:0; padding:0 12px 80px 12px; }
+    .header { padding:12px 0; display:flex; align-items:center; gap:12px; }
+    .brand { display:flex; align-items:center; gap:10px; }
+    .logo { width:44px;height:44px;border-radius:8px;background:#222;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#fff; }
+    /* شبکه غذاها */
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #ffb84d;
-      font-weight: 800;
+    @media (max-width:768px) {
+      .food-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+      body { padding-bottom: 120px; }
     }
-    .order {
+    /* کارت غذا */
+    .food-card {
       background: #111;
-      border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 2px;
+      align-items: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    /* تصویر غذا */
+    .food-img {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
       border: 1px solid #222;
     }
-    .order-header {
-      display: flex;
-      justify-content: space-between;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #0ea5b7;
+    @media (max-width: 768px) {
+      .food-img {
+        aspect-ratio: 16 / 9;
+      }
     }
-    .order-meta {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    @media (min-width: 769px) {
+      .food-img {
+        height: 200px;
+      }
+    }
+    .food-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: inherit;
+    }
+    /* برچسب تخفیف */
+    .discount-badge {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      background-color: #e63946;
+      color: white;
+      font-weight: bold;
+      font-size: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+      animation: pulse 2s infinite ease-in-out;
+      z-index: 1;
+      pointer-events: none;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    @media (max-width: 768px) {
+      .discount-badge {
+        width: 35px;
+        height: 35px;
+        font-size: 11px;
+        bottom: 4px;
+        right: 4px;
+      }
+    }
+    /* اطلاعات غذا */
+    .food-info {
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+      padding: 8px 10px;
+    }
+    .food-info h3 {
+      margin: 0 0 6px 0;
+      font-size: 16px;
+      line-height: 1.2;
+      color: #fff;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
       gap: 8px;
-      margin: 12px 0;
+    }
+    .food-info p {
+      margin: 0 0 6px 0;
       font-size: 13px;
       color: #bbb;
+      white-space: normal;
+      word-wrap: break-word;
     }
-    .meta-item {
-      display: flex;
-      gap: 6px;
-    }
-    .meta-item strong {
-      color: #fff;
-      min-width: 110px;
-    }
-    .items-list {
-      margin: 12px 0;
-    }
-    .item-row {
+    /* فوتر */
+    .food-footer {
+      width: 100%;
+      height: 40px;
+      background-color: #111;
       display: flex;
       justify-content: space-between;
-      padding: 4px 0;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 0 0 12px 12px;
+    }
+    /* قیمت */
+    .price {
+      font-weight: 800;
+      min-width: 90px;
       font-size: 14px;
-      border-bottom: 1px dashed rgba(255,255,255,0.06);
-    }
-    .item-name {
-      flex: 1;
-      color: #fff;
-    }
-    .item-total {
-      text-align: left;
-      min-width: 70px;
       color: #ffb84d;
+      text-align: right;
+      direction: ltr;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.1;
     }
-    .total-section {
-      margin-top: 10px;
-      font-weight: bold;
-      color: #ffb84d;
-      text-align: left;
-    }
-    .loading {
-      text-align: center;
-      padding: 40px;
+    .price del {
       color: #999;
+      font-size: 13px;
+      text-decoration: line-through;
+      order: 1;
     }
-    .error {
+    .price .discounted {
       color: #e63946;
-      text-align: center;
-      padding: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      order: 2;
     }
-    @media (max-width: 600px) {
-      .meta-item {
-        flex-direction: column;
-        gap: 2px;
+    .add-btn {
+      background: #c62828;
+      border: none;
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* افکت کارت */
+    .food-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      animation: flame 1.5s infinite alternate ease-in-out;
+      z-index: 10;
+    }
+    @keyframes flame {
+      0% {
+        box-shadow: 
+          0 0 10px 5px rgba(255, 69, 0, 0.7),
+          0 0 20px 10px rgba(255, 140, 0, 0.5),
+          0 0 30px 15px rgba(255, 215, 0, 0.3);
       }
-      .meta-item strong {
-        min-width: auto;
+      33% {
+        box-shadow: 
+          0 0 15px 7px rgba(255, 69, 0, 0.8),
+          0 0 25px 12px rgba(255, 140, 0, 0.6),
+          0 0 35px 17px rgba(255, 215, 0, 0.4);
+      }
+      66% {
+        box-shadow: 
+          0 0 12px 6px rgba(255, 69, 0, 0.6),
+          0 0 22px 11px rgba(255, 140, 0, 0.4),
+          0 0 32px 16px rgba(255, 215, 0, 0.2);
+      }
+      100% {
+        box-shadow: 
+          0 0 10px 5px rgba(255, 69, 0, 0.7),
+          0 0 20px 10px rgba(255, 140, 0, 0.5),
+          0 0 30px 15px rgba(255, 215, 0, 0.3);
+      }
+    }
+    /* سبد خرید شناور */
+    .cart-floating {
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      width: 360px;
+      max-width: calc(100% - 24px);
+      background: linear-gradient(180deg, rgba(10,10,10,0.95), rgba(12,12,12,0.95));
+      color: #fff;
+      padding: 14px 14px 44px 86px;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 1100;
+      min-width: 280px;
+      font-size: 13px;
+    }
+    .cart-list {
+      max-height: 160px;
+      overflow: auto;
+      padding-right: 6px;
+    }
+    .cart-item {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.04);
+    }
+    .cart-item .qty {
+      font-weight: 800;
+      width: 48px;
+      text-align: center;
+    }
+    .cart-item button {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.06);
+      color: #fff;
+      padding: 4px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .cart-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .send-btn {
+      background: #0ea5b7;
+      border: none;
+      color: #fff;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .send-btn[style] {}
+    /* دکمه موزیک */
+    .music-button {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.06);
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1200;
+      transition: box-shadow 0.1s ease;
+    }
+    .music-button img {
+      width: 86%;
+      height: 86%;
+      object-fit: contain;
+      display: block;
+    }
+    /* متن حقوقی */
+    .rights-text {
+      position: absolute;
+      bottom: 8px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-weight: 800;
+      color: #fff;
+      font-size: 12px;
+      pointer-events: none;
+    }
+    @media (max-width: 420px) {
+      .cart-floating {
+        right: 8px;
+        left: 8px;
+        width: auto;
+        padding-left: 82px;
+      }
+      .music-button {
+        left: 8px;
       }
     }
   </style>
 </head>
 <body>
-  <h1>📊 گزارش سفارشات - TOUCAN</h1>
-  <div id="orders-container" class="loading">در حال بارگذاری سفارشات از Google Sheet...</div>
+  <!-- intro GIF overlay -->
+  <div id="intro-overlay">
+    <div class="gif-container">
+      <img id="intro-gif" src="https://www.dash-smal.ir/assets/images/777.gif" alt="لوگو موشن">
+    </div>
+  </div>
+  <div id="main-content">
+    <div class="header">
+      <div class="brand">
+        <div class="logo">T</div>
+        <div>
+          <div style="font-weight:800;font-size:18px">TOUCAN</div>
+          <div style="font-size:13px;color:#bbb">منوی دیجیتال - سفارش با QR</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="margin-bottom:10px">
+        <strong>میز:</strong> <span id="table-number-display">—</span>
+      </div>
+      <div id="food-grid" class="food-grid"></div>
+    </div>
+    <!-- floating cart -->
+    <div id="cart" class="cart-floating" aria-live="polite">
+      <button id="music-toggle" class="music-button" title="پخش/توقف موسیقی">
+        <img id="music-icon" src="https://www.dash-smal.ir/assets/images/player/play.png" alt="play">
+      </button>
+      <div style="flex:1">
+        <div style="font-weight:800; margin-bottom:6px">فاکتور (<span id="cart-count">0</span>)</div>
+        <div class="cart-list" id="cart-list"></div>
+        <div style="margin-top:6px;font-weight:800">کل: <span id="cart-total">0</span> تومان</div>
+      </div>
+      <div class="cart-actions">
+        <button id="send-whatsapp" class="send-btn">ارسال سفارش به واتس‌اپ</button>
+        <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
+      </div>
+      <div class="rights-text">All rights reserved by Dash Smal Content Production Agency.</div>
+    </div>
+    <!-- hidden audio -->
+    <audio id="background-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop preload="none"></audio>
+    <!-- modal -->
+    <div id="modal" class="modal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:2000">
+      <div class="box" role="dialog" aria-modal="true" style="background:#111;color:#fff;padding:16px;border-radius:10px;max-width:92%;width:420px">
+        <h3 style="margin-top:0">چند شماره آشپزخانه پیدا شد</h3>
+        <p style="color:#ccc">سفارش به هر شماره جداگانه ارسال خواهد شد. شماره مورد نظر را انتخاب کنید یا همه را با هم ارسال کنید.</p>
+        <div id="recipient-list" style="display:flex;flex-direction:column;gap:8px;margin-top:12px"></div>
+        <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-start">
+          <button id="send-all" class="send-btn">ارسال همه</button>
+          <button id="close-modal" class="send-btn" style="background:#ddd;color:#000">بستن</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
-    // 🔗 لینک CSV عمومی Google Sheet شما
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/1aBcD.../export?format=csv&gid=0'; // 👈 اینجا لینک خودتان را جایگزین کنید
+/* menu.js - client side logic */
+(() => {
+  // ⏱️ زمان شروع صفحه (برای محاسبه مدت حضور)
+  const pageLoadTime = Date.now();
 
-    const container = document.getElementById('orders-container');
+  const CSV_PATH = 'data/foods.csv';
+  const PLACEHOLDER = 'assets/images/placeholder.png';
+  const POLL_INTERVAL = 12000;
+  const table = getQueryParam('table') || localStorage.getItem('toucan_table') || '—';
+  document.getElementById('table-number-display').textContent = table;
+  localStorage.setItem('toucan_table', table);
+  let foods = [];
+  let cart = {};
+  let audioCtx, source, analyser, bufferLength, dataArray;
+  const neonColors = [
+    {r: 0, g: 255, b: 255},
+    {r: 255, g: 105, b: 180},
+    {r: 138, g: 43, b: 226}
+  ];
+  let currentNeonIndex = 0;
+  let nextChangeTime = Date.now() + 5000;
+  let transitionStartTime = 0;
+  let transitionDuration = 1000;
+  let isFadingOut = false;
+  let currentAlpha = 0.6;
 
-    // تبدیل CSV به آرایه
-    function parseCSV(text) {
-      const lines = text.split('\n').filter(line => line.trim() !== '');
-      const headers = lines[0].split(',').map(h => h.trim());
-      const orders = [];
-      for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/); // handle commas in quotes
-        if (values.length < headers.length) continue;
-        const order = {};
-        headers.forEach((header, index) => {
-          let val = values[index] || '';
-          // حذف "" اگر وجود داشت
-          if (val.startsWith('"') && val.endsWith('"')) {
-            val = val.slice(1, -1).replace(/""/g, '"');
-          }
-          order[header] = val;
-        });
-        orders.push(order);
+  // 📤 تابع ارسال به Google Sheet (در اسکوپ صحیح)
+  function logOrderToSheet(message) {
+    const now = Date.now();
+    const durationSeconds = Math.round((now - pageLoadTime) / 1000);
+    const ua = navigator.userAgent;
+    const screenWidth = window.screen.width;
+    const screenHeight = window.screen.height;
+
+    let deviceType = 'desktop';
+    if (/Mobi|Android/i.test(ua)) deviceType = 'mobile';
+    else if (/iPad|Tablet/i.test(ua)) deviceType = 'tablet';
+
+    let browser = 'unknown';
+    if (ua.includes('Chrome')) browser = 'Chrome';
+    else if (ua.includes('Safari')) browser = 'Safari';
+    else if (ua.includes('Firefox')) browser = 'Firefox';
+    else if (ua.includes('Edg')) browser = 'Edge';
+
+    let os = 'unknown';
+    if (ua.includes('Win')) os = 'Windows';
+    else if (ua.includes('Mac')) os = 'macOS';
+    else if (ua.includes('Linux')) os = 'Linux';
+    else if (ua.includes('Android')) os = 'Android';
+    else if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
+
+    const orderData = {
+      table: table || '—',
+      durationSeconds: durationSeconds,
+      deviceType: deviceType,
+      browser: browser,
+      os: os,
+      resolution: `${screenWidth}x${screenHeight}`,
+      language: navigator.language || 'fa',
+      referrer: document.referrer || 'direct',
+      items: message.items.map(item => ({
+        name: item.fa || item.en,
+        qty: item.qty,
+        price: item.discountedPrice || item.price,
+        total: (item.discountedPrice || item.price) * item.qty
+      })),
+      subtotal: message.subtotal,
+      recipient: message.to || 'بدون شماره'
+    };
+
+    fetch('https://script.google.com/macros/s/AKfycbxN6VoRhD2viybzKtVJ_wPnU48z6nrZeI6OZLVH7-AMSI4SpUlqVybaW56QOsICKzCW/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    })
+    .then(() => console.log('✅ سفارش در Google Sheet ثبت شد'))
+    .catch(err => console.error('❌ خطا در ارسال به Sheet:', err));
+  }
+
+  function getQueryParam(name) {
+    const params = new URLSearchParams(location.search);
+    return params.get(name);
+  }
+
+  function parseCSV(text) {
+    const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+    if(lines.length === 0) return [];
+    function parseLine(line) {
+      const res=[]; let cur=''; let inQ=false;
+      for(let i=0;i<line.length;i++){
+        const ch=line[i];
+        if(ch==='"'){
+          if(inQ && line[i+1]==='"'){ cur+='"'; i++; }
+          else inQ=!inQ;
+        } else if(ch===',' && !inQ){
+          res.push(cur); cur='';
+        } else { cur+=ch; }
       }
-      return orders;
+      res.push(cur);
+      return res;
     }
+    const parsed = lines.map(parseLine);
+    return parsed;
+  }
 
-    // نمایش سفارشات
-    function renderOrders(orders) {
-      if (orders.length === 0) {
-        container.innerHTML = '<div class="loading">هیچ سفارشی ثبت نشده است.</div>';
-        return;
+  async function fetchFoods() {
+    try {
+      const resp = await fetch(CSV_PATH + '?t=' + Date.now());
+      const text = await resp.text();
+      const rows = parseCSV(text);
+      foods = rows.map((r, idx) => {
+        const price = r[3] ? Number(String(r[3]).replace(/[^0-9.-]/g,'')) : 0;
+        const discountPercent = r[9] ? parseFloat(r[9]) || 0 : 0;
+        const discountedPrice = discountPercent > 0 ? Math.round(price * (1 - discountPercent / 100)) : price;
+        return {
+          id: (r[0] || ('item-'+idx)).toString().trim() || ('item-'+idx),
+          en: (r[0]||'').trim(),
+          fa: (r[1]||'').trim(),
+          ingredients: (r[2]||'').trim(),
+          price: price,
+          discountedPrice: discountedPrice,
+          hasDiscount: discountPercent > 0,
+          discountPercent: discountPercent,
+          whatsapp: (r[4]||'').trim(),
+          img_name: (r[5]||'').trim(),
+          img_folder: (r[6]||'').trim()
+        };
+      }).filter(it => it.en || it.fa);
+      reconcileCartWithFoods();
+      renderFoods();
+    } catch(e){
+      console.error('failed to load CSV', e);
+      document.getElementById('food-grid').innerHTML = '<p style="color: red;">خطا در لود فایل foods.csv</p>';
+    }
+  }
+
+  function reconcileCartWithFoods(){
+    for(const key in cart){
+      const entry = cart[key];
+      const match = foods.find(f => f.id === entry.id || f.en === entry.en || f.fa === entry.fa);
+      if(match){
+        entry.price = match.price;
+        entry.discountedPrice = match.discountedPrice;
+        entry.hasDiscount = match.hasDiscount;
+        entry.discountPercent = match.discountPercent;
+        entry.en = match.en;
+        entry.fa = match.fa;
+        entry.whatsapp = match.whatsapp;
+        entry.img_folder = match.img_folder;
+        entry.img_name = match.img_name;
+      } else {
+        entry.removed = true;
       }
+    }
+    saveCart();
+    renderCart();
+  }
 
-      // مرتب‌سازی بر اساس زمان (جدیدترین اول)
-      orders.sort((a, b) => new Date(b['زمان ارسال']) - new Date(a['زمان ارسال']));
+  function renderFoods(){
+    const grid = document.getElementById('food-grid');
+    grid.innerHTML = '';
+    foods.forEach(f => {
+      const card = document.createElement('div');
+      card.className = 'food-card';
+      card.dataset.id = f.id;
+      const imgWrap = document.createElement('div'); imgWrap.className='food-img';
+      const img = document.createElement('img');
+      const imgPath = makeImagePath(f);
+      img.src = imgPath;
+      img.onerror = () => img.src = PLACEHOLDER;
+      img.alt = f.fa || f.en;
+      imgWrap.appendChild(img);
+      if (f.hasDiscount) {
+        const badge = document.createElement('div');
+        badge.className = 'discount-badge';
+        badge.textContent = `${Math.round(f.discountPercent)}%`;
+        imgWrap.appendChild(badge);
+      }
+      const info = document.createElement('div'); info.className='food-info';
+      const h = document.createElement('h3');
+      h.style.display = 'flex';
+      h.style.alignItems = 'center';
+      h.style.gap = '8px';
+      h.style.margin = '0';
+      h.style.fontWeight = '600';
+      h.style.fontSize = '16px';
+      h.style.lineHeight = '1.2';
+      h.style.color = '#fff';
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = f.fa || f.en;
+      h.appendChild(nameSpan);
+      info.appendChild(h);
+      const p = document.createElement('p'); p.textContent = f.ingredients || '';
+      info.appendChild(p);
+      const footer = document.createElement('div'); 
+      footer.className = 'food-footer';
+      const priceSpan = document.createElement('div');
+      priceSpan.className = 'price';
+      if (f.hasDiscount) {
+        const original = document.createElement('del');
+        original.textContent = formatMoney(f.price);
+        const discounted = document.createElement('span');
+        discounted.className = 'discounted';
+        discounted.textContent = formatMoney(f.discountedPrice);
+        priceSpan.appendChild(original);
+        priceSpan.appendChild(discounted);
+      } else {
+        priceSpan.textContent = formatMoney(f.price) + ' تومان';
+      }
+      const addBtn = document.createElement('button');
+      addBtn.className = 'add-btn';
+      addBtn.textContent = '+';
+      addBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        addToCart(f);
+      });
+      footer.appendChild(addBtn);
+      footer.appendChild(priceSpan);
+      card.appendChild(imgWrap);
+      card.appendChild(info);
+      card.appendChild(footer);
+      grid.appendChild(card);
+    });
+  }
 
-      let html = '';
-      orders.forEach(order => {
-        // هدر
-        const header = `
-          <div class="order-header">
-            <span>میز: ${order['میز'] || '—'}</span>
-            <span>${order['زمان ارسال'] || '—'}</span>
-          </div>
-        `;
+  function makeImagePath(f){
+    let folder = (f.img_folder || '').trim();
+    let name = (f.img_name || '').trim();
+    if(folder && name){
+      folder = folder.replace(/\s+$/,'').replace(/\\/g,'/').replace(/\s+/g,' ');
+      let path = folder + (folder.endsWith('/') ? '' : '/') + name;
+      return encodeURI(path);
+    }
+    return PLACEHOLDER;
+  }
 
-        // متا
-        const metaFields = [
-          { label: 'مدت حضور', value: order['مدت حضور (ثانیه)'] ? `${order['مدت حضور (ثانیه)']} ثانیه` : '—' },
-          { label: 'دستگاه', value: order['نوع دستگاه'] || '—' },
-          { label: 'مرورگر', value: order['مرورگر'] || '—' },
-          { label: 'سیستم‌عامل', value: order['سیستم‌عامل'] || '—' },
-          { label: 'رزولوشن', value: order['رزولوشن صفحه'] || '—' },
-          { label: 'زبان', value: order['زبان کاربر'] || '—' },
-          { label: 'منبع ورود', value: order['منبع ورود'] === 'direct' ? 'مستقیم' : (order['منبع ورود'] || '—') },
-          { label: 'دریافت‌کننده', value: order['دریافت‌کننده'] || '—' }
-        ];
+  function formatMoney(num){
+    if(!num && num !== 0) return '0';
+    try{
+      return Number(num).toLocaleString('en-US');
+    }catch(e){ return String(num); }
+  }
 
-        let metaHtml = '<div class="order-meta">';
-        metaFields.forEach(field => {
-          metaHtml += `<div class="meta-item"><strong>${field.label}:</strong> ${field.value}</div>`;
-        });
-        metaHtml += '</div>';
+  function addToCart(food){
+    const id = food.id || (food.en||food.fa).toString().trim();
+    if(!cart[id]) cart[id] = Object.assign({}, food, {qid:id, qty:0});
+    cart[id].qty += 1;
+    delete cart[id].removed;
+    saveCart();
+    renderCart();
+  }
 
-        // غذاها
-        let itemsHtml = '';
-        try {
-          const items = JSON.parse(order['غذاهای سفارش‌داده شده'] || '[]');
-          if (items.length > 0) {
-            itemsHtml = '<div class="items-list"><div style="font-weight:bold;margin-bottom:6px;color:#fff;">غذاها:</div>';
-            items.forEach(item => {
-              const name = item.name || '—';
-              const qty = item.qty || 0;
-              const total = item.total ? parseInt(item.total).toLocaleString() : '—';
-              itemsHtml += `<div class="item-row">
-                <span class="item-name">${qty} × ${name}</span>
-                <span class="item-total">${total} تومان</span>
-              </div>`;
-            });
-            itemsHtml += '</div>';
-          }
-        } catch (e) {
-          itemsHtml = '<div class="items-list"><div style="color:#e63946">خطا در خواندن لیست غذاها</div></div>';
+  function removeFromCart(id){
+    delete cart[id];
+    saveCart();
+    renderCart();
+  }
+
+  function changeQty(id, delta){
+    if(!cart[id]) return;
+    cart[id].qty += delta;
+    if(cart[id].qty <= 0) delete cart[id];
+    saveCart();
+    renderCart();
+  }
+
+  function saveCart(){
+    try{
+      localStorage.setItem('toucan_cart', JSON.stringify(cart));
+    }catch(e){}
+  }
+
+  function loadCart(){
+    try{
+      const raw = localStorage.getItem('toucan_cart');
+      if(raw) cart = JSON.parse(raw);
+    }catch(e){ cart = {}; }
+  }
+
+  function clearCart(){
+    cart = {};
+    saveCart();
+    renderCart();
+  }
+
+  function renderCart(){
+    const list = document.getElementById('cart-list');
+    list.innerHTML = '';
+    let total = 0, count = 0;
+    for(const id in cart){
+      const it = cart[id];
+      count += it.qty;
+      total += (Number(it.discountedPrice || it.price)||0) * it.qty;
+      const row = document.createElement('div'); row.className='cart-item';
+      const name = document.createElement('div'); name.style.flex='1'; name.textContent = (it.fa||it.en) + (it.removed ? ' (حذف‌شده از منو)' : '');
+      const qty = document.createElement('div'); qty.className='qty'; qty.textContent = it.qty + 'x';
+      const plus = document.createElement('button'); plus.textContent='+'; plus.addEventListener('click', ()=> changeQty(id,1));
+      const minus = document.createElement('button'); minus.textContent='-'; minus.addEventListener('click', ()=> changeQty(id,-1));
+      const rem = document.createElement('button'); rem.textContent='حذف'; rem.addEventListener('click', ()=> removeFromCart(id));
+      row.appendChild(name); row.appendChild(qty); row.appendChild(plus); row.appendChild(minus); row.appendChild(rem);
+      list.appendChild(row);
+    }
+    document.getElementById('cart-total').textContent = formatMoney(total);
+    document.getElementById('cart-count').textContent = count;
+  }
+
+  function buildMessages(){
+    const groups = {};
+    for(const id in cart){
+      const it = cart[id];
+      if(!it.whatsapp) it.whatsapp = '';
+      const num = sanitizeNumber(it.whatsapp || '');
+      const key = num || '__NO_NUM__';
+      if(!groups[key]) groups[key] = {num: num, items: [], subtotal:0};
+      groups[key].items.push(it);
+      groups[key].subtotal += (Number(it.discountedPrice || it.price)||0) * it.qty;
+    }
+    const messages = [];
+    for(const k in groups){
+      const g = groups[k];
+      let lines = [];
+      lines.push('سفارش جدید - TOUCAN');
+      lines.push('میز: ' + (table || '—'));
+      lines.push('');
+      g.items.forEach(it => {
+        lines.push(it.qty + ' x ' + (it.fa||it.en) + ' - ' + formatMoney(it.discountedPrice || it.price) + ' تومان');
+      });
+      lines.push('');
+      lines.push('مجموع: ' + formatMoney(g.subtotal) + ' تومان');
+      const txt = lines.join('\n');
+      messages.push({to: g.num, text: txt, items: g.items, subtotal: g.subtotal});
+    }
+    return messages;
+  }
+
+  function sanitizeNumber(n){
+    if(!n) return '';
+    return String(n).replace(/[^0-9]/g,'');
+  }
+
+  function sendToWhatsApp(){
+    const msgs = buildMessages();
+    if(msgs.length === 0) { alert('سبد خرید خالی است'); return; }
+    if(msgs.length === 1){
+      const m = msgs[0];
+      if(!m.to){ 
+        promptAndOpen(m.text); 
+        saveOrderForKitchen(m); 
+        logOrderToSheet(m); // ✅ اضافه شد
+      } else { 
+        window.open('https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text), '_blank'); 
+        saveOrderForKitchen(m); 
+        logOrderToSheet(m); // ✅ اضافه شد
+      }
+      return;
+    }
+    const modal = document.getElementById('modal');
+    const list = document.getElementById('recipient-list');
+    list.innerHTML = '';
+    msgs.forEach(m => {
+      const div = document.createElement('div');
+      div.style.display = 'flex';
+      div.style.justifyContent = 'space-between';
+      div.style.alignItems = 'center';
+      div.style.gap = '8px';
+      div.style.padding = '6px 0';
+      const label = document.createElement('div'); label.textContent = (m.to || '(بدون شماره)') + ' — مجموع: ' + formatMoney(m.subtotal) + ' تومان';
+      const btn = document.createElement('button'); btn.className='send-btn'; btn.textContent='ارسال به ' + (m.to || '(وارد کنید)');
+      btn.addEventListener('click', ()=> {
+        if(!m.to) { 
+          promptAndOpen(m.text); 
+          saveOrderForKitchen(m); 
+          logOrderToSheet(m); // ✅ اضافه شد
+        } else { 
+          window.open('https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text), '_blank'); 
+          saveOrderForKitchen(m); 
+          logOrderToSheet(m); // ✅ اضافه شد
         }
-
-        // جمع کل
-        const totalAmount = order['مجموع مبلغ'] ? parseInt(order['مجموع مبلغ']).toLocaleString() : '0';
-        const totalSection = `<div class="total-section">جمع کل: ${totalAmount} تومان</div>`;
-
-        html += `<div class="order">${header}${metaHtml}${itemsHtml}${totalSection}</div>`;
       });
+      div.appendChild(label); div.appendChild(btn);
+      list.appendChild(div);
+    });
+    modal.style.display = 'flex';
+    document.getElementById('close-modal').onclick = ()=> modal.style.display='none';
+    document.getElementById('send-all').onclick = ()=> {
+      msgs.forEach(m=>{
+        if(m.to) window.open('https://wa.me/' + m.to + '?text=' + encodeURIComponent(m.text), '_blank');
+        else promptAndOpen(m.text);
+        saveOrderForKitchen(m);
+        logOrderToSheet(m); // ✅ اضافه شد
+      });
+    };
+  }
 
-      container.innerHTML = html;
+  function promptAndOpen(text){
+    const number = prompt('شماره واتس‌اپ آشپزخانه را وارد کنید (مثال: 98912...)');
+    if(number){
+      const num = sanitizeNumber(number);
+      window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(text), '_blank');
+    } else {
+      alert('شماره وارد نشد.');
     }
+  }
 
-    // بارگذاری CSV
-    fetch(CSV_URL)
-      .then(response => {
-        if (!response.ok) throw new Error('خطا در دریافت داده‌ها');
-        return response.text();
-      })
-      .then(text => {
-        const orders = parseCSV(text);
-        renderOrders(orders);
-      })
-      .catch(err => {
-        console.error('خطا:', err);
-        container.innerHTML = `<div class="error">❌ خطا در بارگذاری گزارش: ${err.message}</div>`;
-      });
-  </script>
+  function saveOrderForKitchen(message){
+    try{
+      const raw = localStorage.getItem('toucan_orders') || '[]';
+      const orders = JSON.parse(raw);
+      orders.unshift({to: message.to, text: message.text, items: message.items, subtotal: message.subtotal, table: table, ts: Date.now()});
+      localStorage.setItem('toucan_orders', JSON.stringify(orders.slice(0,200)));
+    }catch(e){ console.warn(e); }
+  }
+
+  // ========== مدیریت موزیک ==========
+  const music = document.getElementById('background-music');
+  const toggleBtn = document.getElementById('music-toggle');
+  const icon = document.getElementById('music-icon');
+  const PLAY_SRC = "https://www.dash-smal.ir/assets/images/player/play.png";
+  const PAUSE_SRC = "https://www.dash-smal.ir/assets/images/player/puse.png";
+  icon.src = PLAY_SRC;
+  toggleBtn.addEventListener('click', async (ev) => {
+    ev.preventDefault();
+    try {
+      if (music.paused) {
+        await music.play();
+        icon.src = PAUSE_SRC;
+        setupAudioAnalyzer();
+        animateFlame();
+      } else {
+        music.pause();
+        icon.src = PLAY_SRC;
+      }
+    } catch (err) {
+      console.warn('cannot play audio yet', err);
+      alert('برای پخش صدا، لطفاً یک بار دیگر روی صفحه کلیک کنید.');
+    }
+  });
+
+  function setupAudioAnalyzer() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      source = audioCtx.createMediaElementSource(music);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+      bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
+  }
+
+  function animateFlame() {
+    if (music.paused) return;
+    analyser.getByteFrequencyData(dataArray);
+    let avgLow = 0, avgMid = 0, avgHigh = 0;
+    const third = Math.floor(bufferLength / 3);
+    for (let i = 0; i < third; i++) avgLow += dataArray[i];
+    for (let i = third; i < 2 * third; i++) avgMid += dataArray[i];
+    for (let i = 2 * third; i < bufferLength; i++) avgHigh += dataArray[i];
+    avgLow /= third;
+    avgMid /= third;
+    avgHigh /= (bufferLength - 2 * third);
+    let intensityLow = (avgLow / 255) * 80;
+    let intensityMid = (avgMid / 255) * 80;
+    let intensityHigh = (avgHigh / 255) * 80;
+    const now = Date.now();
+    if (now >= nextChangeTime) {
+      transitionStartTime = now;
+      isFadingOut = true;
+      nextChangeTime = now + 5000;
+    }
+    let neonShadow = '';
+    if (transitionStartTime > 0) {
+      const elapsed = now - transitionStartTime;
+      if (isFadingOut) {
+        currentAlpha = 0.6 * (1 - elapsed / transitionDuration);
+        if (elapsed >= transitionDuration) {
+          currentNeonIndex = (currentNeonIndex + 1) % neonColors.length;
+          transitionStartTime = now;
+          isFadingOut = false;
+          currentAlpha = 0;
+        }
+      } else {
+        currentAlpha = 0.6 * (elapsed / transitionDuration);
+        if (elapsed >= transitionDuration) {
+          transitionStartTime = 0;
+        }
+      }
+    } else {
+      currentAlpha = 0.6;
+    }
+    const neon = neonColors[currentNeonIndex];
+    neonShadow = `0 0 ${intensityLow * 0.8}px 8px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha}),
+      0 0 ${intensityMid * 1.2}px 12px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha}),
+      0 0 ${intensityHigh * 1.6}px 16px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha})`;
+    toggleBtn.style.boxShadow = `0 0 ${intensityLow}px 3px rgba(255, 69, 0, 0.7),
+      0 0 ${intensityMid * 1.5}px 3px rgba(255, 140, 0, 0.5),
+      0 0 ${intensityHigh * 2}px 3px rgba(255, 215, 0, 0.3),
+      ${neonShadow}`;
+    requestAnimationFrame(animateFlame);
+  }
+
+  music.addEventListener('play', () => {
+    icon.src = PAUSE_SRC;
+    setupAudioAnalyzer();
+    animateFlame();
+  });
+  music.addEventListener('pause', () => icon.src = PLAY_SRC;
+  music.addEventListener('ended', () => icon.src = PLAY_SRC;
+
+  // ================= load & init =================
+  loadCart();
+  fetchFoods();
+  renderCart();
+  setInterval(fetchFoods, POLL_INTERVAL);
+  document.getElementById('send-whatsapp').addEventListener('click', sendToWhatsApp);
+  document.getElementById('clear-cart').addEventListener('click', ()=> {
+    if(confirm('پاک کردن کامل فاکتور؟')) clearCart();
+  });
+  document.getElementById('modal').addEventListener('click', (ev)=>{
+    if(ev.target === document.getElementById('modal')) document.getElementById('modal').style.display='none';
+  });
+
+  // ========== مدیریت intro GIF ==========
+  document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('intro-overlay');
+    const gif = document.getElementById('intro-gif');
+    const mainContent = document.getElementById('main-content');
+    mainContent.classList.add('intro-blurred');
+    setTimeout(dismissOverlay, 10000);
+    document.addEventListener('click', dismissOverlay, { once: true });
+    document.addEventListener('touchstart', dismissOverlay, { once: true });
+    function dismissOverlay() {
+      overlay.classList.add('hidden');
+      mainContent.classList.remove('intro-blurred');
+      gif.src = '';
+    }
+  });
+})();
+</script>
 </body>
 </html>
