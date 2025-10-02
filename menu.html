@@ -801,7 +801,7 @@
     }
   }
 
-  function saveOrderForKitchen(message){
+  async function saveOrderForKitchen(message){
     try{
       const raw = localStorage.getItem('toucan_orders') || '[]';
       const orders = JSON.parse(raw);
@@ -809,31 +809,58 @@
       localStorage.setItem('toucan_orders', JSON.stringify(orders.slice(0,200)));
     }catch(e){ console.warn(e); }
 
-    // تغییرات جدید: ذخیره گزارش در localStorage برای report.html
+    // تغییرات جدید: ذخیره گزارش در data/report.csv از طریق POST به save_report.php
     const duration = Math.round((Date.now() - entryTime) / 1000); // مدت زمان حضور در ثانیه
     const itemsList = message.items.map(it => `${it.qty}x ${it.fa || it.en} (${formatMoney(it.discountedPrice || it.price)})`).join(', ');
-    const report = {
-      timestamp: new Date().toISOString(),
-      table: table,
-      duration_seconds: duration,
-      device_type: deviceType,
-      browser: browser,
-      os: os,
-      screen_resolution: screenResolution,
-      user_language: userLanguage,
-      referrer: referrer,
-      items: itemsList,
-      total: message.subtotal,
-      recipient: message.to || 'None'
-    };
+    const report = [
+      new Date().toISOString(),
+      table,
+      duration,
+      deviceType,
+      browser,
+      os,
+      screenResolution,
+      userLanguage,
+      referrer,
+      itemsList,
+      message.subtotal,
+      message.to || 'None'
+    ];
 
+    try {
+      const response = await fetch('save_report.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(report)
+      });
+      if (!response.ok) {
+        console.warn('Error saving to CSV:', response.statusText);
+      }
+    } catch (e) {
+      console.warn('Error sending report to server:', e);
+    }
+
+    // همچنان در localStorage برای بک‌آپ محلی
     try {
       const rawReports = localStorage.getItem('toucan_reports') || '[]';
       const reports = JSON.parse(rawReports);
-      reports.unshift(report);
-      localStorage.setItem('toucan_reports', JSON.stringify(reports.slice(0, 500))); // حداکثر 500 گزارش نگه داریم
+      reports.unshift({
+        timestamp: report[0],
+        table: report[1],
+        duration_seconds: report[2],
+        device_type: report[3],
+        browser: report[4],
+        os: report[5],
+        screen_resolution: report[6],
+        user_language: report[7],
+        referrer: report[8],
+        items: report[9],
+        total: report[10],
+        recipient: report[11]
+      });
+      localStorage.setItem('toucan_reports', JSON.stringify(reports.slice(0, 500)));
     } catch (e) {
-      console.warn('Error saving report:', e);
+      console.warn('Error saving report locally:', e);
     }
   }
 
