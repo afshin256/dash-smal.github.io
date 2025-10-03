@@ -56,18 +56,19 @@
   const errorDiv = document.getElementById('error');
   const loadButton = document.getElementById('load-logs');
 
-  async function fetchLogs() {
-    try {
-      const response = await fetch(SHEET_WEB_APP_URL + '?mode=getLogs');
-      if (!response.ok) {
-        throw new Error('خطا در دریافت داده‌ها');
-      }
-      const data = await response.json();
+  function fetchLogs() {
+    const callbackName = 'handleLogs_' + Math.random().toString(36).substring(2, 11);
+    window[callbackName] = function(data) {
       renderLogs(data);
-    } catch (e) {
-      errorDiv.textContent = 'خطا: ' + e.message + '. لطفاً مطمئن شوید که وب اپ Google Apps Script از GET پشتیبانی می‌کند و تابع doGet برای بازگشت لاگ‌ها تنظیم شده است.';
+      delete window[callbackName];
+    };
+    const script = document.createElement('script');
+    script.src = `${SHEET_WEB_APP_URL}?mode=getLogs&callback=${callbackName}`;
+    script.onerror = () => {
+      errorDiv.textContent = 'خطا در بارگذاری داده‌ها. مطمئن شوید که اسکریپت گوگل از JSONP پشتیبانی می‌کند (پارامتر callback را بررسی کند و پاسخ را wrap کند).';
       errorDiv.style.display = 'block';
-    }
+    };
+    document.head.appendChild(script);
   }
 
   function renderLogs(logs) {
