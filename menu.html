@@ -396,8 +396,8 @@
   let isFadingOut = false;
   let currentAlpha = 0.6;
 
-  // ========== Google Sheets Logger ==========
-  const SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxpukoo8GSuQfl1hJuHmz4B3fYX9QFXqjeyPC7oOLEQtZy8q_67vUeZ7MPeFzR5PAVx/exec";
+  // ========== Google Sheets Logger (نسخه ایمن با no-cors) ==========
+  const SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyHOywAqL48GvQq2t3X9gI-32ToWgolaifVEaGtdw6vpHiMZtAptpwH1Vr4rnjb8Wak/exec";
   let visitStartTime = Date.now();
 
   function getDeviceType() {
@@ -440,7 +440,7 @@
     return items.join("; ");
   }
 
-  async function logToSheet(durationSec) {
+  function logToSheet(durationSec) {
     const data = {
       table: table || "—",
       duration: Math.round(durationSec),
@@ -455,17 +455,16 @@
       recipient: "N/A"
     };
 
+    // ارسال با mode: "no-cors" — تنها راه برای GitHub Pages
     try {
-      const response = await fetch(SHEET_WEB_APP_URL, {
+      fetch(SHEET_WEB_APP_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify(data)
       });
-      if (!response.ok) {
-        console.warn("Google Sheets log failed:", await response.text());
-      }
     } catch (e) {
-      console.error("Error logging to Google Sheets:", e);
+      // سکوت کامل — هیچ اروری نمایش داده نشود
     }
   }
 
@@ -817,64 +816,64 @@
     }
   }
 
-function animateFlame() {
-  if (music.paused) return;
-  analyser.getByteFrequencyData(dataArray);
-  let avgLow = 0, avgMid = 0, avgHigh = 0;
-  const third = Math.floor(bufferLength / 3);
-  for (let i = 0; i < third; i++) avgLow += dataArray[i];
-  for (let i = third; i < 2 * third; i++) avgMid += dataArray[i];
-  for (let i = 2 * third; i < bufferLength; i++) avgHigh += dataArray[i];
-  avgLow /= third;
-  avgMid /= third;
-  avgHigh /= (bufferLength - 2 * third);
-  let intensityLow = (avgLow / 255) * 80;
-  let intensityMid = (avgMid / 255) * 80;
-  let intensityHigh = (avgHigh / 255) * 80;
-  const now = Date.now();
-  if (now >= nextChangeTime) {
-    transitionStartTime = now;
-    isFadingOut = true;
-    nextChangeTime = now + 5000;
-  }
-  let neonShadow = '';
-  if (transitionStartTime > 0) {
-    const elapsed = now - transitionStartTime;
-    if (isFadingOut) {
-      currentAlpha = 0.6 * (1 - elapsed / transitionDuration);
-      if (elapsed >= transitionDuration) {
-        currentNeonIndex = (currentNeonIndex + 1) % neonColors.length;
-        transitionStartTime = now;
-        isFadingOut = false;
-        currentAlpha = 0;
+  function animateFlame() {
+    if (music.paused) return;
+    analyser.getByteFrequencyData(dataArray);
+    let avgLow = 0, avgMid = 0, avgHigh = 0;
+    const third = Math.floor(bufferLength / 3);
+    for (let i = 0; i < third; i++) avgLow += dataArray[i];
+    for (let i = third; i < 2 * third; i++) avgMid += dataArray[i];
+    for (let i = 2 * third; i < bufferLength; i++) avgHigh += dataArray[i];
+    avgLow /= third;
+    avgMid /= third;
+    avgHigh /= (bufferLength - 2 * third);
+    let intensityLow = (avgLow / 255) * 80;
+    let intensityMid = (avgMid / 255) * 80;
+    let intensityHigh = (avgHigh / 255) * 80;
+    const now = Date.now();
+    if (now >= nextChangeTime) {
+      transitionStartTime = now;
+      isFadingOut = true;
+      nextChangeTime = now + 5000;
+    }
+    let neonShadow = '';
+    if (transitionStartTime > 0) {
+      const elapsed = now - transitionStartTime;
+      if (isFadingOut) {
+        currentAlpha = 0.6 * (1 - elapsed / transitionDuration);
+        if (elapsed >= transitionDuration) {
+          currentNeonIndex = (currentNeonIndex + 1) % neonColors.length;
+          transitionStartTime = now;
+          isFadingOut = false;
+          currentAlpha = 0;
+        }
+      } else {
+        currentAlpha = 0.6 * (elapsed / transitionDuration);
+        if (elapsed >= transitionDuration) {
+          transitionStartTime = 0;
+        }
       }
     } else {
-      currentAlpha = 0.6 * (elapsed / transitionDuration);
-      if (elapsed >= transitionDuration) {
-        transitionStartTime = 0;
-      }
+      currentAlpha = 0.6;
     }
-  } else {
-    currentAlpha = 0.6;
+    const neon = neonColors[currentNeonIndex];
+    neonShadow = `0 0 ${intensityLow * 0.8}px 8px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha}),
+      0 0 ${intensityMid * 1.2}px 12px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha}),
+      0 0 ${intensityHigh * 1.6}px 16px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha})`;
+    toggleBtn.style.boxShadow = `0 0 ${intensityLow}px 3px rgba(255, 69, 0, 0.7),
+      0 0 ${intensityMid * 1.5}px 3px rgba(255, 140, 0, 0.5),
+      0 0 ${intensityHigh * 2}px 3px rgba(255, 215, 0, 0.3),
+      ${neonShadow}`;
+    requestAnimationFrame(animateFlame);
   }
-  const neon = neonColors[currentNeonIndex];
-  neonShadow = `0 0 ${intensityLow * 0.8}px 8px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha}),
-    0 0 ${intensityMid * 1.2}px 12px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha}),
-    0 0 ${intensityHigh * 1.6}px 16px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha})`;
-  toggleBtn.style.boxShadow = `0 0 ${intensityLow}px 3px rgba(255, 69, 0, 0.7),
-    0 0 ${intensityMid * 1.5}px 3px rgba(255, 140, 0, 0.5),
-    0 0 ${intensityHigh * 2}px 3px rgba(255, 215, 0, 0.3),
-    ${neonShadow}`;
-  requestAnimationFrame(animateFlame);
-}
 
-music.addEventListener('play', () => {
-  icon.src = PAUSE_SRC;
-  setupAudioAnalyzer();
-  animateFlame();
-});
-music.addEventListener('pause', () => icon.src = PLAY_SRC);
-music.addEventListener('ended', () => icon.src = PLAY_SRC);
+  music.addEventListener('play', () => {
+    icon.src = PAUSE_SRC;
+    setupAudioAnalyzer();
+    animateFlame();
+  });
+  music.addEventListener('pause', () => icon.src = PLAY_SRC;
+  music.addEventListener('ended', () => icon.src = PLAY_SRC;
 
   loadCart();
   fetchFoods();
@@ -883,9 +882,9 @@ music.addEventListener('ended', () => icon.src = PLAY_SRC);
 
   // اتصال دکمه ارسال به واتس‌اپ + گزارش‌گیری
   const originalSendHandler = sendToWhatsApp;
-  document.getElementById('send-whatsapp').addEventListener('click', async () => {
+  document.getElementById('send-whatsapp').addEventListener('click', () => {
     const duration = (Date.now() - visitStartTime) / 1000;
-    await logToSheet(duration);
+    logToSheet(duration);
     originalSendHandler();
   });
 
