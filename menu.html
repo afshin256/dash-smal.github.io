@@ -396,8 +396,8 @@
   let isFadingOut = false;
   let currentAlpha = 0.6;
 
-  // ========== Google Sheets Logger (نسخه ایمن با no-cors) ==========
-  const SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzjkvmDf3YCBbEXOKqqGpg664j73C5Ucp4KyGeqkf1SzfT-HD0BmTpstXXlBkRIAWWC/exec";
+  // ========== Google Sheets Logger ==========
+  const SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxpukoo8GSuQfl1hJuHmz4B3fYX9QFXqjeyPC7oOLEQtZy8q_67vUeZ7MPeFzR5PAVx/exec";
   let visitStartTime = Date.now();
 
   function getDeviceType() {
@@ -440,7 +440,7 @@
     return items.join("; ");
   }
 
-  function logToSheet(durationSec) {
+  async function logToSheet(durationSec) {
     const data = {
       table: table || "—",
       duration: Math.round(durationSec),
@@ -456,14 +456,16 @@
     };
 
     try {
-      fetch(SHEET_WEB_APP_URL, {
+      const response = await fetch(SHEET_WEB_APP_URL, {
         method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
+      if (!response.ok) {
+        console.warn("Google Sheets log failed:", await response.text());
+      }
     } catch (e) {
-      // silent fail
+      console.error("Error logging to Google Sheets:", e);
     }
   }
 
@@ -856,7 +858,6 @@
       currentAlpha = 0.6;
     }
     const neon = neonColors[currentNeonIndex];
-    // ✅ اصلاح خطای نحوی: کاما اضافی حذف شد
     neonShadow = `0 0 ${intensityLow * 0.8}px 8px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha}),
       0 0 ${intensityMid * 1.2}px 12px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha}),
       0 0 ${intensityHigh * 1.6}px 16px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha})`;
@@ -872,8 +873,8 @@
     setupAudioAnalyzer();
     animateFlame();
   });
-  music.addEventListener('pause', () => icon.src = PLAY_SRC);
-  music.addEventListener('ended', () => icon.src = PLAY_SRC);
+  music.addEventListener('pause', () => icon.src = PLAY_SRC;
+  music.addEventListener('ended', () => icon.src = PLAY_SRC;
 
   loadCart();
   fetchFoods();
@@ -882,9 +883,9 @@
 
   // اتصال دکمه ارسال به واتس‌اپ + گزارش‌گیری
   const originalSendHandler = sendToWhatsApp;
-  document.getElementById('send-whatsapp').addEventListener('click', () => {
+  document.getElementById('send-whatsapp').addEventListener('click', async () => {
     const duration = (Date.now() - visitStartTime) / 1000;
-    logToSheet(duration);
+    await logToSheet(duration);
     originalSendHandler();
   });
 
