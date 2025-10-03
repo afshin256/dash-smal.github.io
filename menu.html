@@ -11,39 +11,35 @@
     .header { padding:12px 0; display:flex; align-items:center; gap:12px; }
     .brand { display:flex; align-items:center; gap:10px; }
     .logo { width:44px;height:44px;border-radius:8px;background:#222;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#fff; }
-
     /* شبکه غذاها */
     .food-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 12px;
     }
-
     @media (max-width:768px) {
       .food-grid {
-        grid-template-columns: 1fr; /* تغییر: تک‌ستونه مثل اینستاگرام در موبایل */
+        grid-template-columns: 1fr;
         gap: 6px;
       }
       body { padding-bottom: 120px; }
     }
-
     /* کارت غذا */
     .food-card {
       background: #111;
       border-radius: 12px;
       overflow: hidden;
       display: flex;
-      flex-direction: column; /* column برای قرار دادن footer زیر */
-      gap: 8px; /* کاهش gap */
-      padding: 2px; /* کاهش padding برای fit بهتر */
+      flex-direction: column;
+      gap: 8px;
+      padding: 2px;
       align-items: center;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       position: relative;
     }
-
     /* تصویر غذا */
     .food-img {
-      position: relative; /* برای position absolute برچسب */
+      position: relative;
       width: 100%;
       aspect-ratio: 3 / 4;
       border-radius: 8px 8px 0 0;
@@ -52,22 +48,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0; /* صفر margin */
-      border: 1px solid #222; /* حاشیه 1px */
+      margin: 0;
+      border: 1px solid #222;
     }
-
     @media (max-width: 768px) {
       .food-img {
-        aspect-ratio: 16 / 9; /* عریض‌تر در موبایل */
+        aspect-ratio: 16 / 9;
       }
     }
-
     @media (min-width: 769px) {
       .food-img {
-        height: 200px; /* ثابت‌تر در دسکتاپ */
+        height: 200px;
       }
     }
-
     .food-img img {
       width: 100%;
       height: 100%;
@@ -75,8 +68,7 @@
       display: block;
       border-radius: inherit;
     }
-
-    /* برچسب تخفیف جدید: دایره قرمز داخل عکس، پایین راست */
+    /* برچسب تخفیف */
     .discount-badge {
       position: absolute;
       bottom: 5px;
@@ -96,13 +88,11 @@
       z-index: 1;
       pointer-events: none;
     }
-
     @keyframes pulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.05); }
       100% { transform: scale(1); }
     }
-
     @media (max-width: 768px) {
       .discount-badge {
         width: 35px;
@@ -112,15 +102,13 @@
         right: 4px;
       }
     }
-
     /* اطلاعات غذا */
     .food-info {
       flex: 1;
       min-width: 0;
       width: 100%;
-      padding: 8px 10px; /* padding جدا */
+      padding: 8px 10px;
     }
-
     .food-info h3 {
       margin: 0 0 6px 0;
       font-size: 16px;
@@ -131,7 +119,6 @@
       align-items: center;
       gap: 8px;
     }
-
     .food-info p {
       margin: 0 0 6px 0;
       font-size: 13px;
@@ -139,8 +126,7 @@
       white-space: normal;
       word-wrap: break-word;
     }
-
-    /* فوتر جدید برای قیمت و دکمه */
+    /* فوتر جدید */
     .food-footer {
       width: 100%;
       height: 40px;
@@ -151,8 +137,6 @@
       padding: 0 10px;
       border-radius: 0 0 12px 12px;
     }
-
-    /* --- قیمت غذا (با پشتیبانی از تخفیف) --- */
     .price {
       font-weight: 800;
       min-width: 90px;
@@ -165,21 +149,18 @@
       align-items: flex-end;
       line-height: 1.1;
     }
-
     .price del {
       color: #999;
       font-size: 13px;
       text-decoration: line-through;
       order: 1;
     }
-
     .price .discounted {
       color: #e63946;
       font-size: 16px;
       font-weight: bold;
       order: 2;
     }
-
     .add-btn {
       background: #c62828;
       border: none;
@@ -195,14 +176,11 @@
       align-items: center;
       justify-content: center;
     }
-
-    /* --- افکت کارت --- */
     .food-card:hover {
       transform: translateY(-10px) scale(1.05);
       animation: flame 1.5s infinite alternate ease-in-out;
       z-index: 10;
     }
-
     @keyframes flame {
       0% {
         box-shadow: 
@@ -229,7 +207,6 @@
           0 0 30px 15px rgba(255, 215, 0, 0.3);
       }
     }
-
     /* سبد خرید شناور */
     .cart-floating {
       position: fixed;
@@ -249,13 +226,11 @@
       min-width: 280px;
       font-size: 13px;
     }
-
     .cart-list {
       max-height: 160px;
       overflow: auto;
       padding-right: 6px;
     }
-
     .cart-item {
       display: flex;
       gap: 8px;
@@ -263,13 +238,11 @@
       padding: 6px 0;
       border-bottom: 1px dashed rgba(255,255,255,0.04);
     }
-
     .cart-item .qty {
       font-weight: 800;
       width: 48px;
       text-align: center;
     }
-
     .cart-item button {
       background: transparent;
       border: 1px solid rgba(255,255,255,0.06);
@@ -278,14 +251,12 @@
       border-radius: 6px;
       cursor: pointer;
     }
-
     .cart-actions {
       display: flex;
       gap: 8px;
       align-items: center;
       justify-content: flex-end;
     }
-
     .send-btn {
       background: #0ea5b7;
       border: none;
@@ -295,11 +266,9 @@
       cursor: pointer;
       font-weight: 800;
     }
-
     .send-btn[style] {
       /* allow inline override */
     }
-
     /* دکمه موزیک */
     .music-button {
       position: absolute;
@@ -318,15 +287,12 @@
       z-index: 1200;
       transition: box-shadow 0.1s ease;
     }
-
     .music-button img {
       width: 86%;
       height: 86%;
       object-fit: contain;
       display: block;
     }
-
-    /* متن حقوقی */
     .rights-text {
       position: absolute;
       bottom: 8px;
@@ -338,7 +304,6 @@
       font-size: 12px;
       pointer-events: none;
     }
-
     @media (max-width: 420px) {
       .cart-floating {
         right: 8px;
@@ -359,7 +324,6 @@
       <img id="intro-gif" src="https://www.dash-smal.ir/assets/images/777.gif" alt="لوگو موشن">
     </div>
   </div>
-
   <div id="main-content">
     <div class="header">
       <div class="brand">
@@ -370,38 +334,30 @@
         </div>
       </div>
     </div>
-
     <div>
       <div style="margin-bottom:10px">
         <strong>میز:</strong> <span id="table-number-display">—</span>
       </div>
-
       <div id="food-grid" class="food-grid"></div>
     </div>
-
     <!-- floating cart -->
     <div id="cart" class="cart-floating" aria-live="polite">
       <button id="music-toggle" class="music-button" title="پخش/توقف موسیقی">
         <img id="music-icon" src="https://www.dash-smal.ir/assets/images/player/play.png" alt="play">
       </button>
-
       <div style="flex:1">
         <div style="font-weight:800; margin-bottom:6px">فاکتور (<span id="cart-count">0</span>)</div>
         <div class="cart-list" id="cart-list"></div>
         <div style="margin-top:6px;font-weight:800">کل: <span id="cart-total">0</span> تومان</div>
       </div>
-
       <div class="cart-actions">
         <button id="send-whatsapp" class="send-btn">ارسال سفارش به واتس‌اپ</button>
         <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
       </div>
-
       <div class="rights-text">All rights reserved by Dash Smal Content Production Agency.</div>
     </div>
-
     <!-- پلیر پنهان -->
     <audio id="background-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop preload="none"></audio>
-
     <!-- modal -->
     <div id="modal" class="modal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:2000">
       <div class="box" role="dialog" aria-modal="true" style="background:#111;color:#fff;padding:16px;border-radius:10px;max-width:92%;width:420px">
@@ -425,28 +381,106 @@
   const table = getQueryParam('table') || localStorage.getItem('toucan_table') || '—';
   document.getElementById('table-number-display').textContent = table;
   localStorage.setItem('toucan_table', table);
-
-  let foods = []; // array of food objects
-  let cart = {}; // id -> {id, en, fa, price, whatsapp, qty}
+  let foods = [];
+  let cart = {};
   let audioCtx, source, analyser, bufferLength, dataArray;
   const neonColors = [
-    {r: 0, g: 255, b: 255}, // blue
-    {r: 255, g: 105, b: 180}, // pink
-    {r: 138, g: 43, b: 226} // purple
+    {r: 0, g: 255, b: 255},
+    {r: 255, g: 105, b: 180},
+    {r: 138, g: 43, b: 226}
   ];
   let currentNeonIndex = 0;
   let nextChangeTime = Date.now() + 5000;
   let transitionStartTime = 0;
-  let transitionDuration = 1000; // 1 second fade
+  let transitionDuration = 1000;
   let isFadingOut = false;
   let currentAlpha = 0.6;
+
+  // ========== Google Sheets Logger (نسخه ایمن) ==========
+  const SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwgZn3pz18ALPXw7J2VqomjbSM7X5vKMA7-3zGyiHBo4HbSrNiuNJ9GszQYYaCTaWB1/exec";
+  let visitStartTime = Date.now();
+
+  function getDeviceType() {
+    const ua = navigator.userAgent;
+    if (/android/i.test(ua)) return "Android";
+    if (/iPad|iPhone|iPod/.test(ua)) return "iOS";
+    if (/Win/.test(ua)) return "Windows";
+    if (/Mac/.test(ua)) return "Mac";
+    if (/Linux/.test(ua)) return "Linux";
+    return "Unknown";
+  }
+
+  function getBrowser() {
+    const ua = navigator.userAgent;
+    if (ua.includes("Chrome") && !ua.includes("Edg")) return "Chrome";
+    if (ua.includes("Firefox")) return "Firefox";
+    if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
+    if (ua.includes("Edg")) return "Edge";
+    return "Other";
+  }
+
+  function getOS() {
+    const ua = navigator.userAgent;
+    if (ua.includes("Win")) return "Windows";
+    if (ua.includes("Mac")) return "macOS";
+    if (ua.includes("Linux")) return "Linux";
+    if (ua.includes("Android")) return "Android";
+    if (ua.includes("iPhone") || ua.includes("iPad")) return "iOS";
+    return "Unknown";
+  }
+
+  function getOrderedItemsAsString() {
+    const items = [];
+    for (const id in cart) {
+      const it = cart[id];
+      if (it.qty > 0) {
+        items.push(`${it.qty}x ${it.fa || it.en}`);
+      }
+    }
+    return items.join("; ");
+  }
+
+  function logToSheet(durationSec) {
+    const data = {
+      table: table || "—",
+      duration: Math.round(durationSec),
+      deviceType: getDeviceType(),
+      browser: getBrowser(),
+      os: getOS(),
+      screen: `${screen.width}x${screen.height}`,
+      lang: navigator.language || "unknown",
+      referrer: document.referrer || "direct",
+      items: getOrderedItemsAsString(),
+      total: document.getElementById('cart-total')?.textContent?.replace(/,/g, '') || "0",
+      recipient: "N/A"
+    };
+
+    // ارسال بدون ایجاد خطا در صورت شکست
+    fetch(SHEET_WEB_APP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    }).catch(() => {
+      // سکوت کامل — هیچ اروری نمایش داده نشود
+    });
+  }
+
+  // ذخیره تابع اصلی sendToWhatsApp
+  const originalSendToWhatsApp = sendToWhatsApp;
+
+  // جایگزینی تابع برای افزودن لاگ
+  function sendToWhatsAppWithLogging() {
+    const duration = (Date.now() - visitStartTime) / 1000;
+    logToSheet(duration);
+    originalSendToWhatsApp();
+  }
+  // ========== پایان Google Sheets Logger ==========
 
   function getQueryParam(name) {
     const params = new URLSearchParams(location.search);
     return params.get(name);
   }
 
-  // CSV parser
   function parseCSV(text) {
     const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
     if(lines.length === 0) return [];
@@ -475,9 +509,8 @@
       const rows = parseCSV(text);
       foods = rows.map((r, idx) => {
         const price = r[3] ? Number(String(r[3]).replace(/[^0-9.-]/g,'')) : 0;
-        const discountPercent = r[9] ? parseFloat(r[9]) || 0 : 0; // ستون J (ایندکس 9)
+        const discountPercent = r[9] ? parseFloat(r[9]) || 0 : 0;
         const discountedPrice = discountPercent > 0 ? Math.round(price * (1 - discountPercent / 100)) : price;
-
         return {
           id: (r[0] || ('item-'+idx)).toString().trim() || ('item-'+idx),
           en: (r[0]||'').trim(),
@@ -492,7 +525,6 @@
           img_folder: (r[6]||'').trim()
         };
       }).filter(it => it.en || it.fa);
-
       reconcileCartWithFoods();
       renderFoods();
     } catch(e){
@@ -526,12 +558,10 @@
   function renderFoods(){
     const grid = document.getElementById('food-grid');
     grid.innerHTML = '';
-
     foods.forEach(f => {
       const card = document.createElement('div');
       card.className = 'food-card';
       card.dataset.id = f.id;
-
       const imgWrap = document.createElement('div'); imgWrap.className='food-img';
       const img = document.createElement('img');
       const imgPath = makeImagePath(f);
@@ -539,17 +569,13 @@
       img.onerror = () => img.src = PLACEHOLDER;
       img.alt = f.fa || f.en;
       imgWrap.appendChild(img);
-
       if (f.hasDiscount) {
         const badge = document.createElement('div');
         badge.className = 'discount-badge';
         badge.textContent = `${Math.round(f.discountPercent)}%`;
         imgWrap.appendChild(badge);
       }
-
       const info = document.createElement('div'); info.className='food-info';
-
-      // عنوان غذا
       const h = document.createElement('h3');
       h.style.display = 'flex';
       h.style.alignItems = 'center';
@@ -559,40 +585,27 @@
       h.style.fontSize = '16px';
       h.style.lineHeight = '1.2';
       h.style.color = '#fff';
-
       const nameSpan = document.createElement('span');
       nameSpan.textContent = f.fa || f.en;
-
       h.appendChild(nameSpan);
       info.appendChild(h);
-
-      // مواد تشکیل‌دهنده
       const p = document.createElement('p'); p.textContent = f.ingredients || '';
       info.appendChild(p);
-
-      // فوتر جدید (قیمت و دکمه)
       const footer = document.createElement('div'); 
       footer.className = 'food-footer';
-
-      // قیمت
       const priceSpan = document.createElement('div');
       priceSpan.className = 'price';
-
       if (f.hasDiscount) {
         const original = document.createElement('del');
         original.textContent = formatMoney(f.price);
-        
         const discounted = document.createElement('span');
         discounted.className = 'discounted';
         discounted.textContent = formatMoney(f.discountedPrice);
-        
         priceSpan.appendChild(original);
         priceSpan.appendChild(discounted);
       } else {
         priceSpan.textContent = formatMoney(f.price) + ' تومان';
       }
-
-      // دکمه +
       const addBtn = document.createElement('button');
       addBtn.className = 'add-btn';
       addBtn.textContent = '+';
@@ -600,14 +613,11 @@
         e.stopPropagation();
         addToCart(f);
       });
-
-      footer.appendChild(addBtn); /* دکمه چپ */
-      footer.appendChild(priceSpan); /* قیمت راست */
-
+      footer.appendChild(addBtn);
+      footer.appendChild(priceSpan);
       card.appendChild(imgWrap);
       card.appendChild(info);
       card.appendChild(footer);
-
       grid.appendChild(card);
     });
   }
@@ -630,7 +640,6 @@
     }catch(e){ return String(num); }
   }
 
-  // Cart operations
   function addToCart(food){
     const id = food.id || (food.en||food.fa).toString().trim();
     if(!cart[id]) cart[id] = Object.assign({}, food, {qid:id, qty:0});
@@ -639,11 +648,13 @@
     saveCart();
     renderCart();
   }
+
   function removeFromCart(id){
     delete cart[id];
     saveCart();
     renderCart();
   }
+
   function changeQty(id, delta){
     if(!cart[id]) return;
     cart[id].qty += delta;
@@ -651,17 +662,20 @@
     saveCart();
     renderCart();
   }
+
   function saveCart(){
     try{
       localStorage.setItem('toucan_cart', JSON.stringify(cart));
     }catch(e){}
   }
+
   function loadCart(){
     try{
       const raw = localStorage.getItem('toucan_cart');
       if(raw) cart = JSON.parse(raw);
     }catch(e){ cart = {}; }
   }
+
   function clearCart(){
     cart = {};
     saveCart();
@@ -689,12 +703,11 @@
     document.getElementById('cart-count').textContent = count;
   }
 
-  // Build whatsapp messages grouped by number
   function buildMessages(){
     const groups = {};
     for(const id in cart){
       const it = cart[id];
-      if(!it.whatsapp) it.whatsapp = ''; // blank
+      if(!it.whatsapp) it.whatsapp = '';
       const num = sanitizeNumber(it.whatsapp || '');
       const key = num || '__NO_NUM__';
       if(!groups[key]) groups[key] = {num: num, items: [], subtotal:0};
@@ -782,15 +795,12 @@
     }catch(e){ console.warn(e); }
   }
 
-  // ========== مدیریت دکمه موزیک ==========
   const music = document.getElementById('background-music');
   const toggleBtn = document.getElementById('music-toggle');
   const icon = document.getElementById('music-icon');
   const PLAY_SRC = "https://www.dash-smal.ir/assets/images/player/play.png";
   const PAUSE_SRC = "https://www.dash-smal.ir/assets/images/player/puse.png";
-
   icon.src = PLAY_SRC;
-
   toggleBtn.addEventListener('click', async (ev) => {
     ev.preventDefault();
     try {
@@ -833,18 +843,15 @@
     avgLow /= third;
     avgMid /= third;
     avgHigh /= (bufferLength - 2 * third);
-
     let intensityLow = (avgLow / 255) * 80;
     let intensityMid = (avgMid / 255) * 80;
     let intensityHigh = (avgHigh / 255) * 80;
-
     const now = Date.now();
     if (now >= nextChangeTime) {
       transitionStartTime = now;
       isFadingOut = true;
       nextChangeTime = now + 5000;
     }
-
     let neonShadow = '';
     if (transitionStartTime > 0) {
       const elapsed = now - transitionStartTime;
@@ -865,17 +872,14 @@
     } else {
       currentAlpha = 0.6;
     }
-
     const neon = neonColors[currentNeonIndex];
     neonShadow = `0 0 ${intensityLow * 0.8}px 8px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha}),
       0 0 ${intensityMid * 1.2}px 12px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha}),
       0 0 ${intensityHigh * 1.6}px 16px rgba(${neon.r}, ${neon.g}, ${neon.b}, ${currentAlpha})`;
-
     toggleBtn.style.boxShadow = `0 0 ${intensityLow}px 3px rgba(255, 69, 0, 0.7),
       0 0 ${intensityMid * 1.5}px 3px rgba(255, 140, 0, 0.5),
       0 0 ${intensityHigh * 2}px 3px rgba(255, 215, 0, 0.3),
       ${neonShadow}`;
-
     requestAnimationFrame(animateFlame);
   }
 
@@ -887,14 +891,13 @@
   music.addEventListener('pause', () => icon.src = PLAY_SRC);
   music.addEventListener('ended', () => icon.src = PLAY_SRC);
 
-  // ================= load & init =================
   loadCart();
   fetchFoods();
   renderCart();
   setInterval(fetchFoods, POLL_INTERVAL);
 
-  // event bindings
-  document.getElementById('send-whatsapp').addEventListener('click', sendToWhatsApp);
+  // جایگزینی event listener برای ارسال با لاگ
+  document.getElementById('send-whatsapp').addEventListener('click', sendToWhatsAppWithLogging);
   document.getElementById('clear-cart').addEventListener('click', ()=> {
     if(confirm('پاک کردن کامل فاکتور؟')) clearCart();
   });
@@ -902,30 +905,21 @@
     if(ev.target === document.getElementById('modal')) document.getElementById('modal').style.display='none';
   });
 
-  // ========== مدیریت intro GIF ==========
   document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('intro-overlay');
     const gif = document.getElementById('intro-gif');
     const mainContent = document.getElementById('main-content');
-
-    // فعال کردن بلور صفحه اصلی
     mainContent.classList.add('intro-blurred');
-
-    // fade out بعد از ۱۰ ثانیه (توقف GIF اگر loop داشته باشه)
-    const gifDuration = 10000; // ۱۰ ثانیه
+    const gifDuration = 10000;
     setTimeout(dismissOverlay, gifDuration);
-
-    // dismiss با تعامل کاربر (کلیک یا تاچ)
     document.addEventListener('click', dismissOverlay, { once: true });
     document.addEventListener('touchstart', dismissOverlay, { once: true });
-
     function dismissOverlay() {
       overlay.classList.add('hidden');
       mainContent.classList.remove('intro-blurred');
-      gif.src = ''; // توقف GIF با خالی کردن src
+      gif.src = '';
     }
   });
-
 })();
 </script>
 </body>
