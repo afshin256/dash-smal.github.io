@@ -10,6 +10,7 @@
       color: #eee;
       font-family: Tahoma, sans-serif;
       padding: 20px;
+      direction: rtl;
     }
     h1 {
       color: #00e5ff;
@@ -19,7 +20,7 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-      font-size: 14px;
+      font-size: 13px;
     }
     th, td {
       border: 1px solid #333;
@@ -30,6 +31,9 @@
       background-color: #ff6f00;
       color: #fff;
       cursor: pointer;
+      position: sticky;
+      top: 0;
+      z-index: 2;
     }
     tr:nth-child(even) {
       background-color: #111;
@@ -50,6 +54,12 @@
     .btn:hover {
       background-color: #00bcd4;
     }
+    .table-container {
+      max-height: 70vh;
+      overflow-y: auto;
+      border: 1px solid #444;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -59,12 +69,14 @@
     <button class="btn" onclick="downloadExcel()">⬇️ دانلود اکسل</button>
   </div>
 
-  <table id="logsTable">
-    <thead>
-      <tr id="tableHeader"></tr>
-    </thead>
-    <tbody id="tableBody"></tbody>
-  </table>
+  <div class="table-container">
+    <table id="logsTable">
+      <thead>
+        <tr id="tableHeader"></tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
 
   <script>
     // آدرس وب اپ با exec
@@ -73,14 +85,14 @@
     let logsData = [];
     let sortDirection = {};
 
-    // تابع JSONP loader
+    // گرفتن داده با JSONP
     function fetchLogs() {
       const script = document.createElement("script");
       script.src = apiBase + "?mode=getLogs&callback=renderData";
       document.body.appendChild(script);
     }
 
-    // داده‌ها که از سرور میان می‌افتن داخل این تابع
+    // داده‌ها از سرور → نمایش
     function renderData(data) {
       logsData = data;
       renderTable(data);
@@ -94,7 +106,7 @@
       headerRow.innerHTML = "";
 
       if (data.length === 0) {
-        body.innerHTML = "<tr><td colspan='12'>هیچ داده‌ای موجود نیست</td></tr>";
+        body.innerHTML = "<tr><td colspan='20'>هیچ داده‌ای موجود نیست</td></tr>";
         return;
       }
 
@@ -110,7 +122,7 @@
         const tr = document.createElement("tr");
         columns.forEach(col => {
           const td = document.createElement("td");
-          td.textContent = row[col];
+          td.textContent = row[col] || "";
           tr.appendChild(td);
         });
         body.appendChild(tr);
