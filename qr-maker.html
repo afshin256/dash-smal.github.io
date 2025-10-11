@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ساخت QR Code - TOUCAN</title>
+  <style>
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      padding: 20px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #ffb84d;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #1a1a1a;
+      color: white;
+      min-width: 200px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #c62828;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #d32f2f;
+    }
+    #qrcode-container {
+      margin-top: 20px;
+      text-align: center;
+    }
+    #qrcode-canvas {
+      background: white;
+      padding: 12px;
+      border-radius: 12px;
+      display: inline-block;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .download-btn {
+      margin-top: 16px;
+      background: #0ea5b7;
+    }
+  </style>
+</head>
+<body>
+  <h1>ساخت QR Code برای میز</h1>
+  <div class="input-group">
+    <input type="text" id="table-input" placeholder="شماره یا نام میز (مثلاً: 5 یا VIP1)" />
+    <button id="generate-btn">ساخت QR Code</button>
+  </div>
+  <div id="qrcode-container" style="display:none;">
+    <canvas id="qrcode-canvas"></canvas>
+    <br />
+    <button class="download-btn" id="download-btn">دانلود QR Code</button>
+  </div>
+
+  <!-- QRCode.js -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+  <script>
+    const baseUrl = 'https://www.dash-smal.ir/menu.html';
+    const logoUrl = 'https://www.dash-smal.ir/assets/images/placeholder.png'; // لوگوی رستوران
+
+    document.getElementById('generate-btn').addEventListener('click', generateQRWithLogo);
+    document.getElementById('download-btn').addEventListener('click', downloadQR);
+
+    function generateQRWithLogo() {
+      const tableInput = document.getElementById('table-input').value.trim();
+      if (!tableInput) {
+        alert('لطفاً شماره یا نام میز را وارد کنید.');
+        return;
+      }
+
+      const url = `${baseUrl}?table=${encodeURIComponent(tableInput)}`;
+      const canvas = document.getElementById('qrcode-canvas');
+      const ctx = canvas.getContext('2d');
+
+      // ساخت QR با qrcode-generator
+      const qr = qrcode(0, 'M'); // سطح خطا: Medium
+      qr.addData(url);
+      qr.make();
+
+      const qrSize = 300;
+      const scale = 4; // هر مربع QR = 4px
+      canvas.width = qrSize;
+      canvas.height = qrSize;
+
+      // پاک کردن canvas
+      ctx.clearRect(0, 0, qrSize, qrSize);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, qrSize, qrSize);
+
+      // رسم QR
+      const modules = qr.getModuleCount();
+      const cellSize = qrSize / modules;
+      for (let row = 0; row < modules; row++) {
+        for (let col = 0; col < modules; col++) {
+          if (qr.isDark(row, col)) {
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+          }
+        }
+      }
+
+      // اضافه کردن لوگو در مرکز
+      const logoSize = qrSize * 0.25; // 25% از اندازه QR
+      const logoX = (qrSize - logoSize) / 2;
+      const logoY = (qrSize - logoSize) / 2;
+
+      const logoImg = new Image();
+      logoImg.crossOrigin = "anonymous";
+      logoImg.src = logoUrl;
+      logoImg.onload = () => {
+        ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
+        document.getElementById('qrcode-container').style.display = 'block';
+      };
+      logoImg.onerror = () => {
+        console.warn('لوگو بارگذاری نشد، QR بدون لوگو نمایش داده می‌شود.');
+        document.getElementById('qrcode-container').style.display = 'block';
+      };
+    }
+
+    function downloadQR() {
+      const canvas = document.getElementById('qrcode-canvas');
+      const link = document.createElement('a');
+      link.download = 'toucan-qr.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  </script>
+</body>
+</html>
