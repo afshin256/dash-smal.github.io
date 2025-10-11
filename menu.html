@@ -379,7 +379,7 @@
         <div style="margin-top:6px;font-weight:800">کل: <span id="cart-total">0</span> تومان</div>
       </div>
       <div class="cart-actions">
-        <button id="send-whatsapp" class="send-btn">ارسال سفارش به واتس‌اپ</button>
+        <button id="send-whatsapp" class="send-btn">ارسال سفارش از طریق واتس‌اپ</button>
         <button id="clear-cart" class="send-btn" style="background:#eee;color:#000">پاک کردن</button>
       </div>
       <div class="rights-text">All rights reserved by Dash Smal Content Production Agency.</div>
@@ -399,7 +399,6 @@
       </div>
     </div>
   </div>
-
 <script>
 /* menu.js - client side logic */
 (() => {
@@ -423,11 +422,9 @@
   let transitionDuration = 1000;
   let isFadingOut = false;
   let currentAlpha = 0.6;
-
   // ========== Google Sheets Logger (نسخه ایمن با no-cors) ==========
   const SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyHOywAqL48GvQq2t3X9gI-32ToWgolaifVEaGtdw6vpHiMZtAptpwH1Vr4rnjb8Wak/exec";
   let visitStartTime = Date.now();
-
   function getDeviceType() {
     const ua = navigator.userAgent;
     if (/android/i.test(ua)) return "Android";
@@ -437,7 +434,6 @@
     if (/Linux/.test(ua)) return "Linux";
     return "Unknown";
   }
-
   function getBrowser() {
     const ua = navigator.userAgent;
     if (ua.includes("Chrome") && !ua.includes("Edg")) return "Chrome";
@@ -446,7 +442,6 @@
     if (ua.includes("Edg")) return "Edge";
     return "Other";
   }
-
   function getOS() {
     const ua = navigator.userAgent;
     if (ua.includes("Win")) return "Windows";
@@ -456,7 +451,6 @@
     if (ua.includes("iPhone") || ua.includes("iPad")) return "iOS";
     return "Unknown";
   }
-
   function getOrderedItemsAsString() {
     const items = [];
     for (const id in cart) {
@@ -467,7 +461,6 @@
     }
     return items.join("; ");
   }
-
   function logToSheet(durationSec) {
     const data = {
       table: table || "—",
@@ -482,7 +475,6 @@
       total: document.getElementById('cart-total')?.textContent?.replace(/,/g, '') || "0",
       recipient: "N/A"
     };
-
     // ارسال با mode: "no-cors" — تنها راه برای GitHub Pages
     try {
       fetch(SHEET_WEB_APP_URL, {
@@ -495,14 +487,11 @@
       // سکوت کامل — هیچ اروری نمایش داده نشود
     }
   }
-
   // ========== انتهای Google Sheets Logger ==========
-
   function getQueryParam(name) {
     const params = new URLSearchParams(location.search);
     return params.get(name);
   }
-
   function parseCSV(text) {
     const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
     if(lines.length === 0) return [];
@@ -523,7 +512,6 @@
     const parsed = lines.map(parseLine);
     return parsed;
   }
-
   async function fetchFoods() {
     try {
       const resp = await fetch(CSV_PATH + '?t=' + Date.now());
@@ -554,7 +542,6 @@
       document.getElementById('food-grid').innerHTML = '<p style="color: red;">خطا در لود فایل foods.csv - چک کن فایل وجود داره و فرمتش درسته.</p>';
     }
   }
-
   function reconcileCartWithFoods(){
     for(const key in cart){
       const entry = cart[key];
@@ -576,7 +563,6 @@
     saveCart();
     renderCart();
   }
-
   function renderFoods(){
     const grid = document.getElementById('food-grid');
     grid.innerHTML = '';
@@ -633,7 +619,6 @@
       grid.appendChild(card);
     });
   }
-
   function makeImagePath(f){
     let folder = (f.img_folder || '').trim();
     let name = (f.img_name || '').trim();
@@ -644,14 +629,12 @@
     }
     return PLACEHOLDER;
   }
-
   function formatMoney(num){
     if(!num && num !== 0) return '0';
     try{
       return Number(num).toLocaleString('en-US');
     }catch(e){ return String(num); }
   }
-
   function addToCart(food){
     const id = food.id || (food.en||food.fa).toString().trim();
     if(!cart[id]) cart[id] = Object.assign({}, food, {qid:id, qty:0});
@@ -660,13 +643,11 @@
     saveCart();
     renderCart();
   }
-
   function removeFromCart(id){
     delete cart[id];
     saveCart();
     renderCart();
   }
-
   function changeQty(id, delta){
     if(!cart[id]) return;
     cart[id].qty += delta;
@@ -674,26 +655,22 @@
     saveCart();
     renderCart();
   }
-
   function saveCart(){
     try{
       localStorage.setItem('toucan_cart', JSON.stringify(cart));
     }catch(e){}
   }
-
   function loadCart(){
     try{
       const raw = localStorage.getItem('toucan_cart');
       if(raw) cart = JSON.parse(raw);
     }catch(e){ cart = {}; }
   }
-
   function clearCart(){
     cart = {};
     saveCart();
     renderCart();
   }
-
   function renderCart(){
     const list = document.getElementById('cart-list');
     list.innerHTML = '';
@@ -714,7 +691,6 @@
     document.getElementById('cart-total').textContent = formatMoney(total);
     document.getElementById('cart-count').textContent = count;
   }
-
   function buildMessages(){
     const groups = {};
     for(const id in cart){
@@ -743,12 +719,10 @@
     }
     return messages;
   }
-
   function sanitizeNumber(n){
     if(!n) return '';
     return String(n).replace(/[^0-9]/g,'');
   }
-
   function sendToWhatsApp(){
     const msgs = buildMessages();
     if(msgs.length === 0) { alert('سبد خرید خالی است'); return; }
@@ -787,7 +761,6 @@
       });
     };
   }
-
   function promptAndOpen(text){
     const number = prompt('شماره واتس‌اپ آشپزخانه برای این بخش را وارد کنید (مثال: 98912...)');
     if(number){
@@ -797,7 +770,6 @@
       alert('شماره وارد نشد. ارسال انجام نشد.');
     }
   }
-
   function saveOrderForKitchen(message){
     try{
       const raw = localStorage.getItem('toucan_orders') || '[]';
@@ -806,7 +778,6 @@
       localStorage.setItem('toucan_orders', JSON.stringify(orders.slice(0,200)));
     }catch(e){ console.warn(e); }
   }
-
   const music = document.getElementById('background-music');
   const toggleBtn = document.getElementById('music-toggle');
   const icon = document.getElementById('music-icon');
@@ -830,7 +801,6 @@
       alert('برای پخش صدا، لطفاً یک بار دیگر روی صفحه کلیک کنید یا از تنظیمات مرورگر دسترسی صوتی را بررسی کنید.');
     }
   });
-
   function setupAudioAnalyzer() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -843,7 +813,6 @@
       analyser.connect(audioCtx.destination);
     }
   }
-
   function animateFlame() {
     if (music.paused) return;
     analyser.getByteFrequencyData(dataArray);
@@ -894,35 +863,34 @@
       ${neonShadow}`;
     requestAnimationFrame(animateFlame);
   }
-
   music.addEventListener('play', () => {
     icon.src = PAUSE_SRC;
     setupAudioAnalyzer();
     animateFlame();
   });
-  music.addEventListener('pause', () => icon.src = PLAY_SRC);
-  music.addEventListener('ended', () => icon.src = PLAY_SRC);
-
+  music.addEventListener('pause', () => icon.src = PLAY_SRC;
+  music.addEventListener('ended', () => icon.src = PLAY_SRC;
   loadCart();
   fetchFoods();
   renderCart();
   setInterval(fetchFoods, POLL_INTERVAL);
-
   // اتصال دکمه ارسال به واتس‌اپ + گزارش‌گیری
   const originalSendHandler = sendToWhatsApp;
   document.getElementById('send-whatsapp').addEventListener('click', () => {
     const duration = (Date.now() - visitStartTime) / 1000;
     logToSheet(duration);
     originalSendHandler();
+    // ✅ پاک کردن سبد خرید بلافاصله پس از کلیک
+    cart = {};
+    saveCart();
+    renderCart();
   });
-
   document.getElementById('clear-cart').addEventListener('click', ()=> {
     if(confirm('پاک کردن کامل فاکتور؟')) clearCart();
   });
   document.getElementById('modal').addEventListener('click', (ev)=>{
     if(ev.target === document.getElementById('modal')) document.getElementById('modal').style.display='none';
   });
-
   document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('intro-overlay');
     const gif = document.getElementById('intro-gif');
