@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تولید QR Code برای میزها - TOUCAN</title>
+  <style>
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      padding: 20px;
+      margin: 0;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #ffb84d;
+    }
+    .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .qr-item {
+      text-align: center;
+      background: #1a1a1a;
+      padding: 12px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    .qr-item img {
+      width: 140px;
+      height: 140px;
+      margin: 8px 0;
+      image-rendering: pixelated;
+    }
+    .qr-item .label {
+      font-size: 16px;
+      font-weight: bold;
+      color: #eee;
+    }
+    @media print {
+      body { background: white; color: black; }
+      .qr-item { background: white; box-shadow: none; }
+      .qr-item .label { color: black; }
+    }
+  </style>
+</head>
+<body>
+  <h1>QR Codeهای میزهای TOUCAN (1 تا 35)</h1>
+  <div class="qr-grid" id="qr-container"></div>
+
+  <script>
+    // تابع ساخت QR Code با استفاده از API رایگان
+    function generateQR(text, size = 300) {
+      // استفاده از API سرویس qrcode.show (بدون نیاز به کتابخانه)
+      return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&format=png`;
+    }
+
+    const container = document.getElementById('qr-container');
+    const baseUrl = 'https://www.dash-smal.ir/menu.html';
+
+    for (let table = 1; table <= 35; table++) {
+      const url = `${baseUrl}?table=${table}`;
+      const qrUrl = generateQR(url, 300); // 300x300 پیکسل
+
+      const div = document.createElement('div');
+      div.className = 'qr-item';
+      div.innerHTML = `
+        <div class="label">میز ${table}</div>
+        <img src="${qrUrl}" alt="QR Code میز ${table}" loading="lazy">
+        <div style="font-size:12px;color:#999">menu.html?table=${table}</div>
+      `;
+      container.appendChild(div);
+    }
+  </script>
+</body>
+</html>
