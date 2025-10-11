@@ -6,12 +6,11 @@
   <title>TOUCAN - منو</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    /* پایه‌ای برای کارت‌ها و شبکه */
+    /* ... استایل‌های قبلی بدون تغییر ... */
     body { font-family: 'Segoe UI','Helvetica Neue',Tahoma,Arial; background:#0b0b0b; color:#eee; margin:0; padding:0 12px 80px 12px; }
     .header { padding:12px 0; display:flex; align-items:center; gap:12px; }
     .brand { display:flex; align-items:center; gap:10px; }
     .logo { width:44px;height:44px;border-radius:8px;background:#222;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#fff; }
-    /* شبکه غذاها */
     .food-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -24,7 +23,6 @@
       }
       body { padding-bottom: 120px; }
     }
-    /* کارت غذا */
     .food-card {
       background: #111;
       border-radius: 12px;
@@ -37,7 +35,6 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       position: relative;
     }
-    /* تصویر غذا */
     .food-img {
       position: relative;
       width: 100%;
@@ -68,7 +65,6 @@
       display: block;
       border-radius: inherit;
     }
-    /* برچسب تخفیف */
     .discount-badge {
       position: absolute;
       bottom: 5px;
@@ -102,7 +98,6 @@
         right: 4px;
       }
     }
-    /* اطلاعات غذا */
     .food-info {
       flex: 1;
       min-width: 0;
@@ -126,7 +121,6 @@
       white-space: normal;
       word-wrap: break-word;
     }
-    /* فوتر جدید */
     .food-footer {
       width: 100%;
       height: 40px;
@@ -207,7 +201,6 @@
           0 0 30px 15px rgba(255, 215, 0, 0.3);
       }
     }
-    /* سبد خرید شناور */
     .cart-floating {
       position: fixed;
       right: 12px;
@@ -269,7 +262,6 @@
     .send-btn[style] {
       /* allow inline override */
     }
-    /* دکمه موزیک */
     .music-button {
       position: absolute;
       left: 12px;
@@ -315,7 +307,6 @@
         left: 8px;
       }
     }
-    /* استایل‌های جدید برای intro overlay */
     #intro-overlay {
       position: fixed;
       inset: 0;
@@ -343,10 +334,67 @@
       filter: blur(5px);
       transition: filter 0.5s ease;
     }
+
+    /* استایل مودال جدید */
+    #delivery-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+    }
+    #delivery-modal-content {
+      background: #111;
+      color: #fff;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+    }
+    #delivery-modal-content input,
+    #delivery-modal-content textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      background: #222;
+      color: #fff;
+      border: 1px solid #444;
+      box-sizing: border-box;
+    }
+    #delivery-modal-content textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0;
+    }
+    .payment-option.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .cart-preview-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid #333;
+    }
+    .cart-preview-item img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
-  <!-- intro GIF overlay جدید -->
+  <!-- intro GIF overlay -->
   <div id="intro-overlay">
     <div class="gif-container">
       <img id="intro-gif" src="https://www.dash-smal.ir/assets/images/777.gif" alt="لوگو موشن">
@@ -386,7 +434,7 @@
     </div>
     <!-- پلیر پنهان -->
     <audio id="background-music" src="https://www.dash-smal.ir/assets/music/toucan/toucan.mp3" loop preload="none"></audio>
-    <!-- modal -->
+    <!-- modal قبلی -->
     <div id="modal" class="modal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:2000">
       <div class="box" role="dialog" aria-modal="true" style="background:#111;color:#fff;padding:16px;border-radius:10px;max-width:92%;width:420px">
         <h3 style="margin-top:0">چند شماره آشپزخانه پیدا شد</h3>
@@ -398,13 +446,43 @@
         </div>
       </div>
     </div>
+
+    <!-- مودال جدید برای تحویل -->
+    <div id="delivery-modal">
+      <div id="delivery-modal-content">
+        <h3 style="margin-top:0;text-align:center">تحویل سفارش</h3>
+        <div id="modal-cart-preview" style="max-height:180px;overflow:auto;margin-bottom:16px"></div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <input type="text" id="delivery-name" placeholder="نام و نام خانوادگی *" />
+          <textarea id="delivery-address" placeholder="آدرس دقیق تحویل *"></textarea>
+          <div style="margin:12px 0">
+            <div class="payment-option">
+              <input type="radio" name="payment" value="cash" checked id="pay-cash">
+              <label for="pay-cash">پرداخت در محل</label>
+            </div>
+            <div class="payment-option disabled">
+              <input type="radio" name="payment" value="online" disabled id="pay-online">
+              <label for="pay-online">پرداخت آنلاین (به زودی)</label>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <button id="submit-delivery" class="send-btn" disabled>ارسال سفارش</button>
+          <button id="cancel-delivery" style="background:#555">لغو</button>
+        </div>
+      </div>
+    </div>
   </div>
+
 <script>
 /* menu.js - client side logic */
 (() => {
   const CSV_PATH = 'data/foods.csv';
   const PLACEHOLDER = 'assets/images/placeholder.png';
-  const POLL_INTERVAL = 12000; // ms
+  const POLL_INTERVAL = 12000;
+  // شماره واتس‌اپ ثابت برای سفارشات تحویلی (باید جایگزین شود)
+  const DELIVERY_WHATSAPP = "989123456789"; // ← ← ← اینجا شماره خودت را بدون 0 اول وارد کن (مثلاً 989121234567)
+
   const table = getQueryParam('table') || localStorage.getItem('toucan_table') || '—';
   document.getElementById('table-number-display').textContent = table;
   localStorage.setItem('toucan_table', table);
@@ -422,7 +500,8 @@
   let transitionDuration = 1000;
   let isFadingOut = false;
   let currentAlpha = 0.6;
-  // ========== Google Sheets Logger (نسخه ایمن با no-cors) ==========
+
+  // ========== Google Sheets Logger ==========
   const SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyHOywAqL48GvQq2t3X9gI-32ToWgolaifVEaGtdw6vpHiMZtAptpwH1Vr4rnjb8Wak/exec";
   let visitStartTime = Date.now();
   function getDeviceType() {
@@ -475,7 +554,6 @@
       total: document.getElementById('cart-total')?.textContent?.replace(/,/g, '') || "0",
       recipient: "N/A"
     };
-    // ارسال با mode: "no-cors" — تنها راه برای GitHub Pages
     try {
       fetch(SHEET_WEB_APP_URL, {
         method: "POST",
@@ -483,15 +561,15 @@
         headers: { "Content-Type": "text/plain" },
         body: JSON.stringify(data)
       });
-    } catch (e) {
-      // سکوت کامل — هیچ اروری نمایش داده نشود
-    }
+    } catch (e) {}
   }
-  // ========== انتهای Google Sheets Logger ==========
+  // ========== انتهای Logger ==========
+
   function getQueryParam(name) {
     const params = new URLSearchParams(location.search);
     return params.get(name);
   }
+
   function parseCSV(text) {
     const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
     if(lines.length === 0) return [];
@@ -512,6 +590,7 @@
     const parsed = lines.map(parseLine);
     return parsed;
   }
+
   async function fetchFoods() {
     try {
       const resp = await fetch(CSV_PATH + '?t=' + Date.now());
@@ -539,9 +618,10 @@
       renderFoods();
     } catch(e){
       console.error('failed to load CSV', e);
-      document.getElementById('food-grid').innerHTML = '<p style="color: red;">خطا در لود فایل foods.csv - چک کن فایل وجود داره و فرمتش درسته.</p>';
+      document.getElementById('food-grid').innerHTML = '<p style="color: red;">خطا در لود فایل foods.csv</p>';
     }
   }
+
   function reconcileCartWithFoods(){
     for(const key in cart){
       const entry = cart[key];
@@ -563,6 +643,7 @@
     saveCart();
     renderCart();
   }
+
   function renderFoods(){
     const grid = document.getElementById('food-grid');
     grid.innerHTML = '';
@@ -619,6 +700,7 @@
       grid.appendChild(card);
     });
   }
+
   function makeImagePath(f){
     let folder = (f.img_folder || '').trim();
     let name = (f.img_name || '').trim();
@@ -629,12 +711,14 @@
     }
     return PLACEHOLDER;
   }
+
   function formatMoney(num){
     if(!num && num !== 0) return '0';
     try{
       return Number(num).toLocaleString('en-US');
     }catch(e){ return String(num); }
   }
+
   function addToCart(food){
     const id = food.id || (food.en||food.fa).toString().trim();
     if(!cart[id]) cart[id] = Object.assign({}, food, {qid:id, qty:0});
@@ -643,11 +727,13 @@
     saveCart();
     renderCart();
   }
+
   function removeFromCart(id){
     delete cart[id];
     saveCart();
     renderCart();
   }
+
   function changeQty(id, delta){
     if(!cart[id]) return;
     cart[id].qty += delta;
@@ -655,22 +741,26 @@
     saveCart();
     renderCart();
   }
+
   function saveCart(){
     try{
       localStorage.setItem('toucan_cart', JSON.stringify(cart));
     }catch(e){}
   }
+
   function loadCart(){
     try{
       const raw = localStorage.getItem('toucan_cart');
       if(raw) cart = JSON.parse(raw);
     }catch(e){ cart = {}; }
   }
+
   function clearCart(){
     cart = {};
     saveCart();
     renderCart();
   }
+
   function renderCart(){
     const list = document.getElementById('cart-list');
     list.innerHTML = '';
@@ -691,6 +781,7 @@
     document.getElementById('cart-total').textContent = formatMoney(total);
     document.getElementById('cart-count').textContent = count;
   }
+
   function buildMessages(){
     const groups = {};
     for(const id in cart){
@@ -719,10 +810,12 @@
     }
     return messages;
   }
+
   function sanitizeNumber(n){
     if(!n) return '';
     return String(n).replace(/[^0-9]/g,'');
   }
+
   function sendToWhatsApp(){
     const msgs = buildMessages();
     if(msgs.length === 0) { alert('سبد خرید خالی است'); return; }
@@ -761,15 +854,17 @@
       });
     };
   }
+
   function promptAndOpen(text){
-    const number = prompt('شماره واتس‌اپ آشپزخانه برای این بخش را وارد کنید (مثال: 98912...)');
+    const number = prompt('شماره واتس‌اپ آشپزخانه را وارد کنید (مثال: 98912...)');
     if(number){
       const num = sanitizeNumber(number);
       window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(text), '_blank');
     } else {
-      alert('شماره وارد نشد. ارسال انجام نشد.');
+      alert('شماره وارد نشد.');
     }
   }
+
   function saveOrderForKitchen(message){
     try{
       const raw = localStorage.getItem('toucan_orders') || '[]';
@@ -778,6 +873,94 @@
       localStorage.setItem('toucan_orders', JSON.stringify(orders.slice(0,200)));
     }catch(e){ console.warn(e); }
   }
+
+  // ========== توابع جدید برای تحویل ==========
+  function isNumeric(str) {
+    return /^\d+$/.test(str);
+  }
+
+  function openDeliveryModal() {
+    const preview = document.getElementById('modal-cart-preview');
+    preview.innerHTML = '';
+    let hasItems = false;
+    for (const id in cart) {
+      const it = cart[id];
+      if (it.qty <= 0) continue;
+      hasItems = true;
+      const div = document.createElement('div');
+      div.className = 'cart-preview-item';
+      const img = document.createElement('img');
+      img.src = makeImagePath(it);
+      img.onerror = () => img.src = PLACEHOLDER;
+      const info = document.createElement('div');
+      info.innerHTML = `<strong>${it.qty}x ${it.fa || it.en}</strong><br><small>${formatMoney(it.discountedPrice || it.price)} تومان</small>`;
+      div.appendChild(img);
+      div.appendChild(info);
+      preview.appendChild(div);
+    }
+    if (!hasItems) {
+      alert('سبد خرید خالی است.');
+      return;
+    }
+    document.getElementById('delivery-modal').style.display = 'flex';
+    setupDeliveryFormValidation();
+  }
+
+  function setupDeliveryFormValidation() {
+    const nameInput = document.getElementById('delivery-name');
+    const addressInput = document.getElementById('delivery-address');
+    const submitBtn = document.getElementById('submit-delivery');
+
+    function validate() {
+      const name = nameInput.value.trim();
+      const address = addressInput.value.trim();
+      submitBtn.disabled = !(name && address);
+    }
+
+    nameInput.addEventListener('input', validate);
+    addressInput.addEventListener('input', validate);
+
+    document.getElementById('cancel-delivery').onclick = () => {
+      document.getElementById('delivery-modal').style.display = 'none';
+    };
+
+    submitBtn.onclick = () => {
+      const name = nameInput.value.trim();
+      const address = addressInput.value.trim();
+      const payment = 'پرداخت در محل';
+
+      let lines = [];
+      lines.push('📦 سفارش آنلاین - TOUCAN');
+      lines.push('میز: ' + (table || '—'));
+      lines.push('تحویل‌گیرنده: ' + name);
+      lines.push('آدرس: ' + address);
+      lines.push('روش پرداخت: ' + payment);
+      lines.push('');
+      lines.push('--- سفارشات ---');
+      for (const id in cart) {
+        const it = cart[id];
+        if (it.qty > 0) {
+          lines.push(`${it.qty} x ${it.fa || it.en} - ${formatMoney(it.discountedPrice || it.price)} تومان`);
+        }
+      }
+      const total = document.getElementById('cart-total').textContent;
+      lines.push('');
+      lines.push('مجموع: ' + total + ' تومان');
+
+      const message = lines.join('\n');
+      const url = 'https://wa.me/' + DELIVERY_WHATSAPP + '?text=' + encodeURIComponent(message);
+      window.open(url, '_blank');
+
+      cart = {};
+      saveCart();
+      renderCart();
+      document.getElementById('delivery-modal').style.display = 'none';
+      nameInput.value = '';
+      addressInput.value = '';
+    };
+  }
+
+  // ========== پخش موسیقی ==========
   const music = document.getElementById('background-music');
   const toggleBtn = document.getElementById('music-toggle');
   const icon = document.getElementById('music-icon');
@@ -797,8 +980,7 @@
         icon.src = PLAY_SRC;
       }
     } catch (err) {
-      console.warn('cannot play audio yet', err);
-      alert('برای پخش صدا، لطفاً یک بار دیگر روی صفحه کلیک کنید یا از تنظیمات مرورگر دسترسی صوتی را بررسی کنید.');
+      alert('برای پخش صدا، لطفاً روی صفحه کلیک کنید.');
     }
   });
   function setupAudioAnalyzer() {
@@ -870,27 +1052,38 @@
   });
   music.addEventListener('pause', () => icon.src = PLAY_SRC);
   music.addEventListener('ended', () => icon.src = PLAY_SRC);
+
+  // ========== راه‌اندازی ==========
   loadCart();
   fetchFoods();
   renderCart();
   setInterval(fetchFoods, POLL_INTERVAL);
-  // اتصال دکمه ارسال به واتس‌اپ + گزارش‌گیری
-  const originalSendHandler = sendToWhatsApp;
+
+  // ========== منطق ارسال سفارش ==========
   document.getElementById('send-whatsapp').addEventListener('click', () => {
     const duration = (Date.now() - visitStartTime) / 1000;
     logToSheet(duration);
-    originalSendHandler();
-    // ✅ پاک کردن سبد خرید بلافاصله پس از کلیک
-    cart = {};
-    saveCart();
-    renderCart();
+
+    // اگر میز عددی باشد → رفتار عادی
+    if (table !== '—' && isNumeric(table)) {
+      sendToWhatsApp();
+      cart = {};
+      saveCart();
+      renderCart();
+    } else {
+      // در غیر این صورت (نام میز یا بدون میز) → نمایش فرم تحویل
+      openDeliveryModal();
+    }
   });
+
   document.getElementById('clear-cart').addEventListener('click', ()=> {
     if(confirm('پاک کردن کامل فاکتور؟')) clearCart();
   });
+
   document.getElementById('modal').addEventListener('click', (ev)=>{
     if(ev.target === document.getElementById('modal')) document.getElementById('modal').style.display='none';
   });
+
   document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('intro-overlay');
     const gif = document.getElementById('intro-gif');
