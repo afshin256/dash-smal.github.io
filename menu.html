@@ -344,7 +344,7 @@
       transition: filter 0.5s ease;
     }
 
-    /* استایل مودال تحویل */
+    /* استایل مودال جدید */
     #delivery-modal {
       display: none;
       position: fixed;
@@ -380,8 +380,11 @@
     .payment-option {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
       margin: 8px 0;
+      padding: 8px;
+      background: #222;
+      border-radius: 8px;
     }
     .payment-option.disabled {
       opacity: 0.5;
@@ -464,15 +467,16 @@
         <div style="display:flex;flex-direction:column;gap:12px">
           <input type="text" id="delivery-name" placeholder="نام و نام خانوادگی *" />
           <textarea id="delivery-address" placeholder="آدرس دقیق تحویل *"></textarea>
-          <div style="margin:12px 0">
-            <div class="payment-option">
+          <div style="margin-top:8px; font-weight:700; color:#ffb84d">مجموع: <span id="delivery-total">0</span> تومان</div>
+          <div style="margin:16px 0 0 0; display:flex; flex-direction:column; gap:8px;">
+            <label style="display:flex; align-items:center; gap:12px; padding:8px; background:#222; border-radius:8px">
               <input type="radio" name="payment" value="cash" checked id="pay-cash">
-              <label for="pay-cash">پرداخت در محل</label>
-            </div>
-            <div class="payment-option disabled">
+              <span>پرداخت در محل</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:12px; padding:8px; background:#222; border-radius:8px; opacity:0.5; pointer-events:none">
               <input type="radio" name="payment" value="online" disabled id="pay-online">
-              <label for="pay-online">پرداخت آنلاین (به زودی)</label>
-            </div>
+              <span>پرداخت آنلاین (به زودی)</span>
+            </label>
           </div>
         </div>
         <div style="display:flex;gap:10px;margin-top:16px">
@@ -487,7 +491,6 @@
 /* menu.js - client side logic */
 (() => {
   const CSV_PATH = 'data/foods.csv';
-  const REPORT_PATH = 'data/report.csv';
   const PLACEHOLDER = 'assets/images/placeholder.png';
   const POLL_INTERVAL = 12000;
 
@@ -599,30 +602,6 @@
     return parsed;
   }
 
-  function parseCSVLine(line) {
-    const res = [];
-    let cur = '';
-    let inQuotes = false;
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i];
-      if (ch === '"') {
-        if (inQuotes && line[i + 1] === '"') {
-          cur += '"';
-          i++;
-        } else {
-          inQuotes = !inQuotes;
-        }
-      } else if (ch === ',' && !inQuotes) {
-        res.push(cur);
-        cur = '';
-      } else {
-        cur += ch;
-      }
-    }
-    res.push(cur);
-    return res;
-  }
-
   async function fetchFoods() {
     try {
       const resp = await fetch(CSV_PATH + '?t=' + Date.now());
@@ -656,20 +635,44 @@
 
   async function fetchDeliveryWhatsApp() {
     try {
-      const resp = await fetch(REPORT_PATH + '?t=' + Date.now());
+      const resp = await fetch(CSV_PATH + '?t=' + Date.now()); // همان foods.csv
       const text = await resp.text();
       const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
       if (lines.length >= 2) {
-        const secondRow = lines[1];
+        const secondRow = lines[1]; // سطر دوم (index 1)
         const columns = parseCSVLine(secondRow);
         if (columns.length >= 11) {
-          return sanitizeNumber(columns[10]);
+          return sanitizeNumber(columns[10]); // ستون K = index 10
         }
       }
     } catch (e) {
-      console.warn('خطا در خواندن report.csv:', e);
+      console.warn('خطا در خواندن foods.csv برای شماره تحویل:', e);
     }
     return null;
+  }
+
+  function parseCSVLine(line) {
+    const res = [];
+    let cur = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        if (inQuotes && line[i + 1] === '"') {
+          cur += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (ch === ',' && !inQuotes) {
+        res.push(cur);
+        cur = '';
+      } else {
+        cur += ch;
+      }
+    }
+    res.push(cur);
+    return res;
   }
 
   function reconcileCartWithFoods(){
@@ -830,6 +833,11 @@
     }
     document.getElementById('cart-total').textContent = formatMoney(total);
     document.getElementById('cart-count').textContent = count;
+    // به‌روزرسانی مجموع در فرم تحویل (اگر باز است)
+    const deliveryTotal = document.getElementById('delivery-total');
+    if (deliveryTotal) {
+      deliveryTotal.textContent = formatMoney(total);
+    }
   }
 
   function buildMessages(){
@@ -1000,7 +1008,7 @@
 
       const deliveryNumber = await fetchDeliveryWhatsApp();
       if (!deliveryNumber || deliveryNumber.length < 8) {
-        alert('⚠️ شماره واتس‌اپ تحویل در فایل report.csv یافت نشد. لطفاً با مدیریت تماس بگیرید.');
+        alert('⚠️ شماره واتس‌اپ تحویل در فایل foods.csv (سطر 2، ستون K) یافت نشد. لطفاً با مدیریت تماس بگیرید.');
         return;
       }
 
