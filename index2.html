@@ -1,139 +1,401 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dash-Smal | خدمات دیجیتال و خلاقانه</title>
-  <link rel="stylesheet" href="/ds/assets/ds.css">
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dash-Smal | خدمات دیجیتال و خلاقانه</title>
+    <link rel="stylesheet" href="/ds/assets/ds.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="container header-container">
-      <div class="logo">
-        <img src="/ds/assets/img/1.jpg" alt="لوگو Dash-Smal" class="logo-img">
-      </div>
-      <nav class="nav">
-        <ul>
-          <li><a href="#home">خانه</a></li>
-          <li><a href="#services">خدمات</a></li>
-          <li><a href="#articles">مقالات</a></li>
-          <li><a href="#contact">تماس</a></li>
-        </ul>
-      </nav>
-      <div class="menu-toggle" id="menuToggle">
-        <span></span><span></span><span></span>
-      </div>
+    <!-- Header/Navigation -->
+    <header class="header">
+        <!-- IMPORTANT: header-container uses LTR to force visual order (logo left, nav right)
+             then we restore RTL for text inside nav. -->
+        <div class="container header-container" style="direction:ltr;">
+            <div class="logo" id="logoWrapper">
+                <img src="/ds/assets/img/1.jpg" alt="لوگو Dash-Smal" class="logo-img">
+            </div>
+
+            <nav class="nav" style="direction:rtl;"> <!-- nav content still RTL for Persian text -->
+                <ul>
+                    <li><a href="#home">خانه</a></li>
+                    <li><a href="#services">خدمات</a></li>
+                    <li><a href="#articles">مقالات</a></li>
+                    <li><a href="#contact">تماس</a></li>
+                </ul>
+            </nav>
+
+            <div class="menu-toggle" id="menuToggle" aria-label="menu-toggle" title="منو">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>خلاقیت دیجیتال، <span class="neon-text">هوش مصنوعی</span> و خدمات حرفه‌ای</h2>
+                <p>ما با ترکیب خلاقیت، فناوری و تجربه، راه‌حل‌های نوین برای کسب‌وکارهای شما ارائه می‌دهیم</p>
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="openOrderModal()">سفارش خدمات</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title neon-animated">خدمات ما</h2>
+            <div class="services-grid">
+                <!-- Repeat service cards (همان محتوا مانند قبل) -->
+                <div class="service-card">
+                    <div class="card-image"><img src="/ds/assets/img/4.jpg" alt="طراحی گرافیکی"></div>
+                    <div class="card-content">
+                        <h3>انواع طراحی گرافیکی</h3>
+                        <p>تراکت - بنر - پوستر - تابلو - منو - بروشور - لوگو - لوگو موشن</p>
+                        <button class="btn-order" onclick="openOrderModal('انواع طراحی گرافیکی')">سفارش</button>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="card-image"><img src="/ds/assets/img/5.jpg" alt="خدمات تصویربرداری"></div>
+                    <div class="card-content">
+                        <h3>خدمات تصویربرداری</h3>
+                        <p>عکسبرداری - فیلمبرداری - ادیت ویدیو - ادیت عکس</p>
+                        <button class="btn-order" onclick="openOrderModal('خدمات تصویربرداری')">سفارش</button>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="card-image"><img src="/ds/assets/img/6.jpg" alt="خدمات شبکه‌های اجتماعی"></div>
+                    <div class="card-content">
+                        <h3>خدمات شبکه‌های اجتماعی</h3>
+                        <p>راه‌اندازی پیج اینستاگرام - ساخت ریلز - تولید محتوا - تبلیغات</p>
+                        <button class="btn-order" onclick="openOrderModal('خدمات شبکه‌های اجتماعی')">سفارش</button>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="card-image"><img src="/ds/assets/img/7.jpg" alt="ساخت محتوای تبلیغاتی بر پایه AI"></div>
+                    <div class="card-content">
+                        <h3>ساخت محتوای تبلیغاتی بر پایه AI</h3>
+                        <p>تیزر و ویدیو - ساخت عکس از تصور - تبدیل عکس به تبلیغاتی</p>
+                        <button class="btn-order" onclick="openOrderModal('ساخت محتوای تبلیغاتی بر پایه AI')">سفارش</button>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="card-image"><img src="/ds/assets/img/8.jpg" alt="ساخت موزیک"></div>
+                    <div class="card-content">
+                        <h3>ساخت موزیک</h3>
+                        <p>موزیک برند - موزیک متن - موزیک سفارشی</p>
+                        <button class="btn-order" onclick="openOrderModal('ساخت موزیک')">سفارش</button>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="card-image"><img src="/ds/assets/img/9.jpg" alt="برندینگ"></div>
+                    <div class="card-content">
+                        <h3>برندینگ</h3>
+                        <p>برندسازی و توسعه کسب‌وکار</p>
+                        <button class="btn-order" onclick="openOrderModal('برندینگ')">سفارش</button>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="card-image"><img src="/ds/assets/img/10.jpg" alt="طراحی سایت"></div>
+                    <div class="card-content">
+                        <h3>طراحی سایت</h3>
+                        <p>فروشگاهی، شرکتی، پورتفولیو</p>
+                        <button class="btn-order" onclick="openOrderModal('طراحی سایت')">سفارش</button>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="card-image"><img src="/ds/assets/img/11.jpg" alt="خدمات هوش مصنوعی"></div>
+                    <div class="card-content">
+                        <h3>خدمات هوش مصنوعی</h3>
+                        <p>چت‌بات، تولید تصویر، دستیار صوتی</p>
+                        <button class="btn-order" onclick="openOrderModal('خدمات هوش مصنوعی')">سفارش</button>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="card-image"><img src="/ds/assets/img/12.jpg" alt="خدمات حقوقی"></div>
+                    <div class="card-content">
+                        <h3>خدمات حقوقی</h3>
+                        <p>مشاوره‌های حقوقی و قرارداد</p>
+                        <button class="btn-order" onclick="openOrderModal('خدمات حقوقی')">سفارش</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Order Section (Inline form visible on page) -->
+    <section id="order-section" class="order-section">
+        <div class="container">
+            <h2 class="section-title neon-animated">همین الان سفارش دهید</h2>
+            <div class="order-content">
+                <div class="order-form-container">
+                    <form id="orderFormInline" class="order-form">
+                        <input type="hidden" id="serviceTypeInline" name="serviceType">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" id="nameInline" name="name" placeholder="نام و نام خانوادگی *" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" id="phoneInline" name="phone" placeholder="شماره تماس *" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="email" id="emailInline" name="email" placeholder="ایمیل (اختیاری)">
+                            </div>
+                            <div class="form-group">
+                                <select id="serviceInline" name="service" required>
+                                    <option value="">نوع خدمت را انتخاب کنید *</option>
+                                    <option value="انواع طراحی گرافیکی">انواع طراحی گرافیکی</option>
+                                    <option value="خدمات تصویربرداری">خدمات تصویربرداری</option>
+                                    <option value="خدمات شبکه‌های اجتماعی">خدمات شبکه‌های اجتماعی</option>
+                                    <option value="ساخت محتوای تبلیغاتی بر پایه AI">ساخت محتوای تبلیغاتی بر پایه AI</option>
+                                    <option value="ساخت موزیک">ساخت موزیک</option>
+                                    <option value="برندینگ">برندینگ</option>
+                                    <option value="طراحی سایت">طراحی سایت</option>
+                                    <option value="خدمات هوش مصنوعی">خدمات هوش مصنوعی</option>
+                                    <option value="خدمات حقوقی">خدمات حقوقی</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <textarea id="descriptionInline" name="description" rows="2" placeholder="توضیحات اضافی"></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">ارسال از طریق واتس‌اپ</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Articles Section -->
+    <section id="articles" class="articles">
+        <div class="container">
+            <h2 class="section-title neon-animated">مقالات</h2>
+            <div class="articles-grid">
+                <div class="article-card">
+                    <div class="article-image"><img src="/ds/assets/img/13.jpg" alt="مقاله 1"></div>
+                    <div class="article-content">
+                        <h3>آینده طراحی گرافیکی با هوش مصنوعی</h3>
+                        <p>کشف چگونگی تغییر صنعت طراحی گرافیکی با فناوری‌های نوین</p>
+                        <a href="/ds/art/article1.html" class="read-more">ادامه مطلب</a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-image"><img src="/ds/assets/img/14.jpg" alt="مقاله 2"></div>
+                    <div class="article-content">
+                        <h3>راهنمای راه‌اندازی کسب‌وکار دیجیتال</h3>
+                        <p>قدم‌به‌قدم راه‌اندازی موفق یک کسب‌وکار دیجیتال</p>
+                        <a href="/ds/art/article2.html" class="read-more">ادامه مطلب</a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-image"><img src="/ds/assets/img/15.jpg" alt="مقاله 3"></div>
+                    <div class="article-content">
+                        <h3>تکنیک‌های تولید محتوای جذاب برای اینستاگرام</h3>
+                        <p>استراتژی‌های موثر برای افزایش تعامل و فالوور</p>
+                        <a href="/ds/art/article3.html" class="read-more">ادامه مطلب</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title neon-animated">تماس با ما</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <img src="/ds/assets/img/2.jpg" alt="آیکون تلفن" class="contact-icon">
+                        <a href="tel:09058206145" class="contact-link">09058206145</a>
+                    </div>
+                    <div class="contact-item">
+                        <img src="/ds/assets/img/3.jpg" alt="آیکون اینستاگرام" class="contact-icon">
+                        <span>ads.dash.smal.ir</span>
+                    </div>
+                    <div class="contact-item address-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>تهران، خیابان پیروزی، فلکه دوم نیروی هوایی</span>
+                    </div>
+                </div>
+                <div class="map-container">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!..." 
+                        width="100%" 
+                        height="300" 
+                        style="border:0; border-radius: 15px;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Dash-Smal. تمامی حقوق محفوظ است.</p>
+            <p>طراحی شده با ❤️ توسط تیم Dash-Smal</p>
+        </div>
+    </footer>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="modal" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="orderTitle">
+            <button class="close" onclick="closeOrderModal()" aria-label="close-modal">&times;</button>
+            <h2 id="orderTitle">فرم سفارش خدمات</h2>
+            <form id="orderForm" class="modal-form">
+                <input type="hidden" id="serviceType" name="serviceType">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">نام و نام خانوادگی:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">شماره تماس:</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">ایمیل (اختیاری):</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="service">نوع خدمت:</label>
+                        <select id="service" name="service" required>
+                            <option value="">انتخاب کنید...</option>
+                            <option value="انواع طراحی گرافیکی">انواع طراحی گرافیکی</option>
+                            <option value="خدمات تصویربرداری">خدمات تصویربرداری</option>
+                            <option value="خدمات شبکه‌های اجتماعی">خدمات شبکه‌های اجتماعی</option>
+                            <option value="ساخت محتوای تبلیغاتی بر پایه AI">ساخت محتوای تبلیغاتی بر پایه AI</option>
+                            <option value="ساخت موزیک">ساخت موزیک</option>
+                            <option value="برندینگ">برندینگ</option>
+                            <option value="طراحی سایت">طراحی سایت</option>
+                            <option value="خدمات هوش مصنوعی">خدمات هوش مصنوعی</option>
+                            <option value="خدمات حقوقی">خدمات حقوقی</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="description">توضیحات:</label>
+                    <textarea id="description" name="description" rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">ارسال از طریق واتس‌اپ</button>
+            </form>
+        </div>
     </div>
-  </header>
 
-  <!-- Hero -->
-  <section id="home" class="hero">
-    <div class="container">
-      <div class="hero-content">
-        <h2>خلاقیت دیجیتال، <span class="neon-text">هوش مصنوعی</span> و خدمات حرفه‌ای</h2>
-        <p>ما با ترکیب خلاقیت، فناوری و تجربه، راه‌حل‌های نوین برای کسب‌وکارهای شما ارائه می‌دهیم</p>
-        <div class="hero-buttons">
-          <button class="btn-primary" onclick="openOrderModal()">سفارش خدمات</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.querySelector('.nav ul').classList.toggle('active');
+        });
 
-  <!-- بقیه بخش‌ها (services, articles, contact, footer) همان نسخه قبلی هستند -->
+        // Order modal functions
+        function openOrderModal(service = '') {
+            const modal = document.getElementById('orderModal');
+            modal.style.display = 'block';
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden'; // prevent background scroll
+            if (service) {
+                document.getElementById('service').value = service;
+                document.getElementById('serviceType').value = service;
+                document.getElementById('serviceInline')?.value = service;
+            }
+            // focus on first input
+            setTimeout(() => document.getElementById('name')?.focus(), 150);
+        }
 
-  <!-- Modal فرم سفارش -->
-  <div id="orderModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeOrderModal()">&times;</span>
-      <h2>فرم سفارش خدمات</h2>
-      <form id="orderForm">
-        <input type="hidden" id="serviceType" name="serviceType">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name">نام و نام خانوادگی:</label>
-            <input type="text" id="name" name="name" required>
-          </div>
-          <div class="form-group">
-            <label for="phone">شماره تماس:</label>
-            <input type="tel" id="phone" name="phone" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="email">ایمیل (اختیاری):</label>
-            <input type="email" id="email" name="email">
-          </div>
-          <div class="form-group">
-            <label for="service">نوع خدمت:</label>
-            <select id="service" name="service" required>
-              <option value="">انتخاب کنید...</option>
-              <option value="انواع طراحی گرافیکی">انواع طراحی گرافیکی</option>
-              <option value="خدمات تصویربرداری">خدمات تصویربرداری</option>
-              <option value="خدمات شبکه‌های اجتماعی">خدمات شبکه‌های اجتماعی</option>
-              <option value="ساخت محتوای تبلیغاتی بر پایه AI">ساخت محتوای تبلیغاتی بر پایه AI</option>
-              <option value="ساخت موزیک">ساخت موزیک</option>
-              <option value="برندینگ">برندینگ</option>
-              <option value="طراحی سایت">طراحی سایت</option>
-              <option value="خدمات هوش مصنوعی">خدمات هوش مصنوعی</option>
-              <option value="خدمات حقوقی">خدمات حقوقی</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group full-width">
-          <label for="description">توضیحات:</label>
-          <textarea id="description" name="description" rows="2"></textarea>
-        </div>
-        <button type="submit" class="btn-submit">ارسال از طریق واتس‌اپ</button>
-      </form>
-    </div>
-  </div>
+        function closeOrderModal() {
+            const modal = document.getElementById('orderModal');
+            modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = 'auto';
+            document.getElementById('orderForm')?.reset();
+        }
 
-  <script>
-    // منوی موبایل
-    document.getElementById('menuToggle').addEventListener('click', function() {
-      document.querySelector('.nav ul').classList.toggle('active');
-    });
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('orderModal');
+            if (event.target === modal) closeOrderModal();
+        });
 
-    // باز کردن فرم سفارش
-    function openOrderModal(service = '') {
-      const modal = document.getElementById('orderModal');
-      modal.style.display = 'block';
-      if (service) {
-        document.getElementById('service').value = service;
-        document.getElementById('serviceType').value = service;
-      }
-      document.body.style.overflow = 'hidden';
-    }
+        // Form submission via WhatsApp - Modal
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const service = document.getElementById('service').value.trim();
+            const description = document.getElementById('description').value.trim();
 
-    // بستن فرم
-    function closeOrderModal() {
-      document.getElementById('orderModal').style.display = 'none';
-      document.body.style.overflow = 'auto';
-    }
+            let message = `درخواست سفارش خدمات از وبسایت:\n\nنام: ${name}\nشماره تماس: ${phone}\n`;
+            if (email) message += `ایمیل: ${email}\n`;
+            message += `نوع خدمت: ${service}\n`;
+            if (description) message += `توضیحات: ${description}\n`;
 
-    window.onclick = function(e) {
-      const modal = document.getElementById('orderModal');
-      if (e.target === modal) closeOrderModal();
-    };
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/989058206145?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+            closeOrderModal();
+        });
 
-    // ارسال فرم به واتساپ
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const name = name.value;
-      const phone = phone.value;
-      const email = email.value;
-      const service = document.getElementById('service').value;
-      const desc = description.value;
-      let msg = `درخواست سفارش خدمات از وبسایت:\n\nنام: ${name}\nشماره تماس: ${phone}\n`;
-      if (email) msg += `ایمیل: ${email}\n`;
-      msg += `نوع خدمت: ${service}\n`;
-      if (desc) msg += `توضیحات: ${desc}`;
-      window.open(`https://wa.me/989058206145?text=${encodeURIComponent(msg)}`);
-      closeOrderModal();
-    });
-  </script>
+        // Form submission via WhatsApp - Inline Form
+        document.getElementById('orderFormInline').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('nameInline').value.trim();
+            const phone = document.getElementById('phoneInline').value.trim();
+            const email = document.getElementById('emailInline').value.trim();
+            const service = document.getElementById('serviceInline').value.trim();
+            const description = document.getElementById('descriptionInline').value.trim();
+
+            let message = `درخواست سفارش خدمات از وبسایت:\n\nنام: ${name}\nشماره تماس: ${phone}\n`;
+            if (email) message += `ایمیل: ${email}\n`;
+            message += `نوع خدمت: ${service}\n`;
+            if (description) message += `توضیحات: ${description}\n`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/989058206145?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+            document.getElementById('orderFormInline').reset();
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // close mobile nav if open
+                    document.querySelector('.nav ul')?.classList.remove('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
