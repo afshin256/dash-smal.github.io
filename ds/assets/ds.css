@@ -34,7 +34,7 @@ body {
     padding: 0 15px;
 }
 
-/* Header Styles */
+/* Header Styles - CORRECTED */
 .header {
     background-color: rgba(10, 10, 10, 0.95);
     backdrop-filter: blur(10px);
@@ -51,34 +51,33 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 0;
+    flex-direction: row;
 }
 
+/* Logo on LEFT - CORRECTED */
 .logo {
-    order: 1;
+    /* No margin needed - first element in flex container */
 }
 
+/* Nav on RIGHT - CORRECTED */
 .nav {
-    order: 2;
+    /* No margin needed - last element in flex container */
 }
 
 .logo .logo-img {
     height: auto;
-    width: 600px; /* 5x larger than original 120px */
+    width: 250px; /* 5x larger base size */
     max-width: 100%;
     border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-    transition: all 0.3s ease;
-}
-
-.logo .logo-img:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+    /* Removed all neon effects and animations */
 }
 
 .nav ul {
     display: flex;
     list-style: none;
     gap: 30px;
+    margin: 0;
+    padding: 0;
 }
 
 .nav a {
@@ -132,6 +131,7 @@ body {
     background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-gray) 100%);
     position: relative;
     overflow: hidden;
+    margin-top: 80px;
 }
 
 .hero::before {
@@ -531,7 +531,7 @@ body {
     transform: translateX(5px);
 }
 
-/* Contact Section */
+/* Contact Section - MOBILE CENTERED */
 .contact {
     padding: 100px 0;
     background: var(--dark-gray);
@@ -607,7 +607,7 @@ body {
     margin: 5px 0;
 }
 
-/* Modal Styles */
+/* Modal Styles - NO SCROLL - CORRECTED */
 .modal {
     display: none;
     position: fixed;
@@ -622,20 +622,62 @@ body {
 
 .modal-content {
     background: var(--dark-gray);
-    margin: 5% auto;
-    padding: 30px;
+    margin: 10vh auto; /* More margin from top and bottom */
+    padding: 20px;
     border-radius: 20px;
     width: 90%;
-    max-width: 500px;
+    max-width: 450px; /* Smaller width */
     position: relative;
     border: 2px solid var(--neon-blue);
     box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
     animation: modalSlideIn 0.5s ease;
+    max-height: 80vh; /* Limit height */
+    overflow: hidden; /* No scroll */
+    display: flex;
+    flex-direction: column;
 }
 
-.reduced-height {
-    max-height: 80vh;
-    overflow-y: auto;
+/* COMPACT FORM - NO SCROLL */
+.no-scroll form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Reduced gap */
+    overflow: hidden;
+}
+
+.compact {
+    margin: 0 !important;
+    padding: 8px !important; /* Reduced padding */
+    font-size: 0.9rem !important; /* Smaller font */
+}
+
+.form-group.compact {
+    margin-bottom: 8px !important;
+}
+
+.form-group.compact label {
+    font-size: 0.85rem !important;
+    margin-bottom: 4px !important;
+}
+
+.form-group.compact input,
+.form-group.compact select,
+.form-group.compact textarea {
+    padding: 8px !important;
+    font-size: 0.9rem !important;
+    height: auto !important;
+}
+
+.form-group.compact textarea {
+    resize: none;
+    min-height: 30px;
+    max-height: 60px;
+}
+
+.btn-submit.compact {
+    padding: 10px !important;
+    font-size: 1rem !important;
+    margin-top: 10px !important;
 }
 
 @keyframes modalSlideIn {
@@ -652,14 +694,14 @@ body {
 .close {
     color: var(--neon-red);
     float: left;
-    font-size: 28px;
+    font-size: 24px; /* Smaller close button */
     font-weight: bold;
     cursor: pointer;
     position: absolute;
-    top: 15px;
-    left: 15px;
-    width: 30px;
-    height: 30px;
+    top: 10px;
+    left: 10px;
+    width: 25px;
+    height: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -675,41 +717,11 @@ body {
 
 .modal-content h2 {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 15px; /* Reduced margin */
     color: var(--neon-blue);
-    font-size: 2rem;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--neon-green);
-    font-weight: 500;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid var(--light-gray);
-    border-radius: 10px;
-    background: var(--dark-bg);
-    color: white;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--neon-blue);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    font-size: 1.5rem; /* Smaller title */
+    margin-top: 0;
+    flex-shrink: 0;
 }
 
 /* Responsive Design */
@@ -729,6 +741,7 @@ body {
         padding: 20px;
         transition: right 0.3s ease;
         border-left: 2px solid var(--neon-blue);
+        margin: 0 !important;
     }
     
     .nav ul.active {
@@ -757,6 +770,7 @@ body {
         grid-template-columns: 1fr;
     }
     
+    /* MOBILE CONTACT CENTERED */
     .contact-container {
         flex-direction: column;
         align-items: center;
@@ -765,11 +779,13 @@ body {
     
     .contact-info {
         align-items: center;
+        text-align: center;
     }
     
     .contact-item {
         justify-content: center;
         text-align: center;
+        flex-direction: row-reverse;
     }
     
     .map-container {
@@ -787,8 +803,30 @@ body {
         gap: 15px;
     }
     
+    /* MOBILE LOGO SIZE */
     .logo .logo-img {
-        width: 500px; /* 5x larger for tablet */
+        width: 200px;
+    }
+    
+    /* MOBILE MODAL */
+    .modal-content {
+        margin: 15vh auto;
+        max-height: 70vh;
+        padding: 15px;
+    }
+    
+    .compact {
+        padding: 6px !important;
+        font-size: 0.85rem !important;
+    }
+    
+    .form-group.compact label {
+        font-size: 0.8rem !important;
+    }
+    
+    .btn-submit.compact {
+        padding: 8px !important;
+        font-size: 0.95rem !important;
     }
 }
 
@@ -802,16 +840,48 @@ body {
         padding: 15px;
     }
     
-    .modal-content {
-        margin: 10% auto;
-        padding: 20px;
-    }
-    
     .section-title {
         font-size: 1.8rem;
     }
     
+    /* MOBILE LOGO SIZE */
     .logo .logo-img {
-        width: 400px; /* 5x larger for mobile */
+        width: 160px;
+    }
+    
+    /* COMPACT MOBILE MODAL */
+    .modal-content {
+        margin: 20vh auto;
+        max-height: 60vh;
+        padding: 12px;
+        width: 95%;
+    }
+    
+    .compact {
+        padding: 5px !important;
+        font-size: 0.8rem !important;
+    }
+    
+    .form-group.compact label {
+        font-size: 0.75rem !important;
+        margin-bottom: 3px !important;
+    }
+    
+    .btn-submit.compact {
+        padding: 7px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .modal-content h2 {
+        font-size: 1.3rem !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .close {
+        top: 8px;
+        left: 8px;
+        width: 22px;
+        height: 22px;
+        font-size: 20px !important;
     }
 }
