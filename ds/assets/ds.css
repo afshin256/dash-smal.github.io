@@ -34,7 +34,7 @@ body {
     padding: 0 15px;
 }
 
-/* Header Styles - CORRECTED */
+/* Header Styles - CORRECTED FOR ALL DEVICES */
 .header {
     background-color: rgba(10, 10, 10, 0.95);
     backdrop-filter: blur(10px);
@@ -51,25 +51,25 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 0;
-    flex-direction: row;
 }
 
-/* Logo on LEFT - CORRECTED */
+/* Logo on LEFT for ALL devices */
 .logo {
-    /* No margin needed - first element in flex container */
+    /* First element - automatically on left */
 }
 
-/* Nav on RIGHT - CORRECTED */
+/* Nav on RIGHT for ALL devices */
 .nav {
-    margin-left: auto; /* Ensures nav is pushed to the right */
+    /* Last element - automatically on right */
 }
 
 .logo .logo-img {
     height: auto;
-    width: 200px; /* Reduced base size for smaller logo */
+    width: 250px;
     max-width: 100%;
     border-radius: 10px;
-    /* All neon effects and animations removed */
+    /* COMPLETELY REMOVED neon effects and animations */
+    /* No box-shadow, no transition for hover effects */
 }
 
 .nav ul {
@@ -622,17 +622,17 @@ body {
 
 .modal-content {
     background: var(--dark-gray);
-    margin: 10vh auto; /* More margin from top and bottom */
+    margin: 10vh auto;
     padding: 20px;
     border-radius: 20px;
     width: 90%;
-    max-width: 450px; /* Smaller width */
+    max-width: 450px;
     position: relative;
     border: 2px solid var(--neon-blue);
     box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
     animation: modalSlideIn 0.5s ease;
-    max-height: 80vh; /* Limit height */
-    overflow: hidden; /* No scroll */
+    max-height: 80vh;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
@@ -641,14 +641,14 @@ body {
 .no-scroll form {
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Reduced gap */
+    gap: 12px;
     overflow: hidden;
 }
 
 .compact {
     margin: 0 !important;
-    padding: 8px !important; /* Reduced padding */
-    font-size: 0.9rem !important; /* Smaller font */
+    padding: 8px !important;
+    font-size: 0.9rem !important;
 }
 
 .form-group.compact {
@@ -694,7 +694,7 @@ body {
 .close {
     color: var(--neon-red);
     float: left;
-    font-size: 24px; /* Smaller close button */
+    font-size: 24px;
     font-weight: bold;
     cursor: pointer;
     position: absolute;
@@ -717,20 +717,14 @@ body {
 
 .modal-content h2 {
     text-align: center;
-    margin-bottom: 15px; /* Reduced margin */
+    margin-bottom: 15px;
     color: var(--neon-blue);
-    font-size: 1.5rem; /* Smaller title */
+    font-size: 1.5rem;
     margin-top: 0;
     flex-shrink: 0;
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-    .logo .logo-img {
-        width: 180px; /* Slightly smaller for tablets */
-    }
-}
-
 @media (max-width: 768px) {
     .menu-toggle {
         display: flex;
@@ -811,7 +805,7 @@ body {
     
     /* MOBILE LOGO SIZE */
     .logo .logo-img {
-        width: 160px;
+        width: 200px;
     }
     
     /* MOBILE MODAL */
@@ -852,7 +846,7 @@ body {
     
     /* MOBILE LOGO SIZE */
     .logo .logo-img {
-        width: 140px;
+        width: 160px;
     }
     
     /* COMPACT MOBILE MODAL */
@@ -890,4 +884,38 @@ body {
         height: 22px;
         font-size: 20px !important;
     }
+}
+
+/* CRITICAL FIX: Ensure logo is always on left, nav always on right for ALL screen sizes */
+@media (min-width: 769px) {
+    .header .container {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .logo {
+        order: 1;
+    }
+    
+    .nav {
+        order: 2;
+    }
+    
+    .menu-toggle {
+        order: 3;
+        display: none;
+    }
+}
+
+/* Ensure no neon effects on logo */
+.logo .logo-img {
+    box-shadow: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+}
+
+.logo .logo-img:hover {
+    transform: none !important;
+    box-shadow: none !important;
 }
