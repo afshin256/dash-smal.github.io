@@ -61,15 +61,15 @@ body {
 
 /* Nav on RIGHT - CORRECTED */
 .nav {
-    /* No margin needed - last element in flex container */
+    margin-left: auto; /* Ensures nav is pushed to the right */
 }
 
 .logo .logo-img {
     height: auto;
-    width: 250px; /* 5x larger base size */
+    width: 200px; /* Reduced base size for smaller logo */
     max-width: 100%;
     border-radius: 10px;
-    /* Removed all neon effects and animations */
+    /* All neon effects and animations removed */
 }
 
 .nav ul {
@@ -725,6 +725,12 @@ body {
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+    .logo .logo-img {
+        width: 180px; /* Slightly smaller for tablets */
+    }
+}
+
 @media (max-width: 768px) {
     .menu-toggle {
         display: flex;
@@ -805,7 +811,7 @@ body {
     
     /* MOBILE LOGO SIZE */
     .logo .logo-img {
-        width: 200px;
+        width: 160px;
     }
     
     /* MOBILE MODAL */
@@ -846,7 +852,7 @@ body {
     
     /* MOBILE LOGO SIZE */
     .logo .logo-img {
-        width: 160px;
+        width: 140px;
     }
     
     /* COMPACT MOBILE MODAL */
