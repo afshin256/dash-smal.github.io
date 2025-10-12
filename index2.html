@@ -286,26 +286,30 @@
         </div>
     </footer>
 
-    <!-- Order Modal -->
+    <!-- Order Modal - COMPLETELY REDESIGNED -->
     <div id="orderModal" class="modal">
-        <div class="modal-content no-scroll">
+        <div class="modal-content centered-form">
             <span class="close" onclick="closeOrderModal()">&times;</span>
             <h2>فرم سفارش خدمات</h2>
-            <form id="orderForm">
+            <form id="orderForm" class="vertical-form">
                 <input type="hidden" id="serviceType" name="serviceType">
-                <div class="form-group compact">
+                
+                <div class="form-field">
                     <label for="name">نام و نام خانوادگی:</label>
                     <input type="text" id="name" name="name" required>
                 </div>
-                <div class="form-group compact">
+                
+                <div class="form-field">
                     <label for="phone">شماره تماس:</label>
                     <input type="tel" id="phone" name="phone" required>
                 </div>
-                <div class="form-group compact">
+                
+                <div class="form-field">
                     <label for="email">ایمیل (اختیاری):</label>
                     <input type="email" id="email" name="email">
                 </div>
-                <div class="form-group compact">
+                
+                <div class="form-field">
                     <label for="service">نوع خدمت:</label>
                     <select id="service" name="service" required>
                         <option value="">انتخاب کنید...</option>
@@ -320,11 +324,13 @@
                         <option value="خدمات حقوقی">خدمات حقوقی</option>
                     </select>
                 </div>
-                <div class="form-group compact">
-                    <label for="description">توضیحات:</label>
-                    <textarea id="description" name="description" rows="1"></textarea>
+                
+                <div class="form-field">
+                    <label for="description">توضیحات اضافی:</label>
+                    <textarea id="description" name="description" rows="3"></textarea>
                 </div>
-                <button type="submit" class="btn-submit compact">ارسال از طریق واتس‌اپ</button>
+                
+                <button type="submit" class="btn-submit centered-btn">ارسال از طریق واتس‌اپ</button>
             </form>
         </div>
     </div>
