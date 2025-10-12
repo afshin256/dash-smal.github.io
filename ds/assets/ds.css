@@ -643,7 +643,7 @@ body {
 
 .modal-content {
     background: var(--dark-gray);
-    margin: 5vh auto;
+    margin: 3vh auto;
     padding: 30px;
     border-radius: 20px;
     width: 90%;
@@ -652,7 +652,7 @@ body {
     border: 2px solid var(--neon-blue);
     box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
     animation: modalSlideIn 0.5s ease;
-    max-height: 90vh;
+    max-height: 94vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -669,8 +669,8 @@ body {
     border-radius: 15px;
     max-width: 400px;
     width: 90%;
-    margin: 10vh auto;
-    max-height: 85vh;
+    margin: 7vh auto;
+    max-height: 89vh;
     overflow-y: auto;
 }
 
@@ -888,14 +888,14 @@ body {
     
     /* MOBILE MODAL */
     .modal-content {
-        margin: 15vh auto;
-        max-height: 80vh;
+        margin: 12vh auto;
+        max-height: 83vh;
         padding: 25px;
     }
     
     .exact-screenshot {
-        margin: 15vh auto;
-        max-height: 75vh;
+        margin: 12vh auto;
+        max-height: 80vh;
         padding: 25px;
     }
     
@@ -942,15 +942,15 @@ body {
     
     /* COMPACT MOBILE MODAL */
     .modal-content {
-        margin: 20vh auto;
-        max-height: 70vh;
+        margin: 17vh auto;
+        max-height: 73vh;
         padding: 20px;
         width: 95%;
     }
     
     .exact-screenshot {
-        margin: 20vh auto;
-        max-height: 65vh;
+        margin: 17vh auto;
+        max-height: 68vh;
         padding: 20px;
         width: 95%;
     }
