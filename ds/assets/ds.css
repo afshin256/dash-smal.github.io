@@ -138,13 +138,12 @@
 
 .close {
     color: var(--neon-red);
-    float: left;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
     position: absolute;
     top: 15px;
-    left: 15px;
+    right: 15px; /* Changed to top-right for better RTL UX */
     width: 30px;
     height: 30px;
     display: flex;
@@ -223,7 +222,7 @@
     
     .close {
         top: 10px;
-        left: 10px;
+        right: 10px;
         width: 25px;
         height: 25px;
         font-size: 24px;
