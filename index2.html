@@ -47,12 +47,12 @@
     <!-- Services Section -->
     <section id="services" class="services">
         <div class="container">
-            <h2 class="section-title">خدمات ما</h2>
+            <h2 class="section-title neon-animated">خدمات ما</h2>
             <div class="services-grid">
                 <!-- Graphic Design -->
                 <div class="service-card">
                     <div class="card-image">
-                        <img src="/ds/assets/img/2.jpg" alt="طراحی گرافیکی">
+                        <img src="/ds/assets/img/4.jpg" alt="طراحی گرافیکی">
                     </div>
                     <div class="card-content">
                         <h3>انواع طراحی گرافیکی</h3>
@@ -64,7 +64,7 @@
                 <!-- Photography Services -->
                 <div class="service-card">
                     <div class="card-image">
-                        <img src="/ds/assets/img/3.jpg" alt="خدمات تصویربرداری">
+                        <img src="/ds/assets/img/5.jpg" alt="خدمات تصویربرداری">
                     </div>
                     <div class="card-content">
                         <h3>خدمات تصویربرداری</h3>
@@ -76,7 +76,7 @@
                 <!-- Social Media Services -->
                 <div class="service-card">
                     <div class="card-image">
-                        <img src="/ds/assets/img/4.jpg" alt="خدمات شبکه‌های اجتماعی">
+                        <img src="/ds/assets/img/6.jpg" alt="خدمات شبکه‌های اجتماعی">
                     </div>
                     <div class="card-content">
                         <h3>خدمات شبکه‌های اجتماعی</h3>
@@ -88,7 +88,7 @@
                 <!-- AI Content Creation -->
                 <div class="service-card">
                     <div class="card-image">
-                        <img src="/ds/assets/img/5.jpg" alt="ساخت محتوای تبلیغاتی بر پایه AI">
+                        <img src="/ds/assets/img/7.jpg" alt="ساخت محتوای تبلیغاتی بر پایه AI">
                     </div>
                     <div class="card-content">
                         <h3>ساخت محتوای تبلیغاتی بر پایه AI</h3>
@@ -100,7 +100,7 @@
                 <!-- Music Production -->
                 <div class="service-card">
                     <div class="card-image">
-                        <img src="/ds/assets/img/6.jpg" alt="ساخت موزیک">
+                        <img src="/ds/assets/img/8.jpg" alt="ساخت موزیک">
                     </div>
                     <div class="card-content">
                         <h3>ساخت موزیک</h3>
@@ -112,7 +112,7 @@
                 <!-- Branding -->
                 <div class="service-card">
                     <div class="card-image">
-                        <img src="/ds/assets/img/7.jpg" alt="برندینگ">
+                        <img src="/ds/assets/img/9.jpg" alt="برندینگ">
                     </div>
                     <div class="card-content">
                         <h3>برندینگ</h3>
@@ -124,7 +124,7 @@
                 <!-- Website Design -->
                 <div class="service-card">
                     <div class="card-image">
-                        <img src="/ds/assets/img/8.jpg" alt="طراحی سایت">
+                        <img src="/ds/assets/img/10.jpg" alt="طراحی سایت">
                     </div>
                     <div class="card-content">
                         <h3>طراحی سایت</h3>
@@ -136,7 +136,7 @@
                 <!-- AI Services -->
                 <div class="service-card">
                     <div class="card-image">
-                        <img src="/ds/assets/img/9.jpg" alt="خدمات هوش مصنوعی">
+                        <img src="/ds/assets/img/11.jpg" alt="خدمات هوش مصنوعی">
                     </div>
                     <div class="card-content">
                         <h3>خدمات هوش مصنوعی</h3>
@@ -148,7 +148,7 @@
                 <!-- Legal Services -->
                 <div class="service-card">
                     <div class="card-image">
-                        <img src="/ds/assets/img/10.jpg" alt="خدمات حقوقی">
+                        <img src="/ds/assets/img/12.jpg" alt="خدمات حقوقی">
                     </div>
                     <div class="card-content">
                         <h3>خدمات حقوقی</h3>
@@ -163,10 +163,44 @@
     <!-- Order Section -->
     <section id="order-section" class="order-section">
         <div class="container">
-            <h2 class="section-title">آماده‌ایم خدمات شما را ارائه دهیم!</h2>
+            <h2 class="section-title neon-animated">همین الان سفارش دهید</h2>
             <div class="order-content">
-                <p>برای سفارش هر یک از خدمات ما، کافی است فرم سفارش را پر کنید یا مستقیماً با ما تماس بگیرید.</p>
-                <button class="btn-primary" onclick="openOrderModal()">شروع سفارش</button>
+                <div class="order-form-container">
+                    <form id="orderFormInline" class="order-form">
+                        <input type="hidden" id="serviceTypeInline" name="serviceType">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" id="nameInline" name="name" placeholder="نام و نام خانوادگی *" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" id="phoneInline" name="phone" placeholder="شماره تماس *" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="email" id="emailInline" name="email" placeholder="ایمیل (اختیاری)">
+                            </div>
+                            <div class="form-group">
+                                <select id="serviceInline" name="service" required>
+                                    <option value="">نوع خدمت را انتخاب کنید *</option>
+                                    <option value="انواع طراحی گرافیکی">انواع طراحی گرافیکی</option>
+                                    <option value="خدمات تصویربرداری">خدمات تصویربرداری</option>
+                                    <option value="خدمات شبکه‌های اجتماعی">خدمات شبکه‌های اجتماعی</option>
+                                    <option value="ساخت محتوای تبلیغاتی بر پایه AI">ساخت محتوای تبلیغاتی بر پایه AI</option>
+                                    <option value="ساخت موزیک">ساخت موزیک</option>
+                                    <option value="برندینگ">برندینگ</option>
+                                    <option value="طراحی سایت">طراحی سایت</option>
+                                    <option value="خدمات هوش مصنوعی">خدمات هوش مصنوعی</option>
+                                    <option value="خدمات حقوقی">خدمات حقوقی</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <textarea id="descriptionInline" name="description" rows="2" placeholder="توضیحات اضافی"></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">ارسال از طریق واتس‌اپ</button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
@@ -174,11 +208,11 @@
     <!-- Articles Section -->
     <section id="articles" class="articles">
         <div class="container">
-            <h2 class="section-title">مقالات</h2>
+            <h2 class="section-title neon-animated">مقالات</h2>
             <div class="articles-grid">
                 <div class="article-card">
                     <div class="article-image">
-                        <img src="/ds/assets/img/11.jpg" alt="مقاله 1">
+                        <img src="/ds/assets/img/13.jpg" alt="مقاله 1">
                     </div>
                     <div class="article-content">
                         <h3>آینده طراحی گرافیکی با هوش مصنوعی</h3>
@@ -188,7 +222,7 @@
                 </div>
                 <div class="article-card">
                     <div class="article-image">
-                        <img src="/ds/assets/img/12.jpg" alt="مقاله 2">
+                        <img src="/ds/assets/img/14.jpg" alt="مقاله 2">
                     </div>
                     <div class="article-content">
                         <h3>راهنمای راه‌اندازی کسب‌وکار دیجیتال</h3>
@@ -198,7 +232,7 @@
                 </div>
                 <div class="article-card">
                     <div class="article-image">
-                        <img src="/ds/assets/img/13.jpg" alt="مقاله 3">
+                        <img src="/ds/assets/img/15.jpg" alt="مقاله 3">
                     </div>
                     <div class="article-content">
                         <h3>تکنیک‌های تولید محتوای جذاب برای اینستاگرام</h3>
@@ -213,31 +247,33 @@
     <!-- Contact Section -->
     <section id="contact" class="contact">
         <div class="container">
-            <h2 class="section-title">تماس با ما</h2>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <i class="fas fa-phone"></i>
-                    <span>09058206145</span>
+            <h2 class="section-title neon-animated">تماس با ما</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <img src="/ds/assets/img/2.jpg" alt="آیکون تلفن" class="contact-icon">
+                        <span>09058206145</span>
+                    </div>
+                    <div class="contact-item">
+                        <img src="/ds/assets/img/3.jpg" alt="آیکون اینستاگرام" class="contact-icon">
+                        <span>ads.dash.smal.ir</span>
+                    </div>
+                    <div class="contact-item address-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>تهران خیابان پیروزی خیابان پنجم فلکه دوم نیروی هوایی پلاک ۲۴</span>
+                    </div>
                 </div>
-                <div class="contact-item">
-                    <i class="fab fa-instagram"></i>
-                    <span>ads.dash.smal.ir</span>
+                <div class="map-container">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3240.304588539843!2d51.48566127562627!3d35.698244236271066!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDQxJzUzLjciTiA1McKwMjknMTYuMyJF!5e0!3m2!1sen!2sus!4v1703123456789!5m2!1sen!2sus" 
+                        width="100%" 
+                        height="300" 
+                        style="border:0; border-radius: 15px;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
-                <div class="contact-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>تهران خیابان پیروزی خیابان پنجم فلکه دوم نیروی هوایی پلاک ۲۴</span>
-                </div>
-            </div>
-            <div class="map-container">
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3240.304588539843!2d51.48566127562627!3d35.698244236271066!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDQxJzUzLjciTiA1McKwMjknMTYuMyJF!5e0!3m2!1sen!2sus!4v1703123456789!5m2!1sen!2sus" 
-                    width="100%" 
-                    height="300" 
-                    style="border:0; border-radius: 15px;" 
-                    allowfullscreen="" 
-                    loading="lazy" 
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
             </div>
         </div>
     </section>
@@ -320,7 +356,7 @@
             }
         }
 
-        // Form submission via WhatsApp
+        // Form submission via WhatsApp - Modal
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -337,18 +373,36 @@
             message += `نوع خدمت: ${service}\n`;
             if (description) message += `توضیحات: ${description}\n`;
             
-            // Encode the message for URL
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://wa.me/989058206145?text=${encodedMessage}`;
-            
-            // Open WhatsApp
             window.open(whatsappUrl, '_blank');
             
-            // Close modal after submission
             closeOrderModal();
-            
-            // Reset form
             document.getElementById('orderForm').reset();
+        });
+
+        // Form submission via WhatsApp - Inline Form
+        document.getElementById('orderFormInline').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('nameInline').value;
+            const phone = document.getElementById('phoneInline').value;
+            const email = document.getElementById('emailInline').value;
+            const service = document.getElementById('serviceInline').value;
+            const description = document.getElementById('descriptionInline').value;
+            
+            let message = `درخواست سفارش خدمات از وبسایت:\n\n`;
+            message += `نام: ${name}\n`;
+            message += `شماره تماس: ${phone}\n`;
+            if (email) message += `ایمیل: ${email}\n`;
+            message += `نوع خدمت: ${service}\n`;
+            if (description) message += `توضیحات: ${description}\n`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/989058206145?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+            
+            document.getElementById('orderFormInline').reset();
         });
 
         // Smooth scrolling for navigation links
