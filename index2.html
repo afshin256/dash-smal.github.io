@@ -339,28 +339,80 @@
             '/ds/assets/img/19.jpg'
         ];
 
-        function changeBackground() {
-            currentImageIndex = (currentImageIndex + 1) % backgroundImages.length;
-            const heroSection = document.querySelector('.hero');
-            heroSection.style.backgroundImage = `url(${backgroundImages[currentImageIndex]})`;
-            
-            // Add fade effect
-            heroSection.style.opacity = '0';
-            setTimeout(() => {
-                heroSection.style.opacity = '1';
-            }, 500);
+        // Preload images to cache them in browser
+        function preloadImages() {
+            backgroundImages.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
         }
 
-        // Initialize first image
+        function changeBackground() {
+            const heroSection = document.querySelector('.hero');
+            const nextImageIndex = (currentImageIndex + 1) % backgroundImages.length;
+            
+            // Create a new div for the next image
+            const nextBgDiv = document.createElement('div');
+            nextBgDiv.className = 'hero-bg-slide';
+            nextBgDiv.style.backgroundImage = `url(${backgroundImages[nextImageIndex]})`;
+            nextBgDiv.style.position = 'absolute';
+            nextBgDiv.style.top = '0';
+            nextBgDiv.style.left = '0';
+            nextBgDiv.style.width = '100%';
+            nextBgDiv.style.height = '100%';
+            nextBgDiv.style.backgroundSize = 'cover';
+            nextBgDiv.style.backgroundPosition = 'center';
+            nextBgDiv.style.backgroundRepeat = 'no-repeat';
+            nextBgDiv.style.opacity = '0';
+            nextBgDiv.style.transition = 'opacity 1s ease, transform 1s ease';
+            nextBgDiv.style.transform = 'translateX(100%)';
+            
+            // Add to hero section
+            heroSection.appendChild(nextBgDiv);
+            
+            // Animate slide-in
+            setTimeout(() => {
+                nextBgDiv.style.opacity = '1';
+                nextBgDiv.style.transform = 'translateX(0)';
+            }, 10);
+            
+            // Remove previous background after animation
+            setTimeout(() => {
+                const oldBgDivs = heroSection.querySelectorAll('.hero-bg-slide');
+                if (oldBgDivs.length > 1) {
+                    oldBgDivs[0].remove();
+                }
+                currentImageIndex = nextImageIndex;
+            }, 1000);
+        }
+
+        // Initialize with first image and start rotation
         document.addEventListener('DOMContentLoaded', function() {
             const heroSection = document.querySelector('.hero');
-            heroSection.style.backgroundImage = `url(${backgroundImages[0]})`;
-            heroSection.style.backgroundSize = 'cover';
-            heroSection.style.backgroundPosition = 'center';
-            heroSection.style.backgroundRepeat = 'no-repeat';
+            
+            // Create initial background
+            const initialBgDiv = document.createElement('div');
+            initialBgDiv.className = 'hero-bg-slide';
+            initialBgDiv.style.backgroundImage = `url(${backgroundImages[0]})`;
+            initialBgDiv.style.position = 'absolute';
+            initialBgDiv.style.top = '0';
+            initialBgDiv.style.left = '0';
+            initialBgDiv.style.width = '100%';
+            initialBgDiv.style.height = '100%';
+            initialBgDiv.style.backgroundSize = 'cover';
+            initialBgDiv.style.backgroundPosition = 'center';
+            initialBgDiv.style.backgroundRepeat = 'no-repeat';
+            initialBgDiv.style.opacity = '1';
+            initialBgDiv.style.transition = 'opacity 1s ease, transform 1s ease';
+            initialBgDiv.style.transform = 'translateX(0)';
+            
+            heroSection.appendChild(initialBgDiv);
+            
+            // Start preloading images
+            preloadImages();
             
             // Start the rotation
-            setInterval(changeBackground, 3000); // Change every 3 seconds
+            setInterval(changeBackground, 5000); // Change every 5 seconds
         });
 
         // Mobile menu toggle
