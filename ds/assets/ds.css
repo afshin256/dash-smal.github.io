@@ -387,14 +387,23 @@ body {
     mask-composite: exclude;
     opacity: 0;
     transition: opacity 0.3s ease;
+    z-index: 2; /* Ensure the neon border is above the image */
 }
 
 .service-card:hover::before {
     opacity: 1;
 }
 
-.card-image {
+.card-image-wrapper {
     height: 200px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1; /* Place image below the neon border */
+}
+
+.card-image {
+    height: 100%;
+    width: 100%;
     overflow: hidden;
 }
 
