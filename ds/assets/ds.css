@@ -628,7 +628,7 @@ body {
     margin: 5px 0;
 }
 
-/* Modal Styles - EXACTLY AS PER SCREENSHOT */
+/* Modal Styles - COMPLETELY REDESIGNED FOR MOBILE */
 .modal {
     display: none;
     position: fixed;
@@ -921,4 +921,69 @@ body {
     }
 }
 
-@media (max-width: 480px
+@media (max-width: 480px) {
+    .hero-content h2 {
+        font-size: 2rem;
+    }
+    
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    /* MOBILE LOGO SIZE */
+    .logo .logo-img {
+        width: 160px;
+    }
+    
+    /* CRITICAL MOBILE FIX - EXACTLY AS REQUESTED */
+    .modal-content {
+        margin: 15px auto !important;
+        max-height: calc(100vh - 30px) !important;
+        padding: 0 15px 15px 15px !important;
+        width: 95% !important;
+    }
+    
+    .exact-screenshot {
+        margin: 0 auto !important;
+        max-height: calc(100vh - 30px) !important;
+        padding: 15px !important;
+        width: 95% !important;
+    }
+    
+    .exact-form {
+        max-width: 280px;
+        margin-top: 0 !important;
+    }
+    
+    .modal-content h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        margin-top: 0 !important;
+    }
+    
+    /* افزایش ارتفاع فرم به اندازه 40px */
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+        padding: 12px !important;
+        min-height: 48px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .form-field textarea {
+        min-height: 100px !important;
+    }
+    
+    .close {
+        top: 8px;
+        left: 8px;
+        width: 22px;
+        height: 22px;
+        font-size: 20px;
+    }
+}
