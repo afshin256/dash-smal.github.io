@@ -389,6 +389,7 @@ body {
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 2;
+    pointer-events: none;
 }
 
 .service-card:hover::before {
@@ -400,7 +401,7 @@ body {
     height: 200px;
     overflow: hidden;
     position: relative;
-    z-index: 1;
+    z-index: 0;
 }
 
 .card-image img {
@@ -891,4 +892,3 @@ body {
         font-size: 1rem;
     }
 }
-
