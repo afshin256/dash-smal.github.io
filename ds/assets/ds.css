@@ -405,8 +405,9 @@ body {
     transition: transform 0.5s ease;
 }
 
+/* REMOVE ZOOM ON HOVER */
 .service-card:hover .card-image img {
-    transform: scale(1.1);
+    transform: scale(1.0); /* Keep original size */
 }
 
 .card-content {
