@@ -372,6 +372,7 @@ body {
     box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3);
 }
 
+/* کادر نئونی */
 .service-card::before {
     content: '';
     position: absolute;
@@ -387,15 +388,19 @@ body {
     mask-composite: exclude;
     opacity: 0;
     transition: opacity 0.3s ease;
+    z-index: 2;
 }
 
 .service-card:hover::before {
     opacity: 1;
 }
 
+/* تصویر داخل کارت */
 .card-image {
     height: 200px;
     overflow: hidden;
+    position: relative;
+    z-index: 1;
 }
 
 .card-image img {
@@ -409,8 +414,11 @@ body {
     transform: scale(1.1);
 }
 
+/* محتوای کارت */
 .card-content {
     padding: 25px;
+    position: relative;
+    z-index: 1;
 }
 
 .card-content h3 {
