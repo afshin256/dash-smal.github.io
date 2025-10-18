@@ -10,9 +10,6 @@
     <link rel="stylesheet" href="art.css">
 </head>
 <body>
-    <header>
-        <button class="neon-play-button" onclick="playArticleText()">پخش صوت مقاله (فارسی)</button>
-    </header>
     <article>
         <h1>آینده طراحی گرافیکی با هوش مصنوعی: چگونگی تغییر صنعت با فناوری‌های نوین</h1>
         
@@ -107,76 +104,5 @@
         
         <button onclick="history.back()" class="neon-back-button">برگشت به صفحه قبلی</button>
     </article>
-
-    <script>
-        async function playArticleText() {
-            const playButton = document.querySelector('.neon-play-button');
-            playButton.textContent = 'در حال بارگذاری صوت...';
-            playButton.disabled = true;
-
-            // استخراج متن مقاله
-            const article = document.querySelector('article');
-            const textNodes = [];
-            const walker = document.createTreeWalker(
-                article,
-                NodeFilter.SHOW_TEXT,
-                { acceptNode: function(node) { return node.parentNode.tagName !== 'SCRIPT' && node.parentNode.tagName !== 'STYLE' ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; } }
-            );
-            let node;
-            while (node = walker.nextNode()) {
-                const text = node.textContent.trim();
-                if (text) textNodes.push(text);
-            }
-            const fullText = textNodes.join(' ');
-
-            // تقسیم متن به بخش‌های 125 کلمه‌ای برای رعایت محدودیت ttsMP3
-            const words = fullText.split(' ');
-            const chunkSize = 125;
-            const chunks = [];
-            for (let i = 0; i < words.length; i += chunkSize) {
-                chunks.push(words.slice(i, i + chunkSize).join(' '));
-            }
-
-            try {
-                // استفاده از پروکسی CORS برای جلوگیری از خطا
-                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-                const audioUrls = [];
-                for (const chunk of chunks) {
-                    const apiUrl = `https://ttsmp3.com/makemp3_new.php?lang=Farsi&voice=Sima&txt=${encodeURIComponent(chunk)}`;
-                    const response = await fetch(proxyUrl + apiUrl);
-                    const data = await response.json();
-                    if (data.URL) {
-                        audioUrls.push(data.URL);
-                    } else {
-                        throw new Error('No audio URL returned');
-                    }
-                }
-
-                // پخش متوالی فایل‌های صوتی
-                let currentAudioIndex = 0;
-                const audio = new Audio();
-                audio.src = audioUrls[currentAudioIndex];
-                audio.play();
-                audio.onended = () => {
-                    currentAudioIndex++;
-                    if (currentAudioIndex < audioUrls.length) {
-                        audio.src = audioUrls[currentAudioIndex];
-                        audio.play();
-                    } else {
-                        playButton.textContent = 'پخش صوت مقاله (فارسی)';
-                        playButton.disabled = false;
-                    }
-                };
-            } catch (error) {
-                console.error('خطا در دریافت صوت:', error);
-                playButton.textContent = 'پخش صوت مقاله (فارسی)';
-                playButton.disabled = false;
-                // Fallback به SpeechSynthesis
-                const utterance = new SpeechSynthesisUtterance(fullText);
-                utterance.lang = 'fa-IR';
-                speechSynthesis.speak(utterance);
-            }
-        }
-    </script>
 </body>
 </html>
