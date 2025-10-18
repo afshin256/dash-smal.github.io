@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dash-Smal | خدمات دیجیتال و خلاقانه</title>
     <link rel="stylesheet" href="/ds/assets/ds.css">
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- اضافه کردن وزن 900 به لینک فونت -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header/Navigation -->
@@ -29,7 +30,6 @@
             </div>
         </div>
     </header>
-
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="container">
@@ -42,7 +42,6 @@
             </div>
         </div>
     </section>
-
     <!-- Services Section -->
     <section id="services" class="services">
         <div class="container">
@@ -59,7 +58,6 @@
                         <button class="btn-order" onclick="openOrderModal('انواع طراحی گرافیکی')">سفارش</button>
                     </div>
                 </div>
-
                 <!-- Photography Services -->
                 <div class="service-card">
                     <div class="card-image">
@@ -71,7 +69,6 @@
                         <button class="btn-order" onclick="openOrderModal('خدمات تصویربرداری')">سفارش</button>
                     </div>
                 </div>
-
                 <!-- Social Media Services -->
                 <div class="service-card">
                     <div class="card-image">
@@ -83,7 +80,6 @@
                         <button class="btn-order" onclick="openOrderModal('خدمات شبکه‌های اجتماعی')">سفارش</button>
                     </div>
                 </div>
-
                 <!-- AI Content Creation -->
                 <div class="service-card">
                     <div class="card-image">
@@ -95,7 +91,6 @@
                         <button class="btn-order" onclick="openOrderModal('ساخت محتوای تبلیغاتی بر پایه AI')">سفارش</button>
                     </div>
                 </div>
-
                 <!-- Music Production -->
                 <div class="service-card">
                     <div class="card-image">
@@ -107,7 +102,6 @@
                         <button class="btn-order" onclick="openOrderModal('ساخت موزیک')">سفارش</button>
                     </div>
                 </div>
-
                 <!-- Branding -->
                 <div class="service-card">
                     <div class="card-image">
@@ -119,7 +113,6 @@
                         <button class="btn-order" onclick="openOrderModal('برندینگ')">سفارش</button>
                     </div>
                 </div>
-
                 <!-- Website Design -->
                 <div class="service-card">
                     <div class="card-image">
@@ -131,7 +124,6 @@
                         <button class="btn-order" onclick="openOrderModal('طراحی سایت')">سفارش</button>
                     </div>
                 </div>
-
                 <!-- AI Services -->
                 <div class="service-card">
                     <div class="card-image">
@@ -143,7 +135,6 @@
                         <button class="btn-order" onclick="openOrderModal('خدمات هوش مصنوعی')">سفارش</button>
                     </div>
                 </div>
-
                 <!-- Legal Services -->
                 <div class="service-card">
                     <div class="card-image">
@@ -158,7 +149,6 @@
             </div>
         </div>
     </section>
-
     <!-- Order Section -->
     <section id="order-section" class="order-section">
         <div class="container">
@@ -203,7 +193,6 @@
             </div>
         </div>
     </section>
-
     <!-- Articles Section -->
     <section id="articles" class="articles">
         <div class="container">
@@ -242,7 +231,6 @@
             </div>
         </div>
     </section>
-
     <!-- Contact Section -->
     <section id="contact" class="contact">
         <div class="container">
@@ -276,7 +264,6 @@
             </div>
         </div>
     </section>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -284,7 +271,6 @@
             <p>طراحی شده با ❤️ توسط تیم Dash-Smal</p>
         </div>
     </footer>
-
     <!-- Order Modal -->
     <div id="orderModal" class="modal">
         <div class="modal-content no-scroll">
@@ -327,13 +313,11 @@
             </form>
         </div>
     </div>
-
     <script>
         // Mobile menu toggle
         document.getElementById('menuToggle').addEventListener('click', function() {
             document.querySelector('.nav ul').classList.toggle('active');
         });
-
         // Order modal functions
         function openOrderModal(service = '') {
             document.getElementById('orderModal').style.display = 'block';
@@ -342,11 +326,9 @@
                 document.getElementById('serviceType').value = service;
             }
         }
-
         function closeOrderModal() {
             document.getElementById('orderModal').style.display = 'none';
         }
-
         // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('orderModal');
@@ -354,56 +336,57 @@
                 closeOrderModal();
             }
         }
-
         // Form submission via WhatsApp - Modal
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
             const email = document.getElementById('email').value;
             const service = document.getElementById('service').value;
             const description = document.getElementById('description').value;
-            
-            let message = `درخواست سفارش خدمات از وبسایت:\n\n`;
-            message += `نام: ${name}\n`;
-            message += `شماره تماس: ${phone}\n`;
-            if (email) message += `ایمیل: ${email}\n`;
-            message += `نوع خدمت: ${service}\n`;
-            if (description) message += `توضیحات: ${description}\n`;
-            
+            let message = `درخواست سفارش خدمات از وبسایت:
+`;
+            message += `نام: ${name}
+`;
+            message += `شماره تماس: ${phone}
+`;
+            if (email) message += `ایمیل: ${email}
+`;
+            message += `نوع خدمت: ${service}
+`;
+            if (description) message += `توضیحات: ${description}
+`;
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://wa.me/989058206145?text=${encodedMessage}`;
             window.open(whatsappUrl, '_blank');
-            
             closeOrderModal();
             document.getElementById('orderForm').reset();
         });
-
         // Form submission via WhatsApp - Inline Form
         document.getElementById('orderFormInline').addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const name = document.getElementById('nameInline').value;
             const phone = document.getElementById('phoneInline').value;
             const email = document.getElementById('emailInline').value;
             const service = document.getElementById('serviceInline').value;
             const description = document.getElementById('descriptionInline').value;
-            
-            let message = `درخواست سفارش خدمات از وبسایت:\n\n`;
-            message += `نام: ${name}\n`;
-            message += `شماره تماس: ${phone}\n`;
-            if (email) message += `ایمیل: ${email}\n`;
-            message += `نوع خدمت: ${service}\n`;
-            if (description) message += `توضیحات: ${description}\n`;
-            
+            let message = `درخواست سفارش خدمات از وبسایت:
+`;
+            message += `نام: ${name}
+`;
+            message += `شماره تماس: ${phone}
+`;
+            if (email) message += `ایمیل: ${email}
+`;
+            message += `نوع خدمت: ${service}
+`;
+            if (description) message += `توضیحات: ${description}
+`;
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://wa.me/989058206145?text=${encodedMessage}`;
             window.open(whatsappUrl, '_blank');
-            
             document.getElementById('orderFormInline').reset();
         });
-
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -420,4 +403,3 @@
     </script>
 </body>
 </html>
-
