@@ -1,12 +1,7 @@
 {
   "functions": {
-    "api/**/*.js": {
+    "api/fetch-canva.js": {
       "runtime": "nodejs20.x"
-    }
-  },
-  "build": {
-    "env": {
-      "NODE_VERSION": "20.x"
     }
   }
 }
