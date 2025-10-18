@@ -167,6 +167,7 @@ body {
     /* ✅ اعمال وزن Extra Bold */
     font-weight: 900;
     font-family: 'Vazirmatn', sans-serif;
+     letter-spacing: -0.03em;
 }
 .neon-text {
     background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-green));
@@ -777,3 +778,4 @@ body {
         font-size: 1rem;
     }
 }
+
