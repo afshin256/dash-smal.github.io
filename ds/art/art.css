@@ -7,7 +7,6 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 20px;
-    box-sizing: border-box;
 }
 
 article {
@@ -18,7 +17,6 @@ article {
     border-radius: 10px;
     box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff; /* افکت نئونی */
     animation: neon-glow 2s infinite alternate;
-    box-sizing: border-box;
 }
 
 @keyframes neon-glow {
@@ -32,18 +30,22 @@ article {
 
 h1, h2, h3 {
     color: #ffffff; /* سفید برای تیترها */
-    border: 2px solid #00ffff; /* کادر نئونی برای عناوین */
-    border-radius: 8px;
-    padding: 10px;
-    margin: 15px 0;
-    box-shadow: 0 0 15px #00ffff, 0 0 30px #ff00ff; /* سایه نئونی */
-    animation: neon-glow 2s infinite alternate;
-    text-align: center;
+    border-bottom: 1px solid #00ff00; /* حاشیه نئونی سبز */
+    padding-bottom: 8px;
+    animation: neon-border 1.5s infinite alternate;
 }
 
-p, ul {
+@keyframes neon-border {
+    from {
+        border-bottom-color: #00ff00;
+    }
+    to {
+        border-bottom-color: #ffff00;
+    }
+}
+
+p, ul, table {
     color: #c0c0c0; /* خاکستری روشن برای متن */
-    margin: 10px 0;
 }
 
 ul {
@@ -53,16 +55,13 @@ ul {
 
 .table-wrapper {
     overflow-x: auto; /* اسکرول افقی برای جدول در موبایل */
-    max-width: 100%; /* جدول داخل کادر مقاله */
     margin: 20px 0;
-    box-sizing: border-box;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin: 0;
-    font-size: clamp(0.8rem, 2.5vw, 0.9rem); /* متن ریسپانسیو */
 }
 
 table th, table td {
@@ -70,6 +69,7 @@ table th, table td {
     padding: 8px;
     text-align: right;
     animation: neon-table 3s infinite alternate;
+    font-size: 0.9rem; /* فونت کوچکتر برای موبایل */
 }
 
 @keyframes neon-table {
@@ -84,6 +84,30 @@ table th, table td {
 table th {
     background-color: #1a1a1a; /* بک‌گراند تیره برای هدر جدول */
     color: #ffffff;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #ffff00; /* حاشیه نئونی زرد */
+    border-radius: 5px;
+    box-shadow: 0 0 15px #ffff00;
+    animation: neon-image 2s infinite alternate;
+}
+
+@keyframes neon-image {
+    from {
+        box-shadow: 0 0 5px #ffff00;
+    }
+    to {
+        box-shadow: 0 0 25px #ffff00;
+    }
+}
+
+figure.small-left, figure.small-right {
+    max-width: 300px;
+    margin: 10px auto;
+    display: block;
 }
 
 .neon-back-button {
@@ -119,6 +143,11 @@ table th {
     }
 }
 
+@keyframes neon-flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.95; }
+}
+
 /* ریسپانسیو برای موبایل */
 @media screen and (max-width: 600px) {
     article {
@@ -126,50 +155,51 @@ table th {
     }
     
     h1 {
-        font-size: clamp(1.2rem, 4vw, 1.4rem);
-        padding: 8px;
+        font-size: 1.5rem;
     }
     
     h2, h3 {
-        font-size: clamp(1rem, 3.5vw, 1.2rem);
-        padding: 6px;
+        font-size: 1.2rem;
     }
     
     p, ul {
-        font-size: clamp(0.8rem, 2.5vw, 0.85rem);
+        font-size: 0.85rem;
+    }
+    
+    figure.small-left, figure.small-right {
+        max-width: 100%;
+        float: none;
+        margin: 10px 0;
     }
     
     .neon-back-button {
         padding: 8px 16px;
-        font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+        font-size: 0.9rem;
+        animation: neon-pulse 2s infinite alternate; /* انیمیشن ساده‌تر */
     }
     
     table th, table td {
         padding: 6px;
-        font-size: clamp(0.7rem, 2vw, 0.75rem);
+        font-size: 0.8rem;
     }
 }
 
 @media screen and (max-width: 400px) {
     h1 {
-        font-size: clamp(1rem, 3.5vw, 1.2rem);
+        font-size: 1.3rem;
     }
     
     h2, h3 {
-        font-size: clamp(0.9rem, 3vw, 1rem);
+        font-size: 1rem;
     }
     
     p, ul {
-        font-size: clamp(0.75rem, 2vw, 0.8rem);
+        font-size: 0.8rem;
     }
     
     .neon-back-button {
         padding: 6px 12px;
-        font-size: clamp(0.7rem, 2vw, 0.8rem);
-    }
-    
-    table th, table td {
-        padding: 4px;
-        font-size: clamp(0.65rem, 1.8vw, 0.7rem);
+        font-size: 0.8rem;
     }
 }
+
