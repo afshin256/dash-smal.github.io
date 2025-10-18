@@ -4,8 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dash-Smal | خدمات دیجیتال و خلاقانه</title>
-    <link rel="stylesheet" href="/ds/assets/ds.css">
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- فونت با وزن 900 برای ظاهر مدرن‌تر -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* =============== CSS داخلی برای Typewriter + Neon =============== */
+        .hero-title {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 900;
+            font-size: 2.8rem;
+            line-height: 1.3;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+        }
+
+        .typewriter {
+            display: inline-block;
+            min-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid #fff;
+            animation: 
+                typing 3s steps(18, end) 0.5s forwards,
+                blink 0.7s infinite;
+        }
+
+        .neon-text {
+            color: transparent;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            animation: neon-glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: transparent; }
+            50% { border-color: white; }
+        }
+
+        @keyframes neon-glow {
+            from {
+                text-shadow: 0 0 10px rgba(0, 255, 255, 0.5),
+                            0 0 20px rgba(0, 255, 255, 0.3);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(0, 255, 255, 0.8),
+                            0 0 40px rgba(0, 255, 255, 0.6),
+                            0 0 60px rgba(0, 255, 255, 0.4);
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header/Navigation -->
@@ -34,7 +94,11 @@
     <section id="home" class="hero">
         <div class="container">
             <div class="hero-content">
-                <h2>خلاقیت دیجیتال، <span class="neon-text">هوش مصنوعی</span> و خدمات حرفه‌ای</h2>
+                <h2 class="hero-title">
+                    خلاقیت دیجیتال،
+                    <span class="typewriter neon-text">هوش مصنوعی</span>
+                    و خدمات حرفه‌ای
+                </h2>
                 <p>ما با ترکیب خلاقیت، فناوری و تجربه، راه‌حل‌های نوین برای کسب‌وکارهای شما ارائه می‌دهیم</p>
                 <div class="hero-buttons">
                     <button class="btn-primary" onclick="openOrderModal()">سفارش خدمات</button>
@@ -55,7 +119,7 @@
                     </div>
                     <div class="card-content">
                         <h3>انواع طراحی گرافیکی</h3>
-                        <p>تراکت - بنر - پوستر - تابلو - منو - بروشور - کارت ویزیت - لوگو - لوگو موشن</p>
+                        <p>تراکت - بنر - پوستر - تابلو - منو - بروشور - لوگو - لوگو موشن</p>
                         <button class="btn-order" onclick="openOrderModal('انواع طراحی گرافیکی')">سفارش</button>
                     </div>
                 </div>
@@ -328,6 +392,749 @@
         </div>
     </div>
 
+    <!-- =============== CSS کامل =============== -->
+    <style>
+        /* ds/assets/ds.css */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-green: #00ff00;
+            --neon-purple: #8a2be2;
+            --neon-yellow: #ffff00;
+            --neon-red: #ff0000;
+            --dark-bg: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --light-gray: #2a2a2a;
+            --text-light: #ffffff;
+            --text-neon: var(--neon-blue);
+        }
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        /* Header Styles - CORRECT RTL/LTR HANDLING */
+        .header {
+            background-color: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        /* CRITICAL: Header container in LTR to maintain visual order */
+        .header-container-ltr {
+            direction: ltr !important;
+            text-align: left !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        /* Logo on LEFT (first element in LTR container) */
+        .logo {
+            /* No special styling needed - first element appears on left */
+        }
+        .logo .logo-img {
+            height: auto;
+            width: 250px;
+            max-width: 100%;
+            border-radius: 10px;
+            /* COMPLETELY REMOVED all neon effects and animations */
+            box-shadow: none !important;
+            filter: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+        .logo .logo-img:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        /* Nav on RIGHT (last element in LTR container) */
+        .nav {
+            /* No special styling needed - last element appears on right */
+        }
+        /* CRITICAL: Nav content back to RTL for Persian text */
+        .nav-rtl {
+            direction: rtl !important;
+            text-align: right !important;
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-rtl li {
+            direction: rtl !important;
+        }
+        .nav-rtl a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+            direction: rtl !important;
+            text-align: right !important;
+        }
+        .nav-rtl a:hover {
+            color: var(--neon-blue);
+        }
+        .nav-rtl a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-blue);
+            transition: width 0.3s ease;
+        }
+        .nav-rtl a:hover::after {
+            width: 100%;
+        }
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            direction: ltr !important;
+        }
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--neon-blue);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            background: url('/ds/assets/img/17.jpg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.8) 0%, rgba(26, 26, 26, 0.8) 100%);
+            z-index: 1;
+        }
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: #cccccc;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7), 
+                         -1px -1px 3px rgba(0, 0, 0, 0.7),
+                         0 0 5px rgba(0, 0, 0, 0.5);
+            -webkit-text-stroke: 1px rgba(0, 0, 0, 0.3);
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        /* Button Styles */
+        .btn-primary, .btn-secondary, .btn-order, .btn-submit {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple));
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.8);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        .btn-secondary:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+        }
+        .btn-order {
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-yellow));
+            color: black;
+            font-size: 1rem;
+            padding: 8px 20px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+        }
+        .btn-order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.7);
+        }
+        .btn-submit {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-green));
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+        }
+        /* Section Titles - Neon Animated */
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+        .neon-animated {
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-green), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+            animation: sectionTitleGlow 3s ease-in-out infinite alternate;
+        }
+        @keyframes sectionTitleGlow {
+            0% {
+                text-shadow: 0 0 10px rgba(255, 0, 255, 0.5),
+                            0 0 20px rgba(0, 255, 255, 0.3);
+            }
+            25% {
+                text-shadow: 0 0 15px rgba(0, 255, 255, 0.6),
+                            0 0 30px rgba(0, 255, 255, 0.4);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 255, 0, 0.7),
+                            0 0 40px rgba(255, 255, 0, 0.5);
+            }
+            75% {
+                text-shadow: 0 0 25px rgba(0, 255, 0, 0.8),
+                            0 0 50px rgba(0, 255, 0, 0.6);
+            }
+            100% {
+                text-shadow: 0 0 30px rgba(255, 0, 255, 0.9),
+                            0 0 60px rgba(255, 0, 255, 0.7);
+            }
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        /* Services Section */
+        .services {
+            padding: 100px 0;
+            background: var(--dark-gray);
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .service-card {
+            background: var(--light-gray);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3);
+        }
+        /* کادر نئونی */
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-green), var(--neon-purple)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .service-card:hover::before {
+            opacity: 1;
+        }
+        /* تصویر داخل کارت */
+        .card-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+            z-index: 0;
+        }
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .service-card:hover .card-image img {
+            transform: scale(1.1);
+        }
+        /* محتوای کارت */
+        .card-content {
+            padding: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        .card-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--text-neon);
+        }
+        .card-content p {
+            color: #cccccc;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        /* Order Section */
+        .order-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-gray) 100%);
+        }
+        .order-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .order-form-container {
+            background: var(--dark-gray);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+        .order-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-group {
+            flex: 1;
+        }
+        .form-group.full-width {
+            flex: none;
+            width: 100%;
+        }
+        .order-form input,
+        .order-form select,
+        .order-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            background: var(--dark-bg);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .order-form input::placeholder,
+        .order-form select,
+        .order-form textarea::placeholder {
+            color: #888888;
+        }
+        .order-form input:focus,
+        .order-form select:focus,
+        .order-form textarea:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        /* Articles Section */
+        .articles {
+            padding: 100px 0;
+            background: var(--dark-bg);
+        }
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .article-card {
+            background: var(--light-gray);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 0, 255, 0.3);
+        }
+        .article-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        .article-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .article-card:hover .article-image img {
+            transform: scale(1.05);
+        }
+        .article-content {
+            padding: 25px;
+        }
+        .article-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--neon-blue);
+        }
+        .article-content p {
+            color: #cccccc;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        .read-more {
+            color: var(--neon-green);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        .read-more:hover {
+            color: var(--neon-yellow);
+            transform: translateX(5px);
+        }
+        /* Contact Section - MOBILE CENTERED */
+        .contact {
+            padding: 100px 0;
+            background: var(--dark-gray);
+        }
+        .contact-container {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        .contact-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            direction: rtl;
+        }
+        .contact-icon {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(255, 0, 255, 0.5));
+        }
+        .address-item i {
+            font-size: 1.2rem;
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+        .contact-item span,
+        .contact-link {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            direction: ltr;
+            text-align: right;
+            flex: 1;
+            text-decoration: none;
+        }
+        .contact-link:hover {
+            color: var(--neon-green);
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        .map-container {
+            flex: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-blue);
+            min-width: 300px;
+        }
+        /* Footer */
+        .footer {
+            background: var(--dark-bg);
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid var(--neon-blue);
+        }
+        .footer p {
+            color: #888888;
+            margin: 5px 0;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        .modal-content {
+            background: var(--dark-gray);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            animation: modalSlideIn 0.5s ease;
+        }
+        .reduced-height {
+            max-height: 80vh;
+            overflow: hidden;
+        }
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .close {
+            color: var(--neon-red);
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        .close:hover {
+            color: white;
+            background: var(--neon-red);
+            transform: rotate(90deg);
+        }
+        .modal-content h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--neon-blue);
+            font-size: 2rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--neon-green);
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            background: var(--dark-bg);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            .nav ul {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                flex-direction: column;
+                background: var(--dark-gray);
+                width: 250px;
+                height: calc(100vh - 80px);
+                padding: 20px;
+                transition: right 0.3s ease;
+                border-left: 2px solid var(--neon-blue);
+                margin: 0 !important;
+            }
+            .nav ul.active {
+                right: 0;
+            }
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .services-grid,
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+            /* MOBILE CONTACT CENTERED */
+            .contact-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .contact-info {
+                align-items: center;
+                text-align: center;
+            }
+            .contact-item {
+                justify-content: center;
+                text-align: center;
+                flex-direction: row-reverse;
+            }
+            .map-container {
+                min-width: auto;
+                width: 100%;
+            }
+            .contact-item span {
+                direction: rtl;
+                text-align: center;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            /* MOBILE LOGO SIZE */
+            .logo .logo-img {
+                width: 200px;
+            }
+            /* MOBILE MODAL */
+            .modal-content {
+                margin: 10% auto;
+                padding: 20px;
+            }
+            .reduced-height {
+                max-height: 85vh;
+            }
+        }
+        @media (max-width: 480px) {
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                padding: 15px;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            /* MOBILE LOGO SIZE */
+            .logo .logo-img {
+                width: 160px;
+            }
+            /* COMPACT MOBILE MODAL */
+            .modal-content {
+                margin: 10% auto;
+                padding: 15px;
+            }
+            .reduced-height {
+                max-height: 80vh;
+            }
+            .form-group {
+                margin-bottom: 15px;
+            }
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+            .btn-submit {
+                padding: 10px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+
     <script>
         // Mobile menu toggle
         document.getElementById('menuToggle').addEventListener('click', function() {
@@ -358,24 +1165,20 @@
         // Form submission via WhatsApp - Modal
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
             const email = document.getElementById('email').value;
             const service = document.getElementById('service').value;
             const description = document.getElementById('description').value;
-            
             let message = `درخواست سفارش خدمات از وبسایت:\n\n`;
             message += `نام: ${name}\n`;
             message += `شماره تماس: ${phone}\n`;
             if (email) message += `ایمیل: ${email}\n`;
             message += `نوع خدمت: ${service}\n`;
             if (description) message += `توضیحات: ${description}\n`;
-            
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://wa.me/989058206145?text=${encodedMessage}`;
             window.open(whatsappUrl, '_blank');
-            
             closeOrderModal();
             document.getElementById('orderForm').reset();
         });
@@ -383,24 +1186,20 @@
         // Form submission via WhatsApp - Inline Form
         document.getElementById('orderFormInline').addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const name = document.getElementById('nameInline').value;
             const phone = document.getElementById('phoneInline').value;
             const email = document.getElementById('emailInline').value;
             const service = document.getElementById('serviceInline').value;
             const description = document.getElementById('descriptionInline').value;
-            
             let message = `درخواست سفارش خدمات از وبسایت:\n\n`;
             message += `نام: ${name}\n`;
             message += `شماره تماس: ${phone}\n`;
             if (email) message += `ایمیل: ${email}\n`;
             message += `نوع خدمت: ${service}\n`;
             if (description) message += `توضیحات: ${description}\n`;
-            
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://wa.me/989058206145?text=${encodedMessage}`;
             window.open(whatsappUrl, '_blank');
-            
             document.getElementById('orderFormInline').reset();
         });
 
