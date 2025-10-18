@@ -4,7 +4,9 @@
       "runtime": "nodejs20.x"
     }
   },
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/(.*)" }
-  ]
+  "build": {
+    "env": {
+      "NODE_VERSION": "20.x"
+    }
+  }
 }
