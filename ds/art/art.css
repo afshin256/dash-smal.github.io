@@ -2,7 +2,7 @@
 
 body {
     background-color: #000000; /* بک‌گراند مشکی */
-    color: #d0d0d0; /* رنگ فونت خاکستری روشن برای خوانایی بدون خستگی چشم */
+    color: #d0d0d0; /* رنگ فونت خاکستری روشن برای خوانایی */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     margin: 0;
@@ -12,11 +12,11 @@ body {
 article {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
     border: 2px solid #00ffff; /* حاشیه نئونی آبی */
     border-radius: 10px;
-    box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff; /* افکت نئونی با درخشش */
-    animation: neon-glow 2s infinite alternate; /* انیمیشن نئونی */
+    box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff; /* افکت نئونی */
+    animation: neon-glow 2s infinite alternate;
 }
 
 @keyframes neon-glow {
@@ -30,8 +30,8 @@ article {
 
 h1, h2, h3 {
     color: #ffffff; /* سفید برای تیترها */
-    border-bottom: 1px solid #00ff00; /* حاشیه نئونی سبز زیر تیترها */
-    padding-bottom: 10px;
+    border-bottom: 1px solid #00ff00; /* حاشیه نئونی سبز */
+    padding-bottom: 8px;
     animation: neon-border 1.5s infinite alternate;
 }
 
@@ -53,17 +53,23 @@ ul {
     padding-right: 20px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
+.table-wrapper {
+    overflow-x: auto; /* اسکرول افقی برای جدول در موبایل */
     margin: 20px 0;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
 table th, table td {
-    border: 1px solid #ff00ff; /* حاشیه نئونی صورتی برای جدول */
-    padding: 10px;
+    border: 1px solid #ff00ff; /* حاشیه نئونی صورتی */
+    padding: 8px;
     text-align: right;
     animation: neon-table 3s infinite alternate;
+    font-size: 0.9rem; /* فونت کوچکتر برای موبایل */
 }
 
 @keyframes neon-table {
@@ -83,7 +89,7 @@ table th {
 img {
     max-width: 100%;
     height: auto;
-    border: 2px solid #ffff00; /* حاشیه نئونی زرد برای تصاویر */
+    border: 2px solid #ffff00; /* حاشیه نئونی زرد */
     border-radius: 5px;
     box-shadow: 0 0 15px #ffff00;
     animation: neon-image 2s infinite alternate;
@@ -98,40 +104,34 @@ img {
     }
 }
 
-figure.small-left {
-    float: left;
-    width: 300px;
-    margin: 10px;
-}
-
-figure.small-right {
-    float: right;
-    width: 300px;
-    margin: 10px;
+figure.small-left, figure.small-right {
+    max-width: 300px;
+    margin: 10px auto;
+    display: block;
 }
 
 .neon-back-button {
     display: block;
-    margin: 30px auto;
-    padding: 12px 24px;
+    margin: 20px auto;
+    padding: 10px 20px;
     background: linear-gradient(45deg, #00ffff, #ff00ff); /* گرادیانت نئونی */
     color: #000000;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: bold;
     text-align: center;
     text-transform: uppercase;
     box-shadow: 0 0 15px #00ffff, 0 0 30px #ff00ff, inset 0 0 10px #ffffff;
-    animation: neon-pulse 1.5s infinite alternate, neon-flicker 0.5s infinite;
+    animation: neon-pulse 1.5s infinite alternate;
     transition: all 0.3s ease;
 }
 
 .neon-back-button:hover {
-    background: linear-gradient(45deg, #ff00ff, #00ffff); /* معکوس شدن گرادیانت در هاور */
+    background: linear-gradient(45deg, #ff00ff, #00ffff);
     box-shadow: 0 0 25px #00ffff, 0 0 50px #ff00ff, inset 0 0 15px #ffffff;
-    transform: scale(1.05); /* بزرگ‌نمایی ملایم */
+    transform: scale(1.05);
 }
 
 @keyframes neon-pulse {
@@ -144,10 +144,61 @@ figure.small-right {
 }
 
 @keyframes neon-flicker {
-    0%, 100% {
-        opacity: 1;
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.95; }
+}
+
+/* ریسپانسیو برای موبایل */
+@media screen and (max-width: 600px) {
+    article {
+        padding: 10px;
     }
-    50% {
-        opacity: 0.95;
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    h2, h3 {
+        font-size: 1.2rem;
+    }
+    
+    p, ul {
+        font-size: 0.85rem;
+    }
+    
+    figure.small-left, figure.small-right {
+        max-width: 100%;
+        float: none;
+        margin: 10px 0;
+    }
+    
+    .neon-back-button {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        animation: neon-pulse 2s infinite alternate; /* انیمیشن ساده‌تر */
+    }
+    
+    table th, table td {
+        padding: 6px;
+        font-size: 0.8rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    h1 {
+        font-size: 1.3rem;
+    }
+    
+    h2, h3 {
+        font-size: 1rem;
+    }
+    
+    p, ul {
+        font-size: 0.8rem;
+    }
+    
+    .neon-back-button {
+        padding: 6px 12px;
+        font-size: 0.8rem;
     }
 }
