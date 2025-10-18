@@ -1,4 +1,4 @@
-/* art.css */
+/* ds/art/art.css */
 
 body {
     background-color: #000000; /* بک‌گراند مشکی */
@@ -110,13 +110,44 @@ figure.small-right {
     margin: 10px;
 }
 
-figcaption {
+.neon-back-button {
+    display: block;
+    margin: 30px auto;
+    padding: 12px 24px;
+    background: linear-gradient(45deg, #00ffff, #ff00ff); /* گرادیانت نئونی */
+    color: #000000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
     text-align: center;
-    font-style: italic;
-    color: #a0a0a0;
-    margin-top: 5px;
+    text-transform: uppercase;
+    box-shadow: 0 0 15px #00ffff, 0 0 30px #ff00ff, inset 0 0 10px #ffffff;
+    animation: neon-pulse 1.5s infinite alternate, neon-flicker 0.5s infinite;
+    transition: all 0.3s ease;
 }
 
-strong {
-    color: #ffffff; /* سفید برای برجسته‌سازی */
+.neon-back-button:hover {
+    background: linear-gradient(45deg, #ff00ff, #00ffff); /* معکوس شدن گرادیانت در هاور */
+    box-shadow: 0 0 25px #00ffff, 0 0 50px #ff00ff, inset 0 0 15px #ffffff;
+    transform: scale(1.05); /* بزرگ‌نمایی ملایم */
+}
+
+@keyframes neon-pulse {
+    from {
+        box-shadow: 0 0 15px #00ffff, 0 0 30px #ff00ff, inset 0 0 10px #ffffff;
+    }
+    to {
+        box-shadow: 0 0 30px #00ffff, 0 0 60px #ff00ff, inset 0 0 20px #ffffff;
+    }
+}
+
+@keyframes neon-flicker {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.95;
+    }
 }
