@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/fetch-canva.js": {
-      "runtime": "nodejs20.x"
-    }
-  }
-}
