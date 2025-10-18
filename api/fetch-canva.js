@@ -2,7 +2,6 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
-// تبدیل نوع فارسی به کلید انگلیسی برای جستجو
 const typeToEnglish = {
   flyer: 'flyer',
   banner: 'banner',
@@ -17,51 +16,44 @@ const typeToEnglish = {
 export default async function handler(req, res) {
   // فقط POST مجاز است
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Only POST requests are allowed' });
   }
 
   const { type, subject = '', industry = '' } = req.body;
 
   if (!type || !typeToEnglish[type]) {
-    return res.status(400).json({ error: 'نوع طرح نامعتبر است' });
+    return res.status(400).json({ error: 'Invalid design type' });
   }
 
-  // ترکیب عبارت جستجو
+  // ساخت عبارت جستجو
   const englishType = typeToEnglish[type];
-  const queryParts = [englishType, subject, industry].filter(part => part.trim() !== '');
+  const queryParts = [englishType, subject, industry].filter(p => p.trim() !== '');
   let query = queryParts.join(' ').toLowerCase().replace(/\s+/g, '-');
-
-  // محدود کردن طول query (اختیاری)
-  if (query.length > 100) {
-    query = query.substring(0, 100);
-  }
+  if (query.length > 100) query = query.substring(0, 100);
 
   const url = `https://www.canva.com/templates/?query=${encodeURIComponent(query)}&pricing=FREE`;
 
   try {
-    // درخواست به Canva
     const response = await axios.get(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; DesignBot/1.0; +https://www.dash-smal.ir)'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
       },
-      timeout: 10000
+      timeout: 12000
     });
 
     const $ = cheerio.load(response.data);
     const imageUrls = [];
 
-    // استخراج تصاویر از کارت‌ها
+    // استخراج تصاویر از کارت‌های نتیجه
     $('img.w3KZWA').each((i, el) => {
       let src = $(el).attr('src');
       if (src && src.startsWith('https://marketplace.canva.com/')) {
-        // حذف فضاهای اضافه
         src = src.trim();
         if (!imageUrls.includes(src)) {
           imageUrls.push(src);
         }
       }
-      // حداکثر 12 نمونه
-      if (imageUrls.length >= 12) return false;
+      if (imageUrls.length >= 12) return false; // حداکثر 12 نمونه
     });
 
     res.status(200).json({
@@ -72,9 +64,9 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error('خطا در واکشی از Canva:', error.message);
+    console.error('Error fetching Canva templates:', error.message);
     res.status(500).json({
-      error: 'دریافت نمونه‌ها از Canva با خطا مواجه شد',
+      error: 'Failed to fetch templates from Canva',
       message: error.message
     });
   }
