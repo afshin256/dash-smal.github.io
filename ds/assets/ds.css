@@ -163,11 +163,9 @@ body {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8), 
                  -2px -2px 6px rgba(0, 0, 0, 0.8),
                  0 0 10px rgba(0, 255, 255, 0.5);
-    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
     /* ✅ اعمال وزن Extra Bold */
     font-weight: 900;
     font-family: 'Vazirmatn', sans-serif;
-     letter-spacing: -5.1em;
 }
 .neon-text {
     background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-green));
@@ -176,7 +174,6 @@ body {
     background-clip: text;
     text-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
     animation: neon-glow 2s ease-in-out infinite alternate;
- letter-spacing: -0.1em;
 }
 @keyframes neon-glow {
     from {
@@ -779,6 +776,7 @@ body {
         font-size: 1rem;
     }
 }
+
 
 
 
