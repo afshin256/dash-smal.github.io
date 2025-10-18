@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>سفارش طراحی - داش اسمال</title>
+  <style>
+    body {
+      font-family: "Vazirmatn", sans-serif;
+      background: #0f0f1b;
+      color: white;
+      padding: 2rem;
+      margin: 0;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #1a1a2e;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 0 15px #00f3ff, 0 0 30px rgba(0, 243, 255, 0.3);
+    }
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      font-weight: bold;
+    }
+    select, textarea, input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      background: #0d0d1a;
+      border: 1px solid #00f3ff;
+      border-radius: 8px;
+      color: white;
+      direction: rtl;
+    }
+    button {
+      width: 100%;
+      padding: 1rem;
+      background: #00f3ff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background: #00c2cc;
+      box-shadow: 0 0 15px #00f3ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>فرم سفارش طراحی</h2>
+    <form id="orderForm">
+      <label for="type">به چه چیزی نیاز دارید؟</label>
+      <select id="type" name="type" required>
+        <option value="">انتخاب کنید</option>
+        <option value="flyer">تراکت</option>
+        <option value="banner">بنر</option>
+        <option value="poster">پوستر</option>
+        <option value="sign">تابلو</option>
+        <option value="menu">منو</option>
+        <option value="brochure">بروشور</option>
+        <option value="business-card">کارت ویزیت</option>
+        <option value="logo">لوگو</option>
+      </select>
+
+      <label for="subject">موضوع و یا نوع “<span id="typePreview">...</span>” خود را توضیح دهید</label>
+      <textarea id="subject" name="subject" rows="3" placeholder="مثلاً: منوی غذای ایرانی با تم سنتی"></textarea>
+
+      <label for="industry">این “<span id="typePreview2">...</span>” برای چه شغلی است؟</label>
+      <input type="text" id="industry" name="industry" placeholder="مثلاً: رستوران، آرایشگاه، فروشگاه">
+
+      <label for="name">نام و نام خانوادگی</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="phone">شماره تماس</label>
+      <input type="tel" id="phone" name="phone" required>
+
+      <button type="submit">ثبت اطلاعات و انتخاب نمونه</button>
+    </form>
+  </div>
+
+  <script>
+    // به‌روزرسانی متن دینامیک بر اساس انتخاب نوع
+    const typeSelect = document.getElementById('type');
+    const typePreview1 = document.getElementById('typePreview');
+    const typePreview2 = document.getElementById('typePreview2');
+
+    const typeLabels = {
+      flyer: "تراکت",
+      banner: "بنر",
+      poster: "پوستر",
+      sign: "تابلو",
+      menu: "منو",
+      brochure: "بروشور",
+      "business-card": "کارت ویزیت",
+      logo: "لوگو"
+    };
+
+    typeSelect.addEventListener('change', () => {
+      const selected = typeLabels[typeSelect.value] || '...';
+      typePreview1.textContent = selected;
+      typePreview2.textContent = selected;
+    });
+
+    // فرم هنوز سابمیت نمی‌شود — فقط تست UI
+    document.getElementById('orderForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('گام ۱ کامل شد! حالا باید به backend متصل شویم.');
+    });
+  </script>
+</body>
+</html>
