@@ -176,6 +176,7 @@ body {
     background-clip: text;
     text-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
     animation: neon-glow 2s ease-in-out infinite alternate;
+ letter-spacing: -0.1em;
 }
 @keyframes neon-glow {
     from {
@@ -778,5 +779,6 @@ body {
         font-size: 1rem;
     }
 }
+
 
 
