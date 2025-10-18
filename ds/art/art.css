@@ -1,0 +1,122 @@
+/* art.css */
+
+body {
+    background-color: #000000; /* بک‌گراند مشکی */
+    color: #d0d0d0; /* رنگ فونت خاکستری روشن برای خوانایی بدون خستگی چشم */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+}
+
+article {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 2px solid #00ffff; /* حاشیه نئونی آبی */
+    border-radius: 10px;
+    box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff; /* افکت نئونی با درخشش */
+    animation: neon-glow 2s infinite alternate; /* انیمیشن نئونی */
+}
+
+@keyframes neon-glow {
+    from {
+        box-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
+    }
+    to {
+        box-shadow: 0 0 30px #00ffff, 0 0 60px #ff00ff;
+    }
+}
+
+h1, h2, h3 {
+    color: #ffffff; /* سفید برای تیترها */
+    border-bottom: 1px solid #00ff00; /* حاشیه نئونی سبز زیر تیترها */
+    padding-bottom: 10px;
+    animation: neon-border 1.5s infinite alternate;
+}
+
+@keyframes neon-border {
+    from {
+        border-bottom-color: #00ff00;
+    }
+    to {
+        border-bottom-color: #ffff00;
+    }
+}
+
+p, ul, table {
+    color: #c0c0c0; /* خاکستری روشن برای متن */
+}
+
+ul {
+    list-style-type: disc;
+    padding-right: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table th, table td {
+    border: 1px solid #ff00ff; /* حاشیه نئونی صورتی برای جدول */
+    padding: 10px;
+    text-align: right;
+    animation: neon-table 3s infinite alternate;
+}
+
+@keyframes neon-table {
+    from {
+        border-color: #ff00ff;
+    }
+    to {
+        border-color: #00ffff;
+    }
+}
+
+table th {
+    background-color: #1a1a1a; /* بک‌گراند تیره برای هدر جدول */
+    color: #ffffff;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #ffff00; /* حاشیه نئونی زرد برای تصاویر */
+    border-radius: 5px;
+    box-shadow: 0 0 15px #ffff00;
+    animation: neon-image 2s infinite alternate;
+}
+
+@keyframes neon-image {
+    from {
+        box-shadow: 0 0 5px #ffff00;
+    }
+    to {
+        box-shadow: 0 0 25px #ffff00;
+    }
+}
+
+figure.small-left {
+    float: left;
+    width: 300px;
+    margin: 10px;
+}
+
+figure.small-right {
+    float: right;
+    width: 300px;
+    margin: 10px;
+}
+
+figcaption {
+    text-align: center;
+    font-style: italic;
+    color: #a0a0a0;
+    margin-top: 5px;
+}
+
+strong {
+    color: #ffffff; /* سفید برای برجسته‌سازی */
+}
