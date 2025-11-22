@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>یادآور پیشرفته چارت</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f9fbfd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      direction: rtl;
+    }
+    .container {
+      text-align: center;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+      max-width: 380px;
+      width: 90%;
+    }
+    h1 {
+      margin-top: 0;
+      color: #2c3e50;
+      font-size: 24px;
+    }
+    .time-inputs {
+      margin: 12px 0;
+    }
+    input[type="number"] {
+      padding: 8px;
+      font-size: 16px;
+      width: 70px;
+      text-align: center;
+      border: 2px solid #3498db;
+      border-radius: 6px;
+      margin: 0 4px;
+    }
+    label {
+      font-size: 14px;
+      color: #555;
+      margin: 0 4px;
+    }
+    .audio-upload {
+      margin: 15px 0;
+    }
+    .audio-upload input {
+      width: auto;
+      padding: 6px;
+    }
+    button {
+      padding: 10px 12px;
+      font-size: 14px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 4px 2px;
+      min-width: 80px;
+    }
+    button:hover:not(:disabled) {
+      background: #2980b9;
+    }
+    button:disabled {
+      background: #bdc3c7;
+      cursor: not-allowed;
+    }
+    #countdown {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #2c3e50;
+      font-family: monospace;
+    }
+    #status {
+      font-size: 13px;
+      color: #7f8c8d;
+      margin-top: 10px;
+    }
+    .test-section {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⏱️ یادآور پیشرفته چارت</h1>
+
+    <div class="time-inputs">
+      <label for="minutes">دقیقه:</label>
+      <input type="number" id="minutes" min="0" max="59" value="15" />
+      <label for="seconds">ثانیه:</label>
+      <input type="number" id="seconds" min="0" max="59" value="0" />
+    </div>
+
+    <div class="audio-upload">
+      <label for="audioFile">🔊 فایل صوتی هشدار (اختیاری):</label><br />
+      <input type="file" id="audioFile" accept="audio/*" />
+    </div>
+
+    <button onclick="startTimer()" id="startBtn">شروع</button>
+    <button onclick="stopTimer()" id="stopBtn" disabled>توقف</button>
+
+    <div id="countdown">15:00</div>
+    <div id="status">آماده شروع</div>
+
+    <!-- دکمه تست نوتیفیکیشن -->
+    <div class="test-section">
+      <button onclick="testNotification()">تست نوتیفیکیشن</button>
+    </div>
+  </div>
+
+  <script>
+    let startTime = null;
+    let totalSeconds = 0;
+    let countdownInterval = null;
+    let audioFile = null;
+
+    document.getElementById("audioFile").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        audioFile = new Audio(url);
+        audioFile.preload = "auto";
+      } else {
+        audioFile = null;
+      }
+    });
+
+    function getSeconds() {
+      const mins = parseInt(document.getElementById("minutes").value) || 0;
+      const secs = parseInt(document.getElementById("seconds").value) || 0;
+      return Math.max(0, mins * 60 + secs);
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function playAlert() {
+      if (audioFile) {
+        audioFile.currentTime = 0;
+        audioFile.play().catch(e => console.warn("صدا پخش نشد:", e));
+      } else {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.frequency.value = 800;
+          gain.gain.value = 0.1;
+          osc.start();
+          setTimeout(() => {
+            osc.stop();
+            ctx.close();
+          }, 400);
+        } catch (e) {
+          console.warn("بیپ داخلی نیز اجرا نشد.");
+        }
+      }
+    }
+
+    function startTimer() {
+      const secs = getSeconds();
+      if (secs <= 0) {
+        alert("لطفاً زمان معتبری وارد کنید.");
+        return;
+      }
+
+      totalSeconds = secs;
+      startTime = performance.now();
+
+      document.getElementById("startBtn").disabled = true;
+      document.getElementById("stopBtn").disabled = false;
+      document.getElementById("status").textContent = "در حال شمارش...";
+
+      if (countdownInterval) clearInterval(countdownInterval);
+
+      updateCountdown();
+      countdownInterval = setInterval(updateCountdown, 500);
+    }
+
+    function updateCountdown() {
+      if (!startTime) return;
+
+      const elapsedMs = performance.now() - startTime;
+      const elapsedSec = Math.floor(elapsedMs / 1000);
+      let remaining = totalSeconds - elapsedSec;
+
+      document.getElementById("countdown").textContent = formatTime(Math.max(0, remaining));
+
+      if (remaining <= 0) {
+        clearInterval(countdownInterval);
+        playAlert();
+
+        // ارسال نوتیفیکیشن
+        if (window.Notification && Notification.permission === "granted") {
+          new Notification("📊 زمان چک چارت!", {
+            body: "زمان تنظیم‌شده به پایان رسید.",
+            icon: "https://cdn-icons-png.flaticon.com/512/1998/1998662.png"
+          });
+        }
+
+        setTimeout(() => {
+          startTime = performance.now();
+          updateCountdown();
+          countdownInterval = setInterval(updateCountdown, 500);
+        }, 1000);
+      }
+    }
+
+    function stopTimer() {
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+      }
+      startTime = null;
+      document.getElementById("startBtn").disabled = false;
+      document.getElementById("stopBtn").disabled = true;
+      document.getElementById("countdown").textContent = formatTime(getSeconds());
+      document.getElementById("status").textContent = "متوقف شد.";
+    }
+
+    // 🔔 تابع تست نوتیفیکیشن
+    function testNotification() {
+      if (!("Notification" in window)) {
+        alert("مرورگرت از نوتیفیکیشن پشتیبانی نمی‌کنه.");
+        return;
+      }
+
+      if (Notification.permission === "granted") {
+        new Notification("✅ تست موفق!", {
+          body: "این نوتیفیکیشن کنار ساعت ویندوز ظاهر می‌شه!",
+          icon: "https://cdn-icons-png.flaticon.com/512/1998/1998662.png"
+        });
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            new Notification("✅ تست موفق!", {
+              body: "مجوز داده شد و نوتیفیکیشن ارسال شد!",
+              icon: "https://cdn-icons-png.flaticon.com/512/1998/1998662.png"
+            });
+          }
+        });
+      } else {
+        alert("مجوز نوتیفیکیشن رد شده. لطفاً از تنظیمات مرورگر Allow کنید.");
+      }
+    }
+
+    // به‌روزرسانی نمایش
+    const updateDisplay = () => {
+      if (!startTime) {
+        document.getElementById("countdown").textContent = formatTime(getSeconds());
+      }
+    };
+    document.getElementById("minutes").addEventListener("input", updateDisplay);
+    document.getElementById("seconds").addEventListener("input", updateDisplay);
+  </script>
+</body>
+</html>
